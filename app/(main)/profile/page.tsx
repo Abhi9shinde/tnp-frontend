@@ -7,7 +7,7 @@ type Props = {};
 const Profile = (props: Props) => {
   return (
     <div
-      className="flex flex-col items-center justify-center h-screen"
+      className="flex flex-col items-center justify-center h-screen bg-white dark:bg-black"
       style={{
         backgroundImage: `radial-gradient(circle at 0.5px 0.5px, rgba(6,182,212,0.2) 1px,transparent 0)`,
         backgroundSize: "10px 10px",

@@ -3,24 +3,41 @@ import React from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import {
-  IconBrandGithub,
-  IconBrandGoogle,
-  IconBrandOnlyfans,
-} from "@tabler/icons-react";
+import { FormField } from "@/lib/types";
+import { useState } from "react";
+import { desc } from "motion/react-client";
 
-export default function SignupFormDemo() {
+type Props = {
+  description?: string;
+  fields: FormField[];
+  onSubmit: (data: Record<string, any>) => void;
+  buttonText?: string;
+};
+
+export default function SignupFormDemo({
+  description,
+  fields,
+  onSubmit,
+  buttonText,
+}: Props) {
+  const [formData, setFormData] = useState<Record<string, any>>({});
+  //OnChange handler
+  const handleChange = (id: string, value: string) => {
+    console.log(id, value);
+  };
+  //OnSubmit handler
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("Form submitted");
   };
+
   return (
     <div className="mx-auto w-full max-w-md rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-black shadow-[0_0.8px_1px_rgba(250,250,250,0.5),0_4px_6px_rgba(6,182,212,0.5),0_12px_20px_rgba(150,100,255,0.4),0_0_20px_rgba(6,182,212,0.6)]">
       <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
         Welcome to P.E.S&apos;s MCOE TNP Portal
       </h2>
       <p className="mt-2 max-w-sm text-sm text-neutral-600 dark:text-neutral-300">
-        Fill in your basic information to get registered
+        {description}
       </p>
 
       <form className="my-8" onSubmit={handleSubmit}>

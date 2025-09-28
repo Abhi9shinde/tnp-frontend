@@ -3,6 +3,7 @@ import SignupFormDemo from "@/components/signup-form-demo";
 import { BackgroundRippleEffect } from "@/components/ui/background-ripple-effect";
 import { BACKEND_URL } from "@/lib/config";
 import React from "react";
+import axios from "axios";
 
 type Props = {};
 
@@ -42,12 +43,19 @@ const Profile = (props: Props) => {
   ];
 
   const onSubmitHandler = async (formsData: any) => {
-    const res = axios.post(
-      `${BACKEND_URL}/api/v1/student/registerStudent`,
-      formsData,
-      { withCredentials: true }
-    );
-    console.log(res);
+    console.log("Submitting formsData:", formsData);
+    try {
+      const res = await axios.post(
+        `${BACKEND_URL}/api/v1/student/registerStudent`,
+        formsData,
+        { withCredentials: true }
+      );
+      console.log(res.data);
+      alert("Registered successfully!");
+    } catch (err: any) {
+      console.error(err);
+      alert("Registration failed");
+    }
   };
 
   return (
@@ -61,7 +69,7 @@ const Profile = (props: Props) => {
     >
       {/* <BackgroundRippleEffect /> */}
       <div className="relative z-10">
-        <SignupFormDemo fields={fields} onSubmit={() => {}} />
+        <SignupFormDemo fields={fields} onSubmit={onSubmitHandler} />
       </div>
     </div>
   );

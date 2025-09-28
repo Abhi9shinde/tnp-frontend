@@ -18,16 +18,11 @@ interface SignupFormDemoProps {
   onSubmit: (data: Record<string, string>) => void;
 }
 
-<<<<<<< HEAD
 export default function SignupFormDemo({
   fields,
   onSubmit,
 }: SignupFormDemoProps) {
-  const [formData, setFormData] = useState<Record<string, string>>({});
-=======
-export default function SignupFormDemo({ fields, onSubmit }: SignupFormDemoProps) {
   const [formData, setFormData] = useState<Record<any, any>>({});
->>>>>>> 2f636398e90f35e7d6a0b372dd1b4fa849d9fae7
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({

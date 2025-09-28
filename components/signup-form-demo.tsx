@@ -15,9 +15,9 @@ export default function SignupFormDemo() {
     console.log("Form submitted");
   };
   return (
-    <div className="shadow-input mx-auto w-full max-w-md rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-black">
+    <div className="mx-auto w-full max-w-md rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-black shadow-[0_0.8px_1px_rgba(250,250,250,0.5),0_4px_6px_rgba(6,182,212,0.5),0_12px_20px_rgba(150,100,255,0.4),0_0_20px_rgba(6,182,212,0.6)]">
       <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
-        Welcome to P.E.S's MCOE TNP Portal
+        Welcome to P.E.S&apos;s MCOE TNP Portal
       </h2>
       <p className="mt-2 max-w-sm text-sm text-neutral-600 dark:text-neutral-300">
         Fill in your basic information to get registered
@@ -39,8 +39,14 @@ export default function SignupFormDemo() {
           </LabelInputContainer>
         </div>
         <LabelInputContainer className="mb-4">
-          <Label htmlFor="email">Email Address (other than college email ID)</Label>
-          <Input id="email" placeholder="pranavturkar@onlyfans.com" type="email" />
+          <Label htmlFor="email">
+            Email Address (other than college email ID)
+          </Label>
+          <Input
+            id="email"
+            placeholder="pranavturkar@onlyfans.com"
+            type="email"
+          />
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="phoneno">Phone Number</Label>
@@ -48,11 +54,7 @@ export default function SignupFormDemo() {
         </LabelInputContainer>
         <LabelInputContainer className="mb-8">
           <Label htmlFor="dob">Date of Birth</Label>
-          <Input
-            id="dob"
-            placeholder="DD-MM-YYYY"
-            type="date"
-          />
+          <Input id="dob" placeholder="DD-MM-YYYY" type="date" />
         </LabelInputContainer>
 
         <button
@@ -62,7 +64,6 @@ export default function SignupFormDemo() {
           Sign up &rarr;
           <BottomGradient />
         </button>
-      
       </form>
     </div>
   );

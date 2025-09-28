@@ -1,35 +1,48 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { FormField } from "@/lib/types";
-import { useState } from "react";
-import { desc } from "motion/react-client";
 
-type Props = {
-  description?: string;
-  fields: FormField[];
-  onSubmit: (data: Record<string, any>) => void;
-  buttonText?: string;
+type Field = {
+  name: string;
+  label: string;
+  type?: string;
+  placeholder?: string;
+  ref?: React.Ref<HTMLInputElement>;
+  group?: string; // optional, for grouping fields (like first/middle/last name row)
 };
 
+interface SignupFormDemoProps {
+  fields: Field[];
+  onSubmit: (data: Record<string, string>) => void;
+}
+
 export default function SignupFormDemo({
-  description,
   fields,
   onSubmit,
-  buttonText,
-}: Props) {
-  const [formData, setFormData] = useState<Record<string, any>>({});
-  //OnChange handler
-  const handleChange = (id: string, value: string) => {
-    console.log(id, value);
+}: SignupFormDemoProps) {
+  const [formData, setFormData] = useState<Record<string, string>>({});
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
   };
-  //OnSubmit handler
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Form submitted");
+    onSubmit(formData);
   };
+
+  // group fields by their "group" value (so you can have rows like First/Middle/Last name)
+  const groupedFields = fields.reduce<Record<string, Field[]>>((acc, field) => {
+    const key = field.group || field.name;
+    if (!acc[key]) acc[key] = [];
+    acc[key].push(field);
+    return acc;
+  }, {});
 
   return (
     <div className="mx-auto w-full max-w-md rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-black shadow-[0_0.8px_1px_rgba(250,250,250,0.5),0_4px_6px_rgba(6,182,212,0.5),0_12px_20px_rgba(150,100,255,0.4),0_0_20px_rgba(6,182,212,0.6)]">
@@ -41,38 +54,29 @@ export default function SignupFormDemo({
       </p>
 
       <form className="my-8" onSubmit={handleSubmit}>
-        <div className="mb-4 flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2">
-          <LabelInputContainer>
-            <Label htmlFor="firstname">First name</Label>
-            <Input id="firstname" placeholder="Pranav" type="text" />
-          </LabelInputContainer>
-          <LabelInputContainer>
-            <Label htmlFor="middlename">Middle name</Label>
-            <Input id="middlename" placeholder="Prakash" type="text" />
-          </LabelInputContainer>
-          <LabelInputContainer>
-            <Label htmlFor="lastname">Last name</Label>
-            <Input id="lastname" placeholder="Turkar" type="text" />
-          </LabelInputContainer>
-        </div>
-        <LabelInputContainer className="mb-4">
-          <Label htmlFor="email">
-            Email Address (other than college email ID)
-          </Label>
-          <Input
-            id="email"
-            placeholder="pranavturkar@onlyfans.com"
-            type="email"
-          />
-        </LabelInputContainer>
-        <LabelInputContainer className="mb-4">
-          <Label htmlFor="phoneno">Phone Number</Label>
-          <Input id="phone" placeholder="9876543210" type="tel" />
-        </LabelInputContainer>
-        <LabelInputContainer className="mb-8">
-          <Label htmlFor="dob">Date of Birth</Label>
-          <Input id="dob" placeholder="DD-MM-YYYY" type="date" />
-        </LabelInputContainer>
+        {Object.values(groupedFields).map((row, idx) => (
+          <div
+            key={idx}
+            className={cn(
+              "mb-4 flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2"
+            )}
+          >
+            {row.map((field) => (
+              <LabelInputContainer key={field.name}>
+                <Label htmlFor={field.name}>{field.label}</Label>
+                <Input
+                  id={field.name}
+                  name={field.name}
+                  type={field.type || "text"}
+                  placeholder={field.placeholder || ""}
+                  ref={field.ref}
+                  value={formData[field.name] || ""}
+                  onChange={handleChange}
+                />
+              </LabelInputContainer>
+            ))}
+          </div>
+        ))}
 
         <button
           className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset]"
@@ -86,14 +90,12 @@ export default function SignupFormDemo({
   );
 }
 
-const BottomGradient = () => {
-  return (
-    <>
-      <span className="absolute inset-x-0 -bottom-px block h-px w-full bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-0 transition duration-500 group-hover/btn:opacity-100" />
-      <span className="absolute inset-x-10 -bottom-px mx-auto block h-px w-1/2 bg-gradient-to-r from-transparent via-indigo-500 to-transparent opacity-0 blur-sm transition duration-500 group-hover/btn:opacity-100" />
-    </>
-  );
-};
+const BottomGradient = () => (
+  <>
+    <span className="absolute inset-x-0 -bottom-px block h-px w-full bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-0 transition duration-500 group-hover/btn:opacity-100" />
+    <span className="absolute inset-x-10 -bottom-px mx-auto block h-px w-1/2 bg-gradient-to-r from-transparent via-indigo-500 to-transparent opacity-0 blur-sm transition duration-500 group-hover/btn:opacity-100" />
+  </>
+);
 
 const LabelInputContainer = ({
   children,
@@ -101,10 +103,8 @@ const LabelInputContainer = ({
 }: {
   children: React.ReactNode;
   className?: string;
-}) => {
-  return (
-    <div className={cn("flex w-full flex-col space-y-2", className)}>
-      {children}
-    </div>
-  );
-};
+}) => (
+  <div className={cn("flex w-full flex-col space-y-2", className)}>
+    {children}
+  </div>
+);

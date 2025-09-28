@@ -1,101 +1,88 @@
 import Image from "next/image";
 
+// If Geist Sans is not available, fallback to Inter or system-ui
+const fontClass = "font-[\'Geist\',_\'Inter\',_system-ui,_sans-serif]";
+
 export default function Home() {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className={`min-h-screen w-full grid grid-rows-[20px_1fr_20px] items-center justify-items-center bg-gradient-to-br from-white via-zinc-100 to-zinc-300 dark:from-black dark:via-zinc-900 dark:to-zinc-800 transition-colors duration-300 ${fontClass}`}>
+      <main className="flex flex-col gap-14 row-start-2 items-center sm:items-start max-w-3xl w-full">
+        <div className="flex flex-col items-center gap-6">
+          <Image
+            className="dark:invert drop-shadow-xl"
+            src="/next.svg"
+            alt="Centralised Placement System Logo"
+            width={140}
+            height={44}
+            priority
+          />
+          <h1 className="text-5xl sm:text-7xl font-extrabold text-center text-black dark:text-white tracking-tight leading-tight drop-shadow-lg">
+            Centralised<br className='hidden sm:block'/> Placement System
+          </h1>
+          <p className="text-2xl sm:text-3xl text-center text-zinc-800 dark:text-zinc-200 max-w-2xl font-medium leading-relaxed">
+            Streamline your campus recruitment process with our all-in-one platform for students, companies, and placement coordinators.
+          </p>
+        </div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
+        <div className="flex flex-col sm:flex-row gap-6 w-full justify-center mt-2">
           <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            className="rounded-full border-2 border-black dark:border-white transition-all flex items-center justify-center bg-black text-white gap-2 hover:scale-105 hover:bg-gradient-to-r hover:from-black hover:to-zinc-800 font-bold text-lg h-14 px-10 sm:w-auto shadow-2xl shadow-black/10 dark:shadow-white/10 focus:ring-4 focus:ring-black/20 dark:focus:ring-white/20 outline-none"
+            href="#get-started"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
+            🚀 Get Started
           </a>
           <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            className="rounded-full border-2 border-black dark:border-white transition-all flex items-center justify-center bg-white dark:bg-black text-black dark:text-white hover:scale-105 hover:bg-zinc-100 dark:hover:bg-zinc-900 font-bold text-lg h-14 px-10 sm:w-auto focus:ring-4 focus:ring-black/20 dark:focus:ring-white/20 outline-none"
+            href="#features"
           >
-            Read our docs
+            Learn More
           </a>
         </div>
+
+        <section id="features" className="mt-12 grid gap-8 sm:grid-cols-2 w-full">
+          <div className="bg-white/80 dark:bg-zinc-900/80 border-2 border-black dark:border-white rounded-2xl p-8 shadow-xl flex flex-col items-center transition-colors backdrop-blur-md hover:scale-[1.03] hover:shadow-2xl duration-200">
+            <Image src="/file.svg" alt="Student icon" width={40} height={40} />
+            <h2 className="font-bold text-2xl mt-4 mb-2 text-black dark:text-white tracking-wide">For Students</h2>
+            <p className="text-zinc-700 dark:text-zinc-300 text-center text-base font-medium">
+              Browse job postings, apply easily, track your application status, and get notified about interviews and results.
+            </p>
+          </div>
+          <div className="bg-white/80 dark:bg-zinc-900/80 border-2 border-black dark:border-white rounded-2xl p-8 shadow-xl flex flex-col items-center transition-colors backdrop-blur-md hover:scale-[1.03] hover:shadow-2xl duration-200">
+            <Image src="/window.svg" alt="Company icon" width={40} height={40} />
+            <h2 className="font-bold text-2xl mt-4 mb-2 text-black dark:text-white tracking-wide">For Companies</h2>
+            <p className="text-zinc-700 dark:text-zinc-300 text-center text-base font-medium">
+              Post job openings, manage candidate pipelines, and schedule interviews with ease.
+            </p>
+          </div>
+          <div className="bg-white/80 dark:bg-zinc-900/80 border-2 border-black dark:border-white rounded-2xl p-8 shadow-xl flex flex-col items-center transition-colors backdrop-blur-md hover:scale-[1.03] hover:shadow-2xl duration-200">
+            <Image src="/globe.svg" alt="Coordinator icon" width={40} height={40} />
+            <h2 className="font-bold text-2xl mt-4 mb-2 text-black dark:text-white tracking-wide">For Coordinators</h2>
+            <p className="text-zinc-700 dark:text-zinc-300 text-center text-base font-medium">
+              Oversee the entire placement process, communicate with stakeholders, and generate insightful reports.
+            </p>
+          </div>
+          <div className="bg-white/80 dark:bg-zinc-900/80 border-2 border-black dark:border-white rounded-2xl p-8 shadow-xl flex flex-col items-center transition-colors backdrop-blur-md hover:scale-[1.03] hover:shadow-2xl duration-200">
+            <Image src="/next.svg" alt="Secure icon" width={40} height={40} />
+            <h2 className="font-bold text-2xl mt-4 mb-2 text-black dark:text-white tracking-wide">Secure & Centralised</h2>
+            <p className="text-zinc-700 dark:text-zinc-300 text-center text-base font-medium">
+              All data is securely managed in one place, ensuring privacy and transparency for all users.
+            </p>
+          </div>
+        </section>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
+      <footer className="row-start-3 flex gap-8 flex-wrap items-center justify-center text-zinc-600 dark:text-zinc-300 text-base border-t-2 border-zinc-200 dark:border-zinc-800 pt-8 w-full font-medium tracking-wide">
+        <span>© {new Date().getFullYear()} Centralised Placement System</span>
         <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+          className="hover:underline hover:text-black dark:hover:text-white transition-colors"
+          href="mailto:support@placement-system.com"
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
+          Contact Support
         </a>
         <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+          className="hover:underline hover:text-black dark:hover:text-white transition-colors"
+          href="#"
         >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
+          Privacy Policy
         </a>
       </footer>
     </div>

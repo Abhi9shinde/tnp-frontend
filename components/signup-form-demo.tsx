@@ -50,7 +50,7 @@ export default function SignupFormDemo({
         Welcome to P.E.S&apos;s MCOE TNP Portal
       </h2>
       <p className="mt-2 max-w-sm text-sm text-neutral-600 dark:text-neutral-300">
-        {description}
+        Fill in your basic information to get registered
       </p>
 
       <form className="my-8" onSubmit={handleSubmit}>

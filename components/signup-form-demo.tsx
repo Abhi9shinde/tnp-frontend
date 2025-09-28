@@ -18,7 +18,10 @@ interface SignupFormDemoProps {
   onSubmit: (data: Record<string, string>) => void;
 }
 
-export default function SignupFormDemo({ fields, onSubmit }: SignupFormDemoProps) {
+export default function SignupFormDemo({
+  fields,
+  onSubmit,
+}: SignupFormDemoProps) {
   const [formData, setFormData] = useState<Record<any, any>>({});
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,16 +38,16 @@ export default function SignupFormDemo({ fields, onSubmit }: SignupFormDemoProps
 
   // group fields by their "group" value (so you can have rows like First/Middle/Last name)
   const groupedFields = fields.reduce<Record<string, Field[]>>((acc, field) => {
-    const key = field.group || field.name; 
+    const key = field.group || field.name;
     if (!acc[key]) acc[key] = [];
     acc[key].push(field);
     return acc;
   }, {});
 
   return (
-    <div className="shadow-input mx-auto w-full max-w-md rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-black">
+    <div className="mx-auto w-full max-w-md rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-black shadow-[0_0.8px_1px_rgba(250,250,250,0.5),0_4px_6px_rgba(6,182,212,0.5),0_12px_20px_rgba(150,100,255,0.4),0_0_20px_rgba(6,182,212,0.6)]">
       <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
-        Welcome to P.E.S's MCOE TNP Portal
+        Welcome to P.E.S&apos;s MCOE TNP Portal
       </h2>
       <p className="mt-2 max-w-sm text-sm text-neutral-600 dark:text-neutral-300">
         Fill in your basic information to get registered
@@ -101,5 +104,7 @@ const LabelInputContainer = ({
   children: React.ReactNode;
   className?: string;
 }) => (
-  <div className={cn("flex w-full flex-col space-y-2", className)}>{children}</div>
+  <div className={cn("flex w-full flex-col space-y-2", className)}>
+    {children}
+  </div>
 );

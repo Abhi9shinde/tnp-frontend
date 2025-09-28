@@ -1,3 +1,6 @@
+"use client"
+import { Button } from "@/components/ui/button";
+import { BACKEND_URL } from "@/lib/config";
 import Image from "next/image";
 
 // If Geist Sans is not available, fallback to Inter or system-ui
@@ -34,12 +37,11 @@ export default function Home() {
           >
             Get Started
           </a>
-          <a
-            className="rounded-full border border-zinc-200 dark:border-zinc-700 transition-colors flex items-center justify-center bg-white dark:bg-black text-black dark:text-white hover:bg-zinc-100 dark:hover:bg-zinc-900 font-medium text-sm h-10 px-6 sm:w-auto"
-            href="#features"
-          >
-            Learn More
-          </a>
+          <Button
+            onClick={()=>{
+              window.location.href= BACKEND_URL+"/login"
+            }}
+          >Signup</Button>
         </div>
 
         <section id="features" className="mt-10 grid gap-8 sm:grid-cols-2 w-full max-w-2xl">

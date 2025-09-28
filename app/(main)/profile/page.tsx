@@ -2,8 +2,8 @@
 import SignupFormDemo from "@/components/signup-form-demo";
 import { BackgroundRippleEffect } from "@/components/ui/background-ripple-effect";
 import { BACKEND_URL } from "@/lib/config";
-import React from "react";
 import axios from "axios";
+import React from "react";
 
 type Props = {};
 

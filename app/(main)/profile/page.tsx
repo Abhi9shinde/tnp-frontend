@@ -1,6 +1,7 @@
 "use client";
 import SignupFormDemo from "@/components/signup-form-demo";
 import { BackgroundRippleEffect } from "@/components/ui/background-ripple-effect";
+import { BACKEND_URL } from "@/lib/config";
 import React from "react";
 
 type Props = {};
@@ -39,6 +40,16 @@ const Profile = (props: Props) => {
     },
     { name: "dob", label: "Date of Birth", type: "date" },
   ];
+
+  const onSubmitHandler = async (formsData: any) => {
+    const res = axios.post(
+      `${BACKEND_URL}/api/v1/student/registerStudent`,
+      formsData,
+      { withCredentials: true }
+    );
+    console.log(res);
+  };
+
   return (
     <div
       className="flex flex-col items-center justify-center h-screen bg-white dark:bg-black"

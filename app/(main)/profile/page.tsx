@@ -44,9 +44,10 @@ const Profile = (props: Props) => {
 
   const onSubmitHandler = async (formsData: any) => {
     console.log("Submitting formsData:", formsData);
+    console.log("BACKEND_URL:", BACKEND_URL);
     try {
       const res = await axios.post(
-        `${BACKEND_URL}/api/v1/student/registerStudent`,
+        BACKEND_URL + "/api/v1/student/registerStudent",
         formsData,
         { withCredentials: true }
       );

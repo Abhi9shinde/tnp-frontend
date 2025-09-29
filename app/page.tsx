@@ -2,7 +2,6 @@
 import { Button } from "@/components/ui/button";
 import { BACKEND_URL } from "@/lib/config";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 
 // If Geist Sans is not available, fallback to Inter or system-ui
 
@@ -10,7 +9,6 @@ import { useRouter } from "next/navigation";
 const fontClass = "font-[\'Nunito_Sans\',_\'Inter\',_system-ui,_sans-serif]";
 
 export default function Home() {
-  const router = useRouter();
 
   return (
     <div className={`min-h-screen w-full flex flex-col items-center justify-between bg-white dark:bg-black transition-colors duration-300 ${fontClass}`}>
@@ -41,7 +39,7 @@ export default function Home() {
           </a>
           <Button
             onClick={()=>{
-              router.push("/login");
+              window.location.href=`${BACKEND_URL}/login`
             }}
           >Signup</Button>
         </div>

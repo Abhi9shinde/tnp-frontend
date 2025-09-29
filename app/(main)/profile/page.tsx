@@ -47,7 +47,7 @@ const Profile = (props: Props) => {
     console.log("BACKEND_URL:", BACKEND_URL);
     try {
       const res = await axios.post(
-        BACKEND_URL + "/api/v1/student/registerStudent",
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/student/registerStudent`,
         formsData,
         { withCredentials: true }
       );

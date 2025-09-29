@@ -44,17 +44,25 @@ const Profile = (props: Props) => {
 
   const onSubmitHandler = async (formsData: any) => {
     console.log("Submitting formsData:", formsData);
+    console.log("BACKEND_URL:", BACKEND_URL);
     try {
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/student/registerStudent`,
-        formsData,
-        { withCredentials: true }
+        "/api/backend/api/v1/student/registerStudent",
+        formsData
       );
       console.log(res.data);
       alert("Registered successfully!");
     } catch (err: any) {
-      console.error(err);
-      alert("Registration failed");
+      console.error("Error:", err);
+
+      // Check if user needs to login
+      if (err.response?.data?.needsAuth) {
+        alert("Please login first to complete your profile");
+        window.location.href = err.response.data.loginUrl;
+        return;
+      }
+
+      alert(err.response?.data?.error || "Profile completion failed");
     }
   };
 

@@ -48,7 +48,8 @@ const Profile = (props: Props) => {
     try {
       const res = await axios.post(
         "/api/backend/api/v1/student/registerStudent",
-        formsData
+        formsData,
+        {withCredentials:true}
       );
       console.log(res.data);
       alert("Registered successfully!");

@@ -39,7 +39,7 @@ export default function Home() {
           </a>
           <Button
             onClick={()=>{
-              router.push("/auth/login")
+              router.push("/api/auth/login")
             }}
           >Signup</Button>
         </div>

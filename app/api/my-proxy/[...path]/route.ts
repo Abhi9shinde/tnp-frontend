@@ -1,55 +1,35 @@
 import { NextRequest } from "next/server";
 import { getAccessToken } from "@auth0/nextjs-auth0";
 
-// Forward function
-async function proxyRequest(req: NextRequest, params: { path: string[] }) {
-  // Get token from Auth0 session
+
+export async function GET(req: NextRequest, context: { params: { path: string[] } }) {
   const  accessToken  = await getAccessToken();
+  const { path } = context.params;
+  const backendUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path.join("/")}`;
 
-  if (!accessToken) {
-    return new Response(JSON.stringify({ error: "Unauthorized" }), {
-      status: 401,
-      headers: { "Content-Type": "application/json" },
-    });
-  }
+  const res = await fetch(backendUrl, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
 
-  // Construct backend URL
+  return new Response(await res.text(), { status: res.status });
+}
+
+export async function POST(req: NextRequest, { params }: { params: { path: string[] } }) {
+  const  accessToken  = await getAccessToken();
+  console.log(accessToken)
   const backendUrl = `${process.env.BACKEND_URL}/${params.path.join("/")}`;
 
-  // Forward request to backend
-  const response = await fetch(backendUrl, {
-    method: req.method,
+  const res = await fetch(backendUrl, {
+    method: "POST",
+    body: req.body,
     headers: {
-      ...Object.fromEntries(req.headers), // forward headers
-      Authorization: `Bearer ${accessToken}`, // inject Auth0 token
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": req.headers.get("content-type") ?? "application/json",
     },
-    body: ["GET", "HEAD"].includes(req.method) ? undefined : await req.text(),
   });
 
-  // Return backend response
-  return new Response(response.body, {
-    status: response.status,
-    headers: response.headers,
-  });
-}
-
-// Export handlers for all HTTP verbs
-export async function GET(req: NextRequest, ctx: { params: { path: string[] } }) {
-  return proxyRequest(req, ctx.params);
-}
-
-export async function POST(req: NextRequest, ctx: { params: { path: string[] } }) {
-  return proxyRequest(req, ctx.params);
-}
-
-export async function PUT(req: NextRequest, ctx: { params: { path: string[] } }) {
-  return proxyRequest(req, ctx.params);
-}
-
-export async function PATCH(req: NextRequest, ctx: { params: { path: string[] } }) {
-  return proxyRequest(req, ctx.params);
-}
-
-export async function DELETE(req: NextRequest, ctx: { params: { path: string[] } }) {
-  return proxyRequest(req, ctx.params);
+  return new Response(await res.text(), { status: res.status });
 }

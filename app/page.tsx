@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -6,12 +6,14 @@ import { useRouter } from "next/navigation";
 // If Geist Sans is not available, fallback to Inter or system-ui
 
 // Use a more elegant, modern font stack
-const fontClass = "font-[\'Nunito_Sans\',_\'Inter\',_system-ui,_sans-serif]";
+const fontClass = "font-['Nunito_Sans',_'Inter',_system-ui,_sans-serif]";
 
 export default function Home() {
-  const router = useRouter()
+  const router = useRouter();
   return (
-    <div className={`min-h-screen w-full flex flex-col items-center justify-between bg-white dark:bg-black transition-colors duration-300 ${fontClass}`}>
+    <div
+      className={`min-h-screen w-full flex flex-col items-center justify-between bg-white dark:bg-black transition-colors duration-300 ${fontClass}`}
+    >
       <main className="flex flex-col items-center justify-center flex-1 w-full px-4 py-20 gap-20">
         <div className="flex flex-col items-center gap-4 max-w-xl w-full">
           <Image
@@ -26,7 +28,8 @@ export default function Home() {
             Centralised Placement System
           </h1>
           <p className="text-base sm:text-lg text-center text-zinc-600 dark:text-zinc-300 max-w-md font-normal leading-relaxed mt-2">
-            Streamline your campus recruitment process with our all-in-one platform for students, companies, and placement coordinators.
+            Streamline your campus recruitment process with our all-in-one
+            platform for students, companies, and placement coordinators.
           </p>
         </div>
 
@@ -45,33 +48,58 @@ export default function Home() {
           </a>
         </div>
 
-        <section id="features" className="mt-10 grid gap-8 sm:grid-cols-2 w-full max-w-2xl">
+        <section
+          id="features"
+          className="mt-10 grid gap-8 sm:grid-cols-2 w-full max-w-2xl"
+        >
           <div className="flex flex-col items-center gap-2">
             <Image src="/file.svg" alt="Student icon" width={28} height={28} />
-            <h2 className="font-medium text-base mt-2 mb-1 text-black dark:text-white">For Students</h2>
+            <h2 className="font-medium text-base mt-2 mb-1 text-black dark:text-white">
+              For Students
+            </h2>
             <p className="text-zinc-500 dark:text-zinc-400 text-center text-xs">
-              Browse job postings, apply easily, track your application status, and get notified about interviews and results.
+              Browse job postings, apply easily, track your application status,
+              and get notified about interviews and results.
             </p>
           </div>
           <div className="flex flex-col items-center gap-2">
-            <Image src="/window.svg" alt="Company icon" width={28} height={28} />
-            <h2 className="font-medium text-base mt-2 mb-1 text-black dark:text-white">For Companies</h2>
+            <Image
+              src="/window.svg"
+              alt="Company icon"
+              width={28}
+              height={28}
+            />
+            <h2 className="font-medium text-base mt-2 mb-1 text-black dark:text-white">
+              For Companies
+            </h2>
             <p className="text-zinc-500 dark:text-zinc-400 text-center text-xs">
-              Post job openings, manage candidate pipelines, and schedule interviews with ease.
+              Post job openings, manage candidate pipelines, and schedule
+              interviews with ease.
             </p>
           </div>
           <div className="flex flex-col items-center gap-2">
-            <Image src="/globe.svg" alt="Coordinator icon" width={28} height={28} />
-            <h2 className="font-medium text-base mt-2 mb-1 text-black dark:text-white">For Coordinators</h2>
+            <Image
+              src="/globe.svg"
+              alt="Coordinator icon"
+              width={28}
+              height={28}
+            />
+            <h2 className="font-medium text-base mt-2 mb-1 text-black dark:text-white">
+              For Coordinators
+            </h2>
             <p className="text-zinc-500 dark:text-zinc-400 text-center text-xs">
-              Oversee the entire placement process, communicate with stakeholders, and generate insightful reports.
+              Oversee the entire placement process, communicate with
+              stakeholders, and generate insightful reports.
             </p>
           </div>
           <div className="flex flex-col items-center gap-2">
             <Image src="/next.svg" alt="Secure icon" width={28} height={28} />
-            <h2 className="font-medium text-base mt-2 mb-1 text-black dark:text-white">Secure & Centralised</h2>
+            <h2 className="font-medium text-base mt-2 mb-1 text-black dark:text-white">
+              Secure & Centralised
+            </h2>
             <p className="text-zinc-500 dark:text-zinc-400 text-center text-xs">
-              All data is securely managed in one place, ensuring privacy and transparency for all users.
+              All data is securely managed in one place, ensuring privacy and
+              transparency for all users.
             </p>
           </div>
         </section>
@@ -84,10 +112,7 @@ export default function Home() {
         >
           Contact Support
         </a>
-        <a
-          className="hover:underline"
-          href="#"
-        >
+        <a className="hover:underline" href="#">
           Privacy Policy
         </a>
       </footer>

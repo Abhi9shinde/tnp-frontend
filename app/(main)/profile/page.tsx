@@ -31,7 +31,7 @@ const Profile = (props: Props) => {
       name: "personalEmail",
       label: "Email Address",
       type: "email",
-      placeholder: "your@email.com",
+      placeholder: "pranav@onlyfans.com",
     },
     {
       name: "phoneNo",

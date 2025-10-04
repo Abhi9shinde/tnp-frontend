@@ -1,5 +1,6 @@
 "use client"
 import { Button } from "@/components/ui/button";
+import { auth0 } from "@/lib/auth0";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -8,9 +9,10 @@ import { useRouter } from "next/navigation";
 // Use a more elegant, modern font stack
 const fontClass = "font-[\'Nunito_Sans\',_\'Inter\',_system-ui,_sans-serif]";
 
-export default function Home() {
-  const router = useRouter()
-  return (
+export default async function Home() {
+  const session = await auth0.getSession();
+  if (!session) {
+    return (
     <div className={`min-h-screen w-full flex flex-col items-center justify-between bg-white dark:bg-black transition-colors duration-300 ${fontClass}`}>
       <main className="flex flex-col items-center justify-center flex-1 w-full px-4 py-20 gap-20">
         <div className="flex flex-col items-center gap-4 max-w-xl w-full">
@@ -93,4 +95,12 @@ export default function Home() {
       </footer>
     </div>
   );
-}
+  }
+
+  return (
+    <main>
+      <h1>Welcome, {session.user.name}!</h1>
+    </main>
+  );
+  
+};

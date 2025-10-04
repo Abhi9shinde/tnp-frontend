@@ -33,15 +33,16 @@ export default function Home() {
         <div className="flex flex-col sm:flex-row gap-3 w-full justify-center mt-2">
           <a
             className="rounded-full border border-zinc-200 dark:border-zinc-700 transition-colors flex items-center justify-center bg-black text-white hover:bg-zinc-900 font-medium text-sm h-10 px-6 sm:w-auto"
-            href="#get-started"
+            href="/auth/login"
           >
-            Get Started
+            Login
           </a>
-          <Button
-            onClick={()=>{
-              router.push("/api/auth/login")
-            }}
-          >Signup</Button>
+          <a
+            className="rounded-full border border-zinc-200 dark:border-zinc-700 transition-colors flex items-center justify-center bg-black text-white hover:bg-zinc-900 font-medium text-sm h-10 px-6 sm:w-auto"
+            href="/auth/logout"
+          >
+            Logout
+          </a>
         </div>
 
         <section id="features" className="mt-10 grid gap-8 sm:grid-cols-2 w-full max-w-2xl">

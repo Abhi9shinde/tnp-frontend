@@ -47,7 +47,7 @@ const Profile = (props: Props) => {
     console.log("BACKEND_URL:", BACKEND_URL);
     try {
       const res = await axios.post(
-        "/api/backend/api/v1/student/registerStudent",
+        "api/my-proxy/api/v1/student/registerStudent",
         formsData,
         {withCredentials:true}
       );

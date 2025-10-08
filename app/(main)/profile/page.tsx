@@ -49,14 +49,8 @@ const Profile = async (props: Props) => {
     console.log("BACKEND_URL:", BACKEND_URL);
     try {
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/student/registerStudent`,
-        {
-          headers:
-          {
-            Authorization: `Bearer ${accessToken}`
-          }
-        },
-        formsData,
+        "/api/my-proxy/api/v1/student/registerStudent",
+        formsData
       );
       console.log(res.data);
       alert("Registered successfully!");

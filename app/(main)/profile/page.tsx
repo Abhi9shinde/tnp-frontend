@@ -1,13 +1,14 @@
 "use client";
 import SignupFormDemo from "@/components/signup-form-demo";
 import { BackgroundRippleEffect } from "@/components/ui/background-ripple-effect";
+import { auth0 } from "@/lib/auth0";
 import { BACKEND_URL } from "@/lib/config";
 import axios from "axios";
 import React from "react";
 
 type Props = {};
 
-const Profile = (props: Props) => {
+const Profile = async (props: Props) => {
   const fields = [
     {
       name: "firstname",
@@ -41,15 +42,15 @@ const Profile = (props: Props) => {
     },
     { name: "dob", label: "Date of Birth", type: "date" },
   ];
+  const accessToken = await auth0.getAccessToken();
 
   const onSubmitHandler = async (formsData: any) => {
     console.log("Submitting formsData:", formsData);
     console.log("BACKEND_URL:", BACKEND_URL);
     try {
       const res = await axios.post(
-        "api/my-proxy/api/v1/student/registerStudent",
-        formsData,
-        {withCredentials:true}
+        "/api/my-proxy/api/v1/student/registerStudent",
+        formsData
       );
       console.log(res.data);
       alert("Registered successfully!");

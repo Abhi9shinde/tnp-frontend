@@ -1,9 +1,12 @@
 import { NextRequest } from "next/server";
 import { getAccessToken } from "@auth0/nextjs-auth0";
+import { auth0 } from "@/lib/auth0";
 
-
-export async function GET(req: NextRequest, context: { params: { path: string[] } }) {
-  const  accessToken  = await getAccessToken();
+export async function GET(
+  req: NextRequest,
+  context: { params: { path: string[] } }
+) {
+  const accessToken = await auth0.getAccessToken();
   const { path } = context.params;
   const backendUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path.join("/")}`;
 
@@ -17,9 +20,12 @@ export async function GET(req: NextRequest, context: { params: { path: string[] 
   return new Response(await res.text(), { status: res.status });
 }
 
-export async function POST(req: NextRequest, { params }: { params: { path: string[] } }) {
-  const  accessToken  = await getAccessToken();
-  console.log(accessToken)
+export async function POST(
+  req: NextRequest,
+  { params }: { params: { path: string[] } }
+) {
+  const accessToken = await getAccessToken();
+  console.log(accessToken);
   const backendUrl = `${process.env.BACKEND_URL}/${params.path.join("/")}`;
 
   const res = await fetch(backendUrl, {

@@ -35,10 +35,8 @@ export async function POST(
   const path = (await params).path;
 
   const accessToken = await auth0.getAccessToken(); // await getAccessToken() if async
-  const backendUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path
-    .join("/")
-    .replace(/^api\/my-proxy\/?/, "")}`;
-
+  const backendUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path.join("/").replace(/^api\/my-proxy\/?/, "")}`;
+  console.log(accessToken);
   const res = await fetch(backendUrl, {
     method: "POST",
     headers: {

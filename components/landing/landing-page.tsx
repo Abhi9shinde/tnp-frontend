@@ -15,7 +15,7 @@ export default async function LandingPage() {
 				<div className="flex items-center justify-center gap-4">
 					{session ? (
 						<>
-							<a href="/auth/profile" className="px-5 py-2 rounded-md border border-transparent bg-black text-white text-sm">Profile</a>
+							<a href="/profile" className="px-5 py-2 rounded-md border border-transparent bg-black text-white text-sm">Profile</a>
 							<a href="/auth/logout" className="px-5 py-2 rounded-md text-sm">Sign out</a>
 						</>
 					) : (

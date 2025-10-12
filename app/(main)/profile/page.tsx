@@ -49,7 +49,7 @@ const Profile = async (props: Props) => {
     console.log("BACKEND_URL:", BACKEND_URL);
     try {
       const res = await axios.post(
-        "/api/my-proxy/api/v1/student/registerStudent",
+        "http://localhost:3001/api/v1/student/registerStudent",
         formsData
       );
       console.log(res.data);

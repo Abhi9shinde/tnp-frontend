@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
-const AccessDenied = (props: Props) => {
+const AccessDenied = () => {
   const router = useRouter();
   useEffect(() => {
     document.title = "Access Denied";

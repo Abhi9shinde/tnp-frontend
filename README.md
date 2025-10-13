@@ -1,36 +1,80 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Frontend for Centeralized Student Placement System
 
-## Getting Started
+### Steps to setup project manually
 
-First, run the development server:
+Prerequisites
+ - Node.js 20.x (LTS) or newer
+ - npm, pnpm, or yarn (examples below use npm)
+
+Quick start (local)
+
+1. Clone the repo
+
+```bash
+git clone git@github.com:Ram-Gavhane/tnp-frontend.git
+cd tnp-frontend
+```
+
+2. Install dependencies
+
+```bash
+npm install
+# or: pnpm install
+# or: yarn install
+```
+
+3. Create environment variables
+
+Create a file named `.env.local` in the project root with the values described below. These are required for Auth0 and the SDK to work.
+
+Required environment variables
+
+```env
+# Auth0 configuration (get these from your Auth0 tenant - Application must be a "Regular Web Application")
+AUTH0_DOMAIN=
+AUTH0_CLIENT_ID=
+AUTH0_CLIENT_SECRET=
+AUTH0_SECRET=        # 32-byte hex string used to encrypt session cookies (eg: openssl rand -hex 32)
+APP_BASE_URL=http://localhost:3000
+
+# Optional: if your frontend proxies to a backend, set the backend base url here
+NEXT_PUBLIC_BACKEND_URL=http://localhost:4000
+
+# If your app uses a base path, set it here (leave empty otherwise)
+# NEXT_PUBLIC_BASE_PATH=
+```
+
+Important Auth0 dashboard settings
+- Add `${APP_BASE_URL}/auth/callback` to Allowed Callback URLs
+- Add `${APP_BASE_URL}` to Allowed Logout URLs
+
+4. Run the dev server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000. The landing page will render server-side and display the signed-in user's name when a session exists.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Auth flows in this project
+- The project uses `@auth0/nextjs-auth0` v4 (app-router friendly). The SDK stores sessions in secure, httpOnly cookies so the server can read the session during SSR. Routes mounted by the SDK are exposed under `/auth/*` by the included server client and middleware.
+- There is a proxy API at `/api/my-proxy/*` that forwards requests to `NEXT_PUBLIC_BACKEND_URL` while attaching an Auth0 access token.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Common tasks
+- Build for production: `npm run build`
+- Start production server: `npm start`
+- Run lint: `npm run lint`
 
-## Learn More
+Troubleshooting
+- If you see missing environment variable errors, confirm `.env.local` is present and variables are set.
+- Ensure your Auth0 Application is a "Regular Web Application" and callback/logout URLs match what's configured.
+- If sessions aren't persisting, confirm `AUTH0_SECRET` is a 32-byte hex string and `APP_BASE_URL` matches the site URL.
 
-To learn more about Next.js, take a look at the following resources:
+API reference & structure
+- `app/` — Next.js app router pages/components
+- `components/` — React components (landing page at `components/landing/landing-page.tsx`)
+- `lib/auth0.ts` — Auth0 client used by server components and middleware
+- `middleware.ts` — mounts the Auth0 middleware that manages rolling sessions
+- `app/api/my-proxy/route.ts` — server API proxy that forwards requests to your backend with the access token
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

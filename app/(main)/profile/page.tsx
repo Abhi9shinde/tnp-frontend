@@ -8,7 +8,7 @@ import React from "react";
 
 type Props = {};
 
-const Profile = async (props: Props) => {
+const Profile = (props: Props) => {
   const fields = [
     {
       name: "firstname",
@@ -42,15 +42,19 @@ const Profile = async (props: Props) => {
     },
     { name: "dob", label: "Date of Birth", type: "date" },
   ];
-  const accessToken = await auth0.getAccessToken();
 
   const onSubmitHandler = async (formsData: any) => {
     console.log("Submitting formsData:", formsData);
     console.log("BACKEND_URL:", BACKEND_URL);
     try {
       const res = await axios.post(
-        "http://localhost:3001/api/v1/student/registerStudent",
-        formsData
+        `${BACKEND_URL}/api/v1/student/registerStudent`,
+          formsData,
+        {
+          headers: {
+            Authorization: `Bearer ${auth0.getAccessToken()}`,
+          },
+        }
       );
       console.log(res.data);
       alert("Registered successfully!");

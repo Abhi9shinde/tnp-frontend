@@ -1,5 +1,6 @@
 'use client'
 import { BackgroundRippleEffect } from '@/components/ui/background-ripple-effect'
+import { Button } from '@/components/ui/button'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import React from 'react'
@@ -11,7 +12,7 @@ const Success = (props: Props) => {
     const router = useRouter();
     return (
         <div className="flex flex-col items-center justify-center h-screen bg-white">
-            <BackgroundRippleEffect/>
+            
             <div className="relative z-10 shadow-input mx-auto w-full max-w-md rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-black flex flex-col items-center justify-center gap-6">
                 <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200 text-center">
                     Congratulations! 🎉

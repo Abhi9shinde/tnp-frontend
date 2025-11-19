@@ -6,7 +6,7 @@ export async function GET(
   {
     params,
   }: {
-    params: Promise<{ path: string[] }>
+    params: Promise<{ path: string[] }>;
   }
 ) {
   const path = (await params).path;
@@ -30,22 +30,23 @@ export async function POST(
   {
     params,
   }: {
-    params: Promise<{ path: string[] }>
+    params: Promise<{ path: string[] }>;
   }
 ) {
   const path = (await params).path;
 
-  const accessToken = await auth0.getAccessToken();
-  const backendUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path
-    .join("/")
-    .replace(/^api\/my-proxy\/?/, "")}`;
+  const { token } = await auth0.getAccessToken();
+  const backendUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path.join("/")}`;
+  // .replace(/^api\/my-proxy\/?/, "")}`;
+  console.log("Proxy token:", token);
+  console.log("Backend URL:", backendUrl);
 
   const parsedBody = await req.json().catch(() => undefined);
 
   const res = await fetch(backendUrl, {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
     body: parsedBody !== undefined ? JSON.stringify(parsedBody) : undefined,

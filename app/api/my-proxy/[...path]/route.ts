@@ -33,11 +33,11 @@ export async function POST(
     params: Promise<{ path: string[] }>;
   }
 ) {
-  const path = (await params).path;
-
   const { token } = await auth0.getAccessToken();
-  const backendUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path.join("/")}`;
-  // .replace(/^api\/my-proxy\/?/, "")}`;
+  const path = (await params).path;
+  const backendUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path
+    .join("/")
+    .replace(/^api\/my-proxy\/?/, "")}`;
   console.log("Proxy token:", token);
   console.log("Backend URL:", backendUrl);
 

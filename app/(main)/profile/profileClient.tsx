@@ -11,19 +11,19 @@ export default function ProfileClient({
 }) {
   const fields = [
     {
-      name: "firstname",
+      name: "firstName",
       label: "First name",
       placeholder: "Pranav",
       group: "name",
     },
     {
-      name: "middlename",
+      name: "middleName",
       label: "Middle name",
       placeholder: "Prakash",
       group: "name",
     },
     {
-      name: "lastname",
+      name: "lastName",
       label: "Last name",
       placeholder: "Turkar",
       group: "name",
@@ -47,10 +47,7 @@ export default function ProfileClient({
     try {
       const res = await axios.post(
         "/api/my-proxy/api/v1/student/registerStudent",
-        formsData,
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        }
+        formsData
       );
       alert("Registered successfully!");
     } catch (err: any) {

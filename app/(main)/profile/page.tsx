@@ -1,3 +1,4 @@
+import SignupFormDemo from "@/components/signup-form-demo";
 import ProfileClient from "./profileClient";
 import { auth0 } from "@/lib/auth0";
 import { BACKEND_URL } from "@/lib/config";

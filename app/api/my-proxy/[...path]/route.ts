@@ -11,7 +11,7 @@ export async function GET(
 ) {
   const path = (await params).path;
 
-  const accessToken = await auth0.getAccessToken();
+  const { token } = await auth0.getAccessToken();
   const backendUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path
     .join("/")
     .replace(/^api\/my-proxy\/?/, "")}`;
@@ -19,7 +19,7 @@ export async function GET(
   const res = await fetch(backendUrl, {
     method: "GET",
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: `Bearer ${token}`,
     },
   });
 
@@ -45,6 +45,38 @@ export async function POST(
 
   const res = await fetch(backendUrl, {
     method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: parsedBody !== undefined ? JSON.stringify(parsedBody) : undefined,
+  });
+
+  return new NextResponse(await res.json(), { status: res.status });
+}
+
+export async function PUT(
+  req: NextRequest,
+  {
+    params,
+  }: {
+    params: Promise<{ path: string[] }>;
+  }
+) {
+  const path = (await params).path;
+
+  const { token } = await auth0.getAccessToken();
+  const backendUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path
+    .join("/")
+    .replace(/^api\/my-proxy\/?/, "")}`;
+   
+  console.log("Proxy token:", token);
+  console.log("Backend URL:", backendUrl);
+
+  const parsedBody = await req.json().catch(() => undefined);
+
+  const res = await fetch(backendUrl, {
+    method: "PUT",
     headers: {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",

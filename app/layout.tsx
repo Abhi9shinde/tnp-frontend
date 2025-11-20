@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/providers/theme-provider";
+import { Provider } from "@/components/ui/provider";
 const fontClass = "font-[\'Nunito_Sans\',_\'Inter\',_system-ui,_sans-serif]";
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,7 +35,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-        {children}
+            <Provider>{children}</Provider>
         </ThemeProvider>
       </body>
     </html>

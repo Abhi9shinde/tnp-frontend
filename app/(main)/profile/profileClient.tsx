@@ -13,32 +13,32 @@ export default function ProfileClient({
     {
       name: "firstName",
       label: "First name",
-      placeholder: "Pranav",
+      placeholder: "Name",
       group: "name",
     },
     {
       name: "middleName",
       label: "Middle name",
-      placeholder: "Prakash",
+      placeholder: "Middle Name",
       group: "name",
     },
     {
       name: "lastName",
       label: "Last name",
-      placeholder: "Turkar",
+      placeholder: "Last Name",
       group: "name",
     },
     {
       name: "personalEmail",
       label: "Email Address",
       type: "email",
-      placeholder: "pranav@gmail.com",
+      placeholder: "Personal Email",
     },
     {
       name: "phoneNo",
       label: "Phone Number",
       type: "tel",
-      placeholder: "9876543210",
+      placeholder: "Phone Number",
     },
     { name: "dob", label: "Date of Birth", type: "date" },
   ];

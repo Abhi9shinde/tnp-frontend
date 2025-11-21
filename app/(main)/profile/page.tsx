@@ -16,7 +16,6 @@ type ProfileFormData = {
   dob: string;
 };
 
-const fontClass = "font-['Nunito_Sans',_'Inter',_system-ui,_sans-serif]";
 const surfaceStyles =
   "rounded-2xl border border-zinc-200/70 bg-white/80 p-6 shadow-sm dark:border-zinc-800/70 dark:bg-zinc-900/40";
 

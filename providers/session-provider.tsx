@@ -2,11 +2,28 @@
 
 import { createContext, useContext } from "react";
 
-const SessionContext = createContext(null);
+export type UserSession = {
+  user: {
+    name?: string;
+    nickname?: string;
+    email?: string;
+    picture?: string;
+  } | null;
+};
 
-export const useSession = () => useContext(SessionContext);
+const SessionContext = createContext<UserSession | null>(null);
 
-export function SessionProvider({ session, children }: any) {
+export const useSession = (): UserSession | null => {
+  return useContext(SessionContext);
+};
+
+export function SessionProvider({
+  session,
+  children,
+}: {
+  session: UserSession | null;
+  children: React.ReactNode;
+}) {
   return (
     <SessionContext.Provider value={session}>
       {children}

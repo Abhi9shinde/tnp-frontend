@@ -2,10 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/providers/theme-provider";
-import Navbar from "@/components/navbar";
 import { auth0 } from "@/lib/auth0";
 import { SessionProvider } from "@/providers/session-provider";
-// import { Provider as ChakraProvider } from "@/components/ui/provider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -28,26 +26,12 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className}  antialiased`}>
         <ThemeProvider
-<<<<<<< HEAD
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
-          <SessionProvider session={session}>
-            {/* <ChakraProvider> */}
-            <Navbar />
-            {children}
-            {/* </ChakraProvider> */}
-          </SessionProvider>
-=======
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-          {children}
->>>>>>> c78ab130944eb41ed5b26496c887ca873ffa5191
+          <SessionProvider session={session}>{children}</SessionProvider>
         </ThemeProvider>
       </body>
     </html>

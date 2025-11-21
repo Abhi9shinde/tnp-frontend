@@ -1,4 +1,14 @@
+"use client";
+
+import { useSession } from "@/providers/session-provider";
+import LandingPage from "@/components/landing/landing-page";
+
 export default function Home() {
+  const session = useSession();
+  if (session) {
+    return <LandingPage />;
+  }
+
   return (
     <div className="flex min-h-full flex-1 flex-col items-center justify-center px-6 text-center py-8">
       <div className="max-w-2xl space-y-6">
@@ -27,13 +37,9 @@ export default function Home() {
           </a>
         </div>
       </div>
-<<<<<<< HEAD
-    </>
-=======
       <footer className="mt-auto flex items-center justify-center border-t border-zinc-100 py-6 text-xs text-zinc-500 dark:border-zinc-900 dark:text-zinc-500 w-full">
         © {new Date().getFullYear()} Centralised Placement System
       </footer>
     </div>
->>>>>>> c78ab130944eb41ed5b26496c887ca873ffa5191
   );
 }

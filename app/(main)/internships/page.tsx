@@ -6,7 +6,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 
-const fontClass = "font-['Nunito_Sans',_'Inter',_system-ui,_sans-serif]";
 const surfaceStyles =
   "rounded-2xl border border-zinc-200/70 bg-white/80 p-6 shadow-sm dark:border-zinc-800/70 dark:bg-zinc-900/40";
 const textareaStyles =
@@ -90,7 +89,9 @@ const InternshipsPage = () => {
       ...prev,
       [type]: [
         ...prev[type],
-        type === "internships" ? { ...emptyInternship } : { ...emptyCertification },
+        type === "internships"
+          ? { ...emptyInternship }
+          : { ...emptyCertification },
       ],
     }));
   };
@@ -117,7 +118,9 @@ const InternshipsPage = () => {
       );
 
       if (response.status === 200) {
-        setStatusMessage("Internship & certification details saved successfully!");
+        setStatusMessage(
+          "Internship & certification details saved successfully!"
+        );
       }
     } catch (error: any) {
       if (error.response?.data?.needsAuth) {
@@ -126,7 +129,8 @@ const InternshipsPage = () => {
         return;
       }
       setErrorMessage(
-        error.response?.data?.error || "Failed to save internship details. Try again."
+        error.response?.data?.error ||
+          "Failed to save internship details. Try again."
       );
     }
   };
@@ -134,63 +138,69 @@ const InternshipsPage = () => {
   return (
     <div className="flex min-h-full items-center justify-center px-6 py-8">
       <div className="w-full max-w-5xl space-y-10">
-          <header className="space-y-3 text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.4em] text-blue-500">
-              Experiences
-            </p>
-            <h1 className="text-3xl font-semibold">Internships & certifications</h1>
-            <p className="text-sm text-zinc-600 dark:text-zinc-400">
-              Keep your hands-on work and credentials updated so recruiters can verify
-              everything at a glance.
-            </p>
-          </header>
+        <header className="space-y-3 text-center">
+          <p className="text-xs font-semibold uppercase tracking-[0.4em] text-blue-500">
+            Experiences
+          </p>
+          <h1 className="text-3xl font-semibold">
+            Internships & certifications
+          </h1>
+          <p className="text-sm text-zinc-600 dark:text-zinc-400">
+            Keep your hands-on work and credentials updated so recruiters can
+            verify everything at a glance.
+          </p>
+        </header>
 
-          <form className="space-y-8" onSubmit={handleSubmit}>
-            <section className={surfaceStyles}>
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div>
-                  <h2 className="text-lg font-semibold">Internships</h2>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Add a separate entry for each company or role.
-                  </p>
-                </div>
-                <Button type="button" variant="outline" onClick={() => addRow("internships")}>
-                  Add internship
-                </Button>
+        <form className="space-y-8" onSubmit={handleSubmit}>
+          <section className={surfaceStyles}>
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <h2 className="text-lg font-semibold">Internships</h2>
+                <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                  Add a separate entry for each company or role.
+                </p>
               </div>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => addRow("internships")}
+              >
+                Add internship
+              </Button>
+            </div>
 
-              <div className="mt-6 space-y-6">
-                {formData.internships.map((internship, index) => (
-                  <div
-                    key={`internship-${index}`}
-                    className="rounded-xl border border-zinc-200/70 p-4 dark:border-zinc-800/60"
-                  >
-                    <div className="flex flex-wrap items-center justify-between gap-3 pb-4">
-                      <p className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
-                        Internship #{index + 1}
-                      </p>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        disabled={formData.internships.length === 1}
-                        onClick={() => removeRow("internships", index)}
-                      >
-                        Remove
-                      </Button>
+            <div className="mt-6 space-y-6">
+              {formData.internships.map((internship, index) => (
+                <div
+                  key={`internship-${index}`}
+                  className="rounded-xl border border-zinc-200/70 p-4 dark:border-zinc-800/60"
+                >
+                  <div className="flex flex-wrap items-center justify-between gap-3 pb-4">
+                    <p className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+                      Internship #{index + 1}
+                    </p>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      disabled={formData.internships.length === 1}
+                      onClick={() => removeRow("internships", index)}
+                    >
+                      Remove
+                    </Button>
+                  </div>
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label htmlFor={`company-${index}`}>Company</Label>
+                      <Input
+                        id={`company-${index}`}
+                        placeholder="TechCorp Pvt Ltd"
+                        value={internship.company}
+                        onChange={(event) =>
+                          updateInternship(index, "company", event.target.value)
+                        }
+                        required
+                      />
                     </div>
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      <div className="space-y-2">
-                        <Label htmlFor={`company-${index}`}>Company</Label>
-                        <Input
-                          id={`company-${index}`}
-                          placeholder="TechCorp Pvt Ltd"
-                          value={internship.company}
-                          onChange={(event) =>
-                            updateInternship(index, "company", event.target.value)
-                          }
-                          required
-                        />
-                      </div>
                     <div className="space-y-2">
                       <Label htmlFor={`role-${index}`}>Role</Label>
                       <Input
@@ -203,93 +213,113 @@ const InternshipsPage = () => {
                         required
                       />
                     </div>
-                      <div className="space-y-2">
-                        <Label htmlFor={`duration-${index}`}>Duration</Label>
-                        <Input
-                          id={`duration-${index}`}
-                          placeholder="3 months"
-                          value={internship.duration}
-                          onChange={(event) =>
-                            updateInternship(index, "duration", event.target.value)
-                          }
-                          required
-                        />
-                      </div>
-                      <div className="space-y-2 sm:col-span-2">
-                        <Label htmlFor={`description-${index}`}>Description</Label>
-                        <textarea
-                          id={`description-${index}`}
-                          className={textareaStyles}
-                          placeholder="Key projects, tools used, and impact."
-                          value={internship.description}
-                          onChange={(event) =>
-                            updateInternship(index, "description", event.target.value)
-                          }
-                        />
-                      </div>
+                    <div className="space-y-2">
+                      <Label htmlFor={`duration-${index}`}>Duration</Label>
+                      <Input
+                        id={`duration-${index}`}
+                        placeholder="3 months"
+                        value={internship.duration}
+                        onChange={(event) =>
+                          updateInternship(
+                            index,
+                            "duration",
+                            event.target.value
+                          )
+                        }
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2 sm:col-span-2">
+                      <Label htmlFor={`description-${index}`}>
+                        Description
+                      </Label>
+                      <textarea
+                        id={`description-${index}`}
+                        className={textareaStyles}
+                        placeholder="Key projects, tools used, and impact."
+                        value={internship.description}
+                        onChange={(event) =>
+                          updateInternship(
+                            index,
+                            "description",
+                            event.target.value
+                          )
+                        }
+                      />
                     </div>
                   </div>
-                ))}
-              </div>
-            </section>
-
-            <section className={surfaceStyles}>
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div>
-                  <h2 className="text-lg font-semibold">Certifications</h2>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Include MOOCs, professional credentials, or licenses.
-                  </p>
                 </div>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => addRow("certifications")}
-                >
-                  Add certification
-                </Button>
-              </div>
+              ))}
+            </div>
+          </section>
 
-              <div className="mt-6 space-y-6">
-                {formData.certifications.map((cert, index) => (
-                  <div
-                    key={`cert-${index}`}
-                    className="rounded-xl border border-zinc-200/70 p-4 dark:border-zinc-800/60"
-                  >
-                    <div className="flex flex-wrap items-center justify-between gap-3 pb-4">
-                      <p className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
-                        Certification #{index + 1}
-                      </p>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        disabled={formData.certifications.length === 1}
-                        onClick={() => removeRow("certifications", index)}
-                      >
-                        Remove
-                      </Button>
-                    </div>
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      <div className="space-y-2">
-                        <Label htmlFor={`title-${index}`}>Title</Label>
-                        <Input
-                          id={`title-${index}`}
-                          placeholder="AWS Certified Cloud Practitioner"
-                          value={cert.title}
-                          onChange={(event) =>
-                            updateCertification(index, "title", event.target.value)
-                          }
-                          required
-                        />
-                      </div>
+          <section className={surfaceStyles}>
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <h2 className="text-lg font-semibold">Certifications</h2>
+                <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                  Include MOOCs, professional credentials, or licenses.
+                </p>
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => addRow("certifications")}
+              >
+                Add certification
+              </Button>
+            </div>
+
+            <div className="mt-6 space-y-6">
+              {formData.certifications.map((cert, index) => (
+                <div
+                  key={`cert-${index}`}
+                  className="rounded-xl border border-zinc-200/70 p-4 dark:border-zinc-800/60"
+                >
+                  <div className="flex flex-wrap items-center justify-between gap-3 pb-4">
+                    <p className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+                      Certification #{index + 1}
+                    </p>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      disabled={formData.certifications.length === 1}
+                      onClick={() => removeRow("certifications", index)}
+                    >
+                      Remove
+                    </Button>
+                  </div>
+                  <div className="grid gap-4 sm:grid-cols-2">
                     <div className="space-y-2">
-                      <Label htmlFor={`organization-${index}`}>Organization</Label>
+                      <Label htmlFor={`title-${index}`}>Title</Label>
+                      <Input
+                        id={`title-${index}`}
+                        placeholder="AWS Certified Cloud Practitioner"
+                        value={cert.title}
+                        onChange={(event) =>
+                          updateCertification(
+                            index,
+                            "title",
+                            event.target.value
+                          )
+                        }
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor={`organization-${index}`}>
+                        Organization
+                      </Label>
                       <Input
                         id={`organization-${index}`}
                         placeholder="Amazon Web Services"
                         value={cert.organization}
                         onChange={(event) =>
-                          updateCertification(index, "organization", event.target.value)
+                          updateCertification(
+                            index,
+                            "organization",
+                            event.target.value
+                          )
                         }
                         required
                       />
@@ -301,7 +331,11 @@ const InternshipsPage = () => {
                         type="date"
                         value={cert.issueDate}
                         onChange={(event) =>
-                          updateCertification(index, "issueDate", event.target.value)
+                          updateCertification(
+                            index,
+                            "issueDate",
+                            event.target.value
+                          )
                         }
                       />
                     </div>
@@ -312,84 +346,104 @@ const InternshipsPage = () => {
                         type="date"
                         value={cert.expiryDate}
                         onChange={(event) =>
-                          updateCertification(index, "expiryDate", event.target.value)
+                          updateCertification(
+                            index,
+                            "expiryDate",
+                            event.target.value
+                          )
                         }
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor={`credentialId-${index}`}>Credential ID</Label>
+                      <Label htmlFor={`credentialId-${index}`}>
+                        Credential ID
+                      </Label>
                       <Input
                         id={`credentialId-${index}`}
                         placeholder="ABC-123-XYZ"
                         value={cert.credentialId}
                         onChange={(event) =>
-                          updateCertification(index, "credentialId", event.target.value)
+                          updateCertification(
+                            index,
+                            "credentialId",
+                            event.target.value
+                          )
                         }
                       />
                     </div>
-                      <div className="space-y-2">
-                        <Label htmlFor={`credentialUrl-${index}`}>Credential URL</Label>
-                        <Input
-                          id={`credentialUrl-${index}`}
-                          type="url"
-                          placeholder="https://www.credly.com/badges/..."
-                          value={cert.credentialUrl}
-                          onChange={(event) =>
-                            updateCertification(index, "credentialUrl", event.target.value)
-                          }
-                        />
-                      </div>
+                    <div className="space-y-2">
+                      <Label htmlFor={`credentialUrl-${index}`}>
+                        Credential URL
+                      </Label>
+                      <Input
+                        id={`credentialUrl-${index}`}
+                        type="url"
+                        placeholder="https://www.credly.com/badges/..."
+                        value={cert.credentialUrl}
+                        onChange={(event) =>
+                          updateCertification(
+                            index,
+                            "credentialUrl",
+                            event.target.value
+                          )
+                        }
+                      />
                     </div>
                   </div>
-                ))}
-              </div>
-            </section>
-
-            <section className={surfaceStyles}>
-              <div className="space-y-2">
-                <Label htmlFor="notes">Additional notes (optional)</Label>
-                <textarea
-                  id="notes"
-                  className={textareaStyles}
-                  placeholder="Mention hackathons, publications, or links to proof of work."
-                  value={formData.notes}
-                  onChange={(event) =>
-                    setFormData((prev) => ({ ...prev, notes: event.target.value }))
-                  }
-                />
-              </div>
-            </section>
-
-            <div className="flex flex-col gap-3 text-center sm:text-left sm:flex-row sm:items-center sm:justify-between">
-              <div className="text-sm">
-                {statusMessage && (
-                  <p className="text-sm text-emerald-600 dark:text-emerald-400">
-                    {statusMessage}
-                  </p>
-                )}
-                {errorMessage && (
-                  <p className="text-sm text-red-600 dark:text-red-400">{errorMessage}</p>
-                )}
-              </div>
-              <div className="flex justify-center gap-3 sm:justify-end">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => {
-                    setFormData(initialState);
-                    setStatusMessage("");
-                  }}
-                >
-                  Reset
-                </Button>
-                <Button type="submit">Save Experience Details</Button>
-              </div>
+                </div>
+              ))}
             </div>
-          </form>
+          </section>
+
+          <section className={surfaceStyles}>
+            <div className="space-y-2">
+              <Label htmlFor="notes">Additional notes (optional)</Label>
+              <textarea
+                id="notes"
+                className={textareaStyles}
+                placeholder="Mention hackathons, publications, or links to proof of work."
+                value={formData.notes}
+                onChange={(event) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    notes: event.target.value,
+                  }))
+                }
+              />
+            </div>
+          </section>
+
+          <div className="flex flex-col gap-3 text-center sm:text-left sm:flex-row sm:items-center sm:justify-between">
+            <div className="text-sm">
+              {statusMessage && (
+                <p className="text-sm text-emerald-600 dark:text-emerald-400">
+                  {statusMessage}
+                </p>
+              )}
+              {errorMessage && (
+                <p className="text-sm text-red-600 dark:text-red-400">
+                  {errorMessage}
+                </p>
+              )}
+            </div>
+            <div className="flex justify-center gap-3 sm:justify-end">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setFormData(initialState);
+                  setStatusMessage("");
+                }}
+              >
+                Reset
+              </Button>
+              <Button type="submit">Save Experience Details</Button>
+            </div>
+          </div>
+        </form>
       </div>
     </div>
   );
 };
 
 export default InternshipsPage;
-

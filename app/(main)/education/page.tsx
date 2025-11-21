@@ -1,74 +1,297 @@
 "use client";
 
-import React from "react";
-import { DynamicForm, type DynamicFormValues } from "@/components/dynamic-form";
-import { educationFields } from "@/lib/formContents";
+import { FormEvent, useState } from "react";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 
-type Props = {};
+const surfaceStyles =
+  "rounded-2xl border border-zinc-200/70 bg-white/80 p-6 shadow-sm dark:border-zinc-800/70 dark:bg-zinc-900/40";
 
-export default function Education(props: Props) {
-  const router = useRouter();
+interface EducationFormData {
+  branch: string;
+  enrollmentYear: number;
+  passingYear: number;
+  cgpa: number;
+  tenthPercent: number;
+  tenthYear: number;
+  twelfthPercent: number;
+  twelfthYear: number;
+  diplomaPercent: number;
+  diplomaYear: number;
+  backlogs: number;
+}
 
-  const handleSubmit = async (values: DynamicFormValues) => {
-    try {
-      // Convert number fields to actual numbers
-      const payload = {
-        ...values,
-        enrollmentYear: values.enrollmentYear ? Number(values.enrollmentYear) : undefined,
-        cgpa: values.cgpa ? Number(values.cgpa) : undefined,
-        tenthPercent: values.tenthPercent ? Number(values.tenthPercent) : undefined,
-        tenthYear: values.tenthYear ? Number(values.tenthYear) : undefined,
-        twelfthPercent: values.twelfthPercent ? Number(values.twelfthPercent) : undefined,
-        twelfthYear: values.twelfthYear ? Number(values.twelfthYear) : undefined,
-        diplomaPercent: values.diplomaPercent ? Number(values.diplomaPercent) : undefined,
-        diplomaYear: values.diplomaYear ? Number(values.diplomaYear) : undefined,
-        backlogs: values.backlogs ? Number(values.backlogs) : undefined,
-      };
+const initialFormState: EducationFormData = {
+  branch: "",
+  enrollmentYear: 0,
+  passingYear: 0,
+  cgpa: 0,
+  tenthPercent: 0,
+  tenthYear: 0,
+  twelfthPercent: 0,
+  twelfthYear: 0,
+  diplomaPercent: 0,
+  diplomaYear: 0,
+  backlogs: 0,
+};
 
-      // Remove empty optional fields
-      if (!payload.diplomaPercent) delete payload.diplomaPercent;
-      if (!payload.diplomaYear) delete payload.diplomaYear;
+const Education = () => {
+  const [formData, setFormData] = useState<EducationFormData>(initialFormState);
+  const [statusMessage, setStatusMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
-      console.log("Sending payload:", payload);
-
-      const res = await axios.post(
-        "/api/my-proxy/api/v1/student/addEducation",
-        payload
-      );
-      if (res.status === 200) {
-        router.push("/home");
+  const updateField = (field: keyof EducationFormData, value: string | number) => {
+    setFormData((prev) => {
+      if (field === "branch") {
+        return { ...prev, [field]: value as string };
+      } else {
+        const numValue = typeof value === "string" ? (value === "" ? 0 : parseFloat(value)) : value;
+        return { ...prev, [field]: numValue };
       }
-    } catch (err: any) {
-      console.error("Submission error:", err);
-      console.error("Error response:", err.response?.data);
-      
-      if (err.response?.data?.needsAuth) {
-        alert("Please login first to complete your profile");
-        window.location.href = err.response.data.loginUrl;
+    });
+  };
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setStatusMessage("");
+    setErrorMessage("");
+
+    try {
+      const response = await axios.post(
+        "/api/my-proxy/api/v1/student/addEducation",
+        formData
+      );
+
+      if (response.status === 200) {
+        setStatusMessage("Education details saved successfully!");
+      }
+    } catch (error: any) {
+      console.log(error.response.data.medium)
+      if (error.response?.data?.needsAuth) {
+        alert("Please login first to save your education details");
+        window.location.href = error.response.data.loginUrl;
         return;
       }
-      alert(
-        err.response?.data?.error ||
-        err.response?.data?.message ||
-        `Education details submission failed: ${err.message}`
+      setErrorMessage(
+        error.response?.data?.error || "Failed to save education details. Try again."
       );
     }
   };
 
   return (
-    <div className="min-h-screen w-full bg-neutral-100 dark:bg-neutral-950 flex items-center justify-center px-4 py-10">
-      <div className="w-full max-w-3xl rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-xl p-6 md:p-10">
-        <DynamicForm
-          fields={educationFields}
-          legend="Education Details"
-          description="Provide your latest academic information so recruiters can understand your background."
-          submitLabel="Save & Continue"
-          maxWidth="full"
-          onSubmit={handleSubmit}
-        />
+    <div className="flex min-h-full items-center justify-center px-6 py-8">
+      <div className="w-full max-w-4xl space-y-10">
+          <header className="space-y-3 text-center">
+            <p className="text-xs font-semibold uppercase tracking-[0.4em] text-blue-500">
+              Education
+            </p>
+            <h1 className="text-3xl font-semibold">Academic information</h1>
+            <p className="text-sm text-zinc-600 dark:text-zinc-400">
+              Share the scores requested by your placement cell. Keep values accurate;
+              you can update them whenever your record changes.
+            </p>
+          </header>
+
+          <form className="space-y-8" onSubmit={handleSubmit}>
+            <section className={surfaceStyles}>
+              <div className="space-y-1">
+                <h2 className="text-lg font-semibold">Current programme</h2>
+                <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                  Snapshot of your degree and backlog status.
+                </p>
+              </div>
+              <div className="mt-6 grid gap-5 sm:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="branch">Branch</Label>
+                  <Input
+                    id="branch"
+                    placeholder="Computer Engineering"
+                    value={formData.branch}
+                    onChange={(event) => updateField("branch", event.target.value)}
+                    required
+                  />
+                </div>
+              <div className="space-y-2">
+                <Label htmlFor="enrollmentYear">Enrollment Year</Label>
+                <Input
+                  id="enrollmentYear"
+                  type="number"
+                  placeholder="2022"
+                  value={formData.enrollmentYear || ""}
+                  onChange={(event) =>
+                    updateField("enrollmentYear", event.target.value)
+                  }
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <Label htmlFor="passingYear">Passing Year</Label>
+                  <span className="rounded-full border border-zinc-200 px-2 text-xs font-medium text-zinc-500 dark:border-zinc-700 dark:text-zinc-400">
+                    Optional
+                  </span>
+                </div>
+                <Input
+                  id="passingYear"
+                  type="number"
+                  placeholder="2026"
+                  value={formData.passingYear || ""}
+                  onChange={(event) =>
+                    updateField("passingYear", event.target.value)
+                  }
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="cgpa">CGPA</Label>
+                <Input
+                  id="cgpa"
+                  type="number"
+                  step="0.01"
+                  placeholder="8.45"
+                  value={formData.cgpa || ""}
+                  onChange={(event) => updateField("cgpa", event.target.value)}
+                  required
+                />
+              </div>
+                <div className="space-y-2 sm:col-span-2">
+                  <Label htmlFor="backlogs">Backlogs (current / total)</Label>
+                  <Input
+                    id="backlogs"
+                    type="number"
+                    placeholder="0"
+                    value={formData.backlogs === 0 ? "0" : formData.backlogs || ""}
+                    onChange={(event) =>
+                      updateField("backlogs", event.target.value)
+                    }
+                    required
+                    min={0}
+                  />
+                </div>
+              </div>
+            </section>
+
+            <section className={surfaceStyles}>
+              <div className="space-y-1">
+                <h2 className="text-lg font-semibold">Schooling & diploma</h2>
+                <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                  Provide what applies to you. Leave diploma blank if not taken.
+                </p>
+              </div>
+              <div className="mt-6 grid gap-5 sm:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="tenthPercent">10th Percentage</Label>
+                  <Input
+                    id="tenthPercent"
+                    type="number"
+                    step="0.01"
+                    placeholder="92.5"
+                    value={formData.tenthPercent || ""}
+                    onChange={(event) =>
+                      updateField("tenthPercent", event.target.value)
+                    }
+                  />
+                </div>
+              <div className="space-y-2">
+                <Label htmlFor="tenthYear">10th Passing Year</Label>
+                <Input
+                  id="tenthYear"
+                  type="number"
+                  placeholder="2019"
+                  value={formData.tenthYear || ""}
+                  onChange={(event) =>
+                    updateField("tenthYear", event.target.value)
+                  }
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="twelfthPercent">12th Percentage</Label>
+                <Input
+                  id="twelfthPercent"
+                  type="number"
+                  step="0.01"
+                  placeholder="88.0"
+                  value={formData.twelfthPercent || ""}
+                  onChange={(event) =>
+                    updateField("twelfthPercent", event.target.value)
+                  }
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="twelfthYear">12th Passing Year</Label>
+                <Input
+                  id="twelfthYear"
+                  type="number"
+                  placeholder="2021"
+                  value={formData.twelfthYear || ""}
+                  onChange={(event) =>
+                    updateField("twelfthYear", event.target.value)
+                  }
+                />
+              </div>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <Label htmlFor="diplomaPercent">Diploma Percentage</Label>
+                  <span className="rounded-full border border-zinc-200 px-2 text-xs font-medium text-zinc-500 dark:border-zinc-700 dark:text-zinc-400">
+                    Optional
+                  </span>
+                </div>
+                <Input
+                  id="diplomaPercent"
+                  type="number"
+                  step="0.01"
+                  placeholder="75.0"
+                  value={formData.diplomaPercent || ""}
+                  onChange={(event) =>
+                    updateField("diplomaPercent", event.target.value)
+                  }
+                />
+              </div>
+                <div className="space-y-2">
+                  <Label htmlFor="diplomaYear">Diploma Passing Year</Label>
+                  <Input
+                    id="diplomaYear"
+                    type="number"
+                    placeholder="2020"
+                    value={formData.diplomaYear || ""}
+                    onChange={(event) =>
+                      updateField("diplomaYear", event.target.value)
+                    }
+                  />
+                </div>
+              </div>
+            </section>
+
+            <div className="flex flex-col gap-3 text-center sm:text-left sm:flex-row sm:items-center sm:justify-between">
+              <div className="text-sm">
+                {statusMessage && (
+                  <p className="text-sm text-emerald-600 dark:text-emerald-400">
+                    {statusMessage}
+                  </p>
+                )}
+                {errorMessage && (
+                  <p className="text-sm text-red-600 dark:text-red-400">{errorMessage}</p>
+                )}
+              </div>
+              <div className="flex justify-center gap-3 sm:justify-end">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    setFormData(initialFormState);
+                    setStatusMessage("");
+                  }}
+                >
+                  Reset
+                </Button>
+                <Button type="submit">Save Education Details</Button>
+              </div>
+            </div>
+          </form>
       </div>
     </div>
   );
-}
+};
+
+export default Education;

@@ -28,6 +28,7 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className}  antialiased`}>
         <ThemeProvider
+<<<<<<< HEAD
           attribute="class"
           defaultTheme="system"
           enableSystem
@@ -39,6 +40,14 @@ export default async function RootLayout({
             {children}
             {/* </ChakraProvider> */}
           </SessionProvider>
+=======
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+          {children}
+>>>>>>> c78ab130944eb41ed5b26496c887ca873ffa5191
         </ThemeProvider>
       </body>
     </html>

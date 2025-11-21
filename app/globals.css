@@ -8,10 +8,34 @@
     0px 2px 3px -1px rgba(0, 0, 0, 0.1),
     0px 1px 0px 0px rgba(25, 28, 33, 0.02),
     0px 0px 0px 1px rgba(25, 28, 33, 0.08);
-  
+
     --animate-cell-ripple: cell-ripple var(--duration, 200ms) ease-out none 1
   var(--delay, 0ms);
- 
+
+    --color-sidebar-ring:
+    var(--sidebar-ring);
+
+    --color-sidebar-border:
+    var(--sidebar-border);
+
+    --color-sidebar-accent-foreground:
+    var(--sidebar-accent-foreground);
+
+    --color-sidebar-accent:
+    var(--sidebar-accent);
+
+    --color-sidebar-primary-foreground:
+    var(--sidebar-primary-foreground);
+
+    --color-sidebar-primary:
+    var(--sidebar-primary);
+
+    --color-sidebar-foreground:
+    var(--sidebar-foreground);
+
+    --color-sidebar:
+    var(--sidebar);
+
   @keyframes cell-ripple {
     0% {
       opacity: 0.4;
@@ -94,7 +118,6 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
-
 /* Base styles (converted from @apply) */
 *, *::before, *::after {
   border-color: var(--border);
@@ -104,3 +127,5 @@ body {
   background-color: var(--background);
   color: var(--foreground);
 }
+
+

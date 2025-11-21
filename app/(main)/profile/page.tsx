@@ -46,9 +46,9 @@ export default function ProfilePage() {
         "/api/my-proxy/api/v1/student/registerStudent",
         formsData
       );
-      if(res.status == 200){
-        alert("registered")
-        router.push("/education")
+      if (res.status == 200) {
+        alert("registered");
+        router.push("/education");
       }
     } catch (err: any) {
       if (err.response?.data?.needsAuth) {

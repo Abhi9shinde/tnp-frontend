@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/providers/theme-provider";
 import Navbar from "@/components/navbar";
 import { auth0 } from "@/lib/auth0";
 import { SessionProvider } from "@/providers/session-provider";
+// import { Provider as ChakraProvider } from "@/components/ui/provider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -33,8 +34,10 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           <SessionProvider session={session}>
+            {/* <ChakraProvider> */}
             <Navbar />
             {children}
+            {/* </ChakraProvider> */}
           </SessionProvider>
         </ThemeProvider>
       </body>

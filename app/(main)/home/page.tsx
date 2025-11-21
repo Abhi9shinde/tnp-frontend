@@ -1,5 +1,5 @@
 import Image from "next/image";
-const fontClass = "font-['Nunito_Sans',_'Inter',_system-ui,_sans-serif]";
+// const fontClass = "font-['Nunito_Sans',_'Inter',_system-ui,_sans-serif]";
 export default function Home() {
   return (
     <>
@@ -105,6 +105,14 @@ export default function Home() {
     // </div> */}
       <div>
         <h1 className="text-2xl font-bold">Home Page</h1>
+        <div className="flex flex-col sm:flex-row gap-3 w-full justify-center mt-2">
+          <a
+            className="rounded-full border border-zinc-200  transition-colors flex items-center justify-center bg-black text-white  font-medium text-sm h-10 px-6 sm:w-auto"
+            href="/auth/login"
+          >
+            Login
+          </a>
+        </div>
       </div>
     </>
   );

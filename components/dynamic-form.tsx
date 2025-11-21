@@ -106,8 +106,9 @@ export const DynamicForm = ({
       name: field.name,
       placeholder: field.placeholder,
       value: values[field.name] ?? "",
-      onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-        handleChange(field.name, event.target.value),
+      onChange: (
+        event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+      ) => handleChange(field.name, event.target.value),
     };
 
     if (field.type === "textarea") {
@@ -180,4 +181,3 @@ export const DynamicForm = ({
     </form>
   );
 };
-

@@ -63,7 +63,7 @@ const Navbar = () => {
           className="flex items-center gap-2  "
         >
           <Image
-            src={photo || "/default-avatar.png"}
+            src={photo || "/default-user.jpg"}
             alt="User"
             width={36}
             height={36}
@@ -94,7 +94,7 @@ const Navbar = () => {
           {/* Top Row */}
           <div className="flex items-center gap-3">
             <Image
-              src={photo || "/default-avatar.png"}
+              src={photo || "/default-user.jpg"}
               width={48}
               height={48}
               alt="User"

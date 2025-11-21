@@ -35,7 +35,7 @@ export async function POST(
 ) {
   const { token } = await auth0.getAccessToken();
   const path = (await params).path;
-  const backendUrl = `http://localhost:3001/${path
+  const backendUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path
     .join("/")
     .replace(/^api\/my-proxy\/?/, "")}`;
   console.log("Proxy token:", token);

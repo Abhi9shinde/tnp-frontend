@@ -13,32 +13,15 @@ import {
   SidebarProvider,
   SidebarInset,
 } from "@/components/ui/sidebar";
-import NavBar from "@/components/navbar";
 import { SidebarBackdrop } from "@/components/sidebar-backdrop";
+import { useSession } from "@/providers/session-provider";
 
 const fontClass = "font-['Nunito_Sans',_'Inter',_system-ui,_sans-serif]";
 
-type LandingSession = {
-  user?: {
-    name?: string | null;
-    nickname?: string | null;
-    email?: string | null;
-    picture?: string | null;
-  };
-};
+const sidebarPlaceholders = ["Option 1", "Option 2", "Option 3", "Option 4"];
 
-interface LandingShellProps {
-  session: LandingSession | null;
-}
-
-const sidebarPlaceholders = [
-  "Option 1",
-  "Option 2",
-  "Option 3",
-  "Option 4",
-];
-
-export default function LandingShell({ session }: LandingShellProps) {
+export default function LandingShell() {
+  const session = useSession();
   const userName =
     session?.user?.name ||
     session?.user?.nickname ||
@@ -94,7 +77,7 @@ export default function LandingShell({ session }: LandingShellProps) {
       defaultOpen={false}
       className={`min-h-screen bg-white text-zinc-900 dark:bg-black dark:text-white ${fontClass}`}
     >
-      <Sidebar 
+      <Sidebar
         className="border-r border-zinc-200 bg-white/95 dark:border-zinc-800 dark:bg-zinc-950/95 z-50"
         collapsible="offcanvas"
         variant="floating"
@@ -119,8 +102,6 @@ export default function LandingShell({ session }: LandingShellProps) {
 
       <SidebarBackdrop />
       <SidebarInset className="relative flex min-h-screen flex-1 flex-col bg-white text-zinc-900 dark:bg-black dark:text-white">
-        <NavBar session={session} />
-
         {/* Main Content */}
         <div className="flex flex-1 flex-col px-6 py-8">
           <div className="w-full max-w-6xl space-y-6">
@@ -149,7 +130,9 @@ export default function LandingShell({ session }: LandingShellProps) {
 
               {/* Applications Applied Box */}
               <div className="rounded-lg border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900/40">
-                <h2 className="text-lg font-semibold mb-4">Applications Applied</h2>
+                <h2 className="text-lg font-semibold mb-4">
+                  Applications Applied
+                </h2>
                 <div className="space-y-2">
                   <p className="text-sm text-zinc-600 dark:text-zinc-400">
                     No applications yet
@@ -167,4 +150,3 @@ export default function LandingShell({ session }: LandingShellProps) {
     </SidebarProvider>
   );
 }
-

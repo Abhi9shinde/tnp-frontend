@@ -1,4 +1,14 @@
+"use client";
+
+import { useSession } from "@/providers/session-provider";
+import LandingPage from "@/components/landing/landing-page";
+
 export default function Home() {
+  const session = useSession();
+  if (session) {
+    return <LandingPage />;
+  }
+
   return (
     <div className="flex min-h-full flex-1 flex-col items-center justify-center px-6 text-center py-8">
       <div className="max-w-2xl space-y-6">

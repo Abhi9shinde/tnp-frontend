@@ -78,9 +78,11 @@ const Education = () => {
 
       if (response.status === 200 || response.status === 201) {
         setStatusMessage("Education details saved successfully!");
+        
         router.push("/internships");
       }
     } catch (error: any) {
+      console.log(error.response.data)
       console.log(error.response?.data);
       if (error.response?.status === 409) {
         setErrorMessage(

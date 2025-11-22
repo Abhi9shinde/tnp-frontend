@@ -36,9 +36,9 @@ export default function NavBar() {
     <nav className="sticky top-0 z-50 flex items-center justify-between border-b border-zinc-200 bg-white/80 px-6 py-4 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-900/80">
       <div className="flex items-center gap-4">
         <SidebarTrigger className="rounded-md border border-zinc-200 bg-white/70 px-4 py-2 text-sm font-semibold text-zinc-900 shadow-sm transition hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-white" />
-        <h1 className="text-lg font-semibold text-zinc-900 dark:text-white">
+        <a href="/home" className="text-lg font-semibold text-zinc-900 dark:text-white" >
           Centralized Placement System
-        </h1>
+        </a>
       </div>
 
       <div className="relative" ref={dropdownRef}>

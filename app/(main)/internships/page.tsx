@@ -7,9 +7,9 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 
 const surfaceStyles =
-  "rounded-2xl border border-zinc-200/70 bg-white/80 p-6 shadow-sm dark:border-zinc-800/70 dark:bg-zinc-900/40";
+  "rounded-2xl border border-border bg-card p-6 shadow-sm";
 const textareaStyles =
-  "min-h-[120px] w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-black shadow-sm transition focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none dark:border-zinc-800 dark:bg-zinc-900 dark:text-white";
+  "min-h-[120px] w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm transition focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none";
 
 interface InternshipEntry {
   company: string;
@@ -145,7 +145,7 @@ const InternshipsPage = () => {
           <h1 className="text-3xl font-semibold">
             Internships & certifications
           </h1>
-          <p className="text-sm text-zinc-600 dark:text-zinc-400">
+          <p className="text-sm text-muted-foreground">
             Keep your hands-on work and credentials updated so recruiters can
             verify everything at a glance.
           </p>
@@ -156,7 +156,7 @@ const InternshipsPage = () => {
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <h2 className="text-lg font-semibold">Internships</h2>
-                <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                <p className="text-sm text-muted-foreground">
                   Add a separate entry for each company or role.
                 </p>
               </div>
@@ -173,10 +173,10 @@ const InternshipsPage = () => {
               {formData.internships.map((internship, index) => (
                 <div
                   key={`internship-${index}`}
-                  className="rounded-xl border border-zinc-200/70 p-4 dark:border-zinc-800/60"
+                  className="rounded-xl border border-border p-4"
                 >
                   <div className="flex flex-wrap items-center justify-between gap-3 pb-4">
-                    <p className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+                    <p className="text-sm font-semibold text-foreground">
                       Internship #{index + 1}
                     </p>
                     <Button
@@ -257,7 +257,7 @@ const InternshipsPage = () => {
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <h2 className="text-lg font-semibold">Certifications</h2>
-                <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                <p className="text-sm text-muted-foreground">
                   Include MOOCs, professional credentials, or licenses.
                 </p>
               </div>
@@ -274,10 +274,10 @@ const InternshipsPage = () => {
               {formData.certifications.map((cert, index) => (
                 <div
                   key={`cert-${index}`}
-                  className="rounded-xl border border-zinc-200/70 p-4 dark:border-zinc-800/60"
+                  className="rounded-xl border border-border p-4"
                 >
                   <div className="flex flex-wrap items-center justify-between gap-3 pb-4">
-                    <p className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+                    <p className="text-sm font-semibold text-foreground">
                       Certification #{index + 1}
                     </p>
                     <Button

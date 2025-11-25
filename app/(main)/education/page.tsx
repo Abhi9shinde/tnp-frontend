@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
 const surfaceStyles =
-  "rounded-2xl border border-zinc-200/70 bg-white/80 p-6 shadow-sm dark:border-zinc-800/70 dark:bg-zinc-900/40";
+  "rounded-2xl border border-border bg-card p-6 shadow-sm";
 
 interface EducationFormData {
   branch: string;
@@ -112,7 +112,7 @@ const Education = () => {
             Education
           </p>
           <h1 className="text-3xl font-semibold">Academic information</h1>
-          <p className="text-sm text-zinc-600 dark:text-zinc-400">
+          <p className="text-sm text-muted-foreground">
             Share the scores requested by your placement cell. Keep values
             accurate; you can update them whenever your record changes.
           </p>
@@ -122,7 +122,7 @@ const Education = () => {
           <section className={surfaceStyles}>
             <div className="space-y-1">
               <h2 className="text-lg font-semibold">Current programme</h2>
-              <p className="text-sm text-zinc-600 dark:text-zinc-400">
+              <p className="text-sm text-muted-foreground">
                 Snapshot of your degree and backlog status.
               </p>
             </div>
@@ -161,7 +161,7 @@ const Education = () => {
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <Label htmlFor="passingYear">Passing Year</Label>
-                  <span className="rounded-full border border-zinc-200 px-2 text-xs font-medium text-zinc-500 dark:border-zinc-700 dark:text-zinc-400">
+                  <span className="rounded-full border border-border px-2 text-xs font-medium text-muted-foreground">
                     Optional
                   </span>
                 </div>
@@ -216,7 +216,7 @@ const Education = () => {
           <section className={surfaceStyles}>
             <div className="space-y-1">
               <h2 className="text-lg font-semibold">Schooling & diploma</h2>
-              <p className="text-sm text-zinc-600 dark:text-zinc-400">
+              <p className="text-sm text-muted-foreground">
                 Provide what applies to you. Leave diploma blank if not taken.
               </p>
             </div>
@@ -274,7 +274,7 @@ const Education = () => {
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <Label htmlFor="diplomaPercent">Diploma Percentage</Label>
-                  <span className="rounded-full border border-zinc-200 px-2 text-xs font-medium text-zinc-500 dark:border-zinc-700 dark:text-zinc-400">
+                  <span className="rounded-full border border-border px-2 text-xs font-medium text-muted-foreground">
                     Optional
                   </span>
                 </div>

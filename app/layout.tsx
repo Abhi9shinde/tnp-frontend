@@ -7,7 +7,7 @@ import { SessionProvider } from "@/providers/session-provider";
 
 const inter = Inter({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800", "900"],
+  variable: "--font-inter",
   display: "swap",
 });
 
@@ -24,7 +24,7 @@ export default async function RootLayout({
   const session = await auth0.getSession();
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className}  antialiased`}>
+      <body className={`${inter.variable} font-sans antialiased`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

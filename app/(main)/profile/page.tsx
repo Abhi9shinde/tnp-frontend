@@ -17,7 +17,7 @@ type ProfileFormData = {
 };
 
 const surfaceStyles =
-  "rounded-2xl border border-zinc-200/70 bg-white/80 p-6 shadow-sm dark:border-zinc-800/70 dark:bg-zinc-900/40";
+  "rounded-2xl border border-border bg-card p-6 shadow-sm";
 
 const initialState: ProfileFormData = {
   firstName: "",
@@ -76,10 +76,9 @@ export default function ProfilePage() {
           <p className="text-xs font-semibold uppercase tracking-[0.4em] text-blue-500">
             Profile
           </p>
-          <h1 className="text-3xl font-semibold">Tell us about yourself</h1>
-          <p className="text-sm text-zinc-600 dark:text-zinc-400">
-            The placement cell uses these details to verify your identity.
-            Please complete every field carefully.
+          <h1 className="text-3xl font-semibold">Your personal information</h1>
+          <p className="text-sm text-muted-foreground">
+            Manage your details so companies can reach you.
           </p>
         </header>
 
@@ -87,7 +86,7 @@ export default function ProfilePage() {
           <section className={surfaceStyles}>
             <div className="space-y-1">
               <h2 className="text-lg font-semibold">Personal details</h2>
-              <p className="text-sm text-zinc-600 dark:text-zinc-400">
+              <p className="text-sm text-muted-foreground">
                 Names should match your official documents exactly.
               </p>
             </div>
@@ -144,7 +143,7 @@ export default function ProfilePage() {
           <section className={surfaceStyles}>
             <div className="space-y-1">
               <h2 className="text-lg font-semibold">Contact</h2>
-              <p className="text-sm text-zinc-600 dark:text-zinc-400">
+              <p className="text-sm text-muted-foreground">
                 Use personal channels that you check regularly.
               </p>
             </div>

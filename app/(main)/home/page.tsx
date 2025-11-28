@@ -18,26 +18,26 @@ export default function Home() {
         <h1 className="text-3xl sm:text-4xl font-semibold leading-tight">
           Streamline hiring conversations between students and recruiters.
         </h1>
-        <p className="text-base text-zinc-600 dark:text-zinc-400">
+        <p className="text-base text-muted-foreground">
           We help placement cells collect verified student data and keep every
           application stage organised—without endless spreadsheets.
         </p>
         <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
           <a
             href="/auth/login?screen_hint=signup"
-            className="px-6 py-3 rounded-md bg-zinc-900 text-white text-sm font-semibold transition hover:bg-zinc-800 dark:bg-white dark:text-black"
+            className="px-6 py-3 rounded-md bg-primary text-primary-foreground text-sm font-semibold transition hover:bg-primary/90"
           >
             Sign up
           </a>
           <a
             href="/auth/login"
-            className="px-6 py-3 rounded-md border border-zinc-300 text-sm font-semibold text-zinc-900 transition hover:border-zinc-400 dark:border-zinc-700 dark:text-white"
+            className="px-6 py-3 rounded-md border border-border text-sm font-semibold text-foreground transition hover:bg-accent"
           >
             Login
           </a>
         </div>
       </div>
-      <footer className="mt-auto flex items-center justify-center border-t border-zinc-100 py-6 text-xs text-zinc-500 dark:border-zinc-900 dark:text-zinc-500 w-full">
+      <footer className="mt-auto flex items-center justify-center border-t border-border py-6 text-xs text-muted-foreground w-full">
         © {new Date().getFullYear()} Centralised Placement System
       </footer>
     </div>

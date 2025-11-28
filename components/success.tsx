@@ -9,13 +9,13 @@ type Props = {};
 const Success = (props: Props) => {
   const router = useRouter();
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-white">
+    <div className="flex flex-col items-center justify-center h-screen bg-background">
       <BackgroundRippleEffect />
-      <div className="relative z-10 shadow-input mx-auto w-full max-w-md rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-black flex flex-col items-center justify-center gap-6">
-        <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200 text-center">
+      <div className="relative z-10 shadow-input mx-auto w-full max-w-md rounded-none bg-card p-4 md:rounded-2xl md:p-8 flex flex-col items-center justify-center gap-6">
+        <h2 className="text-xl font-bold text-foreground text-center">
           Congratulations! 🎉
         </h2>
-        <p className="mt-2 max-w-sm text-sm text-neutral-600 dark:text-neutral-300 text-center">
+        <p className="mt-2 max-w-sm text-sm text-muted-foreground text-center">
           You have successfully logged in with your college email. Welcome to
           our platform!
         </p>

@@ -184,6 +184,7 @@ const InternshipsPage = () => {
                       variant="ghost"
                       disabled={formData.internships.length === 1}
                       onClick={() => removeRow("internships", index)}
+                      className="text-red-600 transition hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-400/10"
                     >
                       Remove
                     </Button>
@@ -285,6 +286,7 @@ const InternshipsPage = () => {
                       variant="ghost"
                       disabled={formData.certifications.length === 1}
                       onClick={() => removeRow("certifications", index)}
+                      className="text-red-600 transition hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-400/10"
                     >
                       Remove
                     </Button>

@@ -17,9 +17,10 @@ import { Badge } from "@/components/ui/badge";
 interface PostingCardProps {
   posting: Posting;
   index: number;
+  onViewDetails: (posting: Posting) => void;
 }
 
-export function PostingCard({ posting, index }: PostingCardProps) {
+export function PostingCard({ posting, index, onViewDetails }: PostingCardProps) {
   const deadlineDate = new Date(posting.deadline).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
@@ -66,7 +67,7 @@ export function PostingCard({ posting, index }: PostingCardProps) {
           </div>
         </CardContent>
         <CardFooter>
-          <Button className="w-full font-semibold group">
+          <Button className="w-full font-semibold group" onClick={() => onViewDetails(posting)}>
             View Details
           </Button>
         </CardFooter>

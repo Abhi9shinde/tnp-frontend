@@ -15,4 +15,5 @@ export interface Posting {
   description: string;
   ctc: string;
   deadline: string;
+  eligibility?: string;
 }

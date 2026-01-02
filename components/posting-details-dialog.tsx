@@ -23,12 +23,14 @@ interface PostingDetailsDialogProps {
 
 interface EligibilityCriteria {
   id: string;
-  course: string;
-  tenthPercentage: number;
-  twelfthPercentage: number;
-  cgpa: number;
-  backlogsAllowed: number;
-  jobId: string;
+  allowedBranches: string[];
+  minTenth: number;
+  minTwelfth: number;
+  minCGPA: number;
+  maxBacklogs: number;
+  jobPostId: string;
+  passingYear: number;
+  minDiploma: number;
 }
 
 interface StudentEducation {
@@ -63,7 +65,7 @@ export function PostingDetailsDialog({
   useEffect(() => {
     if (isOpen && posting) {
       fetchEligibility(posting.id);
-      fetchStudentData(); // We need to implement this
+      fetchStudentData(); 
     } else {
         // Reset state when closed
         setEligibility(null);
@@ -80,13 +82,13 @@ export function PostingDetailsDialog({
   }, [eligibility, studentEducation]);
 
   const fetchEligibility = async (jobId: string) => {
-    console.log("Fetching eligibility for job ID:", jobId);
     try {
       setLoading(true);
       const response = await axios.get<EligibilityCriteria>(`/api/my-proxy/api/v1/admin/getEligibilityCriteria/${jobId}`);
-      console.log("Eligibility Response:", response.data);
       if (response.data) {
           setEligibility(response.data);
+      } else {
+        console.warn("Eligibility data is empty/null");
       }
     } catch (err) {
       console.error("Failed to fetch eligibility criteria:", err);
@@ -99,12 +101,9 @@ export function PostingDetailsDialog({
   const fetchStudentData = async () => {
        try {
            setStudentLoading(true);
-           // Try to find an endpoint. If not, maybe use a mock or try to deduce from profile/education pages?
-           // Based on `education/page.tsx`, we know the structure of education data.
-           // Assuming a GET endpoint exists or we need to rely on what we can find.
-           // Let's try /api/my-proxy/api/v1/student/getEducation first (common pattern)
-           const response = await axios.get<StudentEducation>('/api/my-proxy/api/v1/student/education'); 
-           setStudentEducation(response.data);
+            const response = await axios.get<{ education: StudentEducation }>('/api/my-proxy/api/v1/student/education'); 
+            console.log("Student Education Response:", response.data.education?.branch);
+            setStudentEducation(response.data.education);
        } catch (err) {
            console.error("Failed to fetch student education:", err);
            // If 404, maybe student hasn't filled education?
@@ -116,27 +115,31 @@ export function PostingDetailsDialog({
   const checkEligibility = (criteria: EligibilityCriteria, student: StudentEducation) => {
       const reasons: string[] = [];
       
-      if (student.cgpa < criteria.cgpa) {
-          reasons.push(`CGPA is ${student.cgpa}, required ${criteria.cgpa}`);
+      if (student.cgpa < criteria.minCGPA) {
+          reasons.push(`CGPA is ${student.cgpa}, required ${criteria.minCGPA}`);
       }
       
-      if (student.tenthPercent < criteria.tenthPercentage) {
-          reasons.push(`10th % is ${student.tenthPercent}, required ${criteria.tenthPercentage}`);
+      if (student.tenthPercent < criteria.minTenth) {
+          reasons.push(`10th % is ${student.tenthPercent}, required ${criteria.minTenth}`);
       }
       
-      if (student.twelfthPercent < criteria.twelfthPercentage) {
-          reasons.push(`12th % is ${student.twelfthPercent}, required ${criteria.twelfthPercentage}`);
+      if (student.twelfthPercent < criteria.minTwelfth) {
+          reasons.push(`12th % is ${student.twelfthPercent}, required ${criteria.minTwelfth}`);
       }
       
-      if (student.backlogs > criteria.backlogsAllowed) {
-           reasons.push(`Backlogs: ${student.backlogs}, max allowed ${criteria.backlogsAllowed}`);
+      if (student.backlogs > criteria.maxBacklogs) {
+           reasons.push(`Backlogs: ${student.backlogs}, max allowed ${criteria.maxBacklogs}`);
       }
       
-      // Course/Branch check could be complex due to string matching, skipping for now or doing simple check
-      if (criteria.course && !student.branch.toLowerCase().includes(criteria.course.toLowerCase()) && criteria.course !== "All") {
-          // Very basic check. 'course' in criteria might be comma separated or single string.
-          // reasons.push(`Branch mismatch (Required: ${criteria.course})`); 
-          // Keeping it lenient for now unless we know exact format
+      // Check if student branch is in allowed branches
+      if (criteria.allowedBranches && criteria.allowedBranches.length > 0) {
+          const isAllowed = criteria.allowedBranches.some(branch => 
+              student.branch.toLowerCase().includes(branch.toLowerCase()) || branch === "All"
+          );
+          
+          if (!isAllowed) {
+               reasons.push(`Branch mismatch. Allowed: ${criteria.allowedBranches.join(", ")}`); 
+          }
       }
 
       setIneligibilityReasons(reasons);
@@ -196,23 +199,23 @@ export function PostingDetailsDialog({
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm bg-muted/50 p-4 rounded-lg">
                     <div className="flex justify-between">
                         <span className="text-muted-foreground">Min CGPA:</span>
-                        <span className="font-medium">{eligibility.cgpa}</span>
+                        <span className="font-medium">{eligibility.minCGPA}</span>
                     </div>
                     <div className="flex justify-between">
                         <span className="text-muted-foreground">10th Percentage:</span>
-                        <span className="font-medium">{eligibility.tenthPercentage}%</span>
+                        <span className="font-medium">{eligibility.minTenth}%</span>
                     </div>
                     <div className="flex justify-between">
                         <span className="text-muted-foreground">12th Percentage:</span>
-                        <span className="font-medium">{eligibility.twelfthPercentage}%</span>
+                        <span className="font-medium">{eligibility.minTwelfth}%</span>
                     </div>
                     <div className="flex justify-between">
                         <span className="text-muted-foreground">Max Backlogs:</span>
-                        <span className="font-medium">{eligibility.backlogsAllowed}</span>
+                        <span className="font-medium">{eligibility.maxBacklogs}</span>
                     </div>
                     <div className="flex justify-between md:col-span-2">
                          <span className="text-muted-foreground">Eligible Courses:</span>
-                         <span className="font-medium">{eligibility.course}</span>
+                         <span className="font-medium">{eligibility.allowedBranches.join(", ")}</span>
                     </div>
                 </div>
             ) : (
@@ -251,8 +254,9 @@ export function PostingDetailsDialog({
                  </p>
             )}
           </div>
-        </div>
 
+        </div>
+        
         <DialogFooter className="gap-2 sm:gap-0">
           <Button variant="outline" onClick={onClose}>
             Close

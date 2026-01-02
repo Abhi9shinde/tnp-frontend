@@ -5,9 +5,9 @@ import axios from "axios";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
-const surfaceStyles =
-  "rounded-2xl border border-border bg-card p-6 shadow-sm";
+const surfaceStyles = "rounded-2xl border border-border bg-card p-6 shadow-sm";
 const textareaStyles =
   "min-h-[120px] w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm transition focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none";
 
@@ -56,6 +56,7 @@ const initialState: ExperienceFormData = {
 };
 
 const InternshipsPage = () => {
+  const router = useRouter();
   const [formData, setFormData] = useState<ExperienceFormData>(initialState);
   const [statusMessage, setStatusMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -121,6 +122,7 @@ const InternshipsPage = () => {
         setStatusMessage(
           "Internship & certification details saved successfully!"
         );
+        router.push("/onboarding/certification");
       }
     } catch (error: any) {
       if (error.response?.data?.needsAuth) {
@@ -438,6 +440,15 @@ const InternshipsPage = () => {
                 }}
               >
                 Reset
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  router.push("/home");
+                }}
+              >
+                SKIP
               </Button>
               <Button type="submit">Save Experience Details</Button>
             </div>

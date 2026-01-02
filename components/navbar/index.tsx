@@ -36,7 +36,7 @@ export default function NavBar() {
     <nav className="sticky top-0 z-50 flex items-center justify-between border-b border-border bg-background/80 px-6 py-4 backdrop-blur-sm">
       <div className="flex items-center gap-4">
         <SidebarTrigger className="rounded-md border border-border bg-background/70 px-4 py-2 text-sm font-semibold text-foreground shadow-sm transition hover:border-zinc-300" />
-        <a href="/home" className="text-lg font-semibold text-foreground" >
+        <a href="/home" className="text-lg font-semibold text-foreground">
           Centralized Placement System
         </a>
       </div>
@@ -70,11 +70,11 @@ export default function NavBar() {
             {session ? (
               <>
                 <Link
-                  href="/profile"
+                  href="/profile/editProfile"
                   className="block rounded-lg px-3 py-2 text-sm font-semibold text-foreground transition hover:bg-primary/10"
                   onClick={() => setMenuOpen(false)}
                 >
-                  Profile page
+                  Edit Profile
                 </Link>
                 <Link
                   href="/auth/logout"

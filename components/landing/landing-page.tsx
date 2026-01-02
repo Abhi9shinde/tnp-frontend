@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/sidebar";
 import { SidebarBackdrop } from "@/components/sidebar-backdrop";
 import { useSession } from "@/providers/session-provider";
+import { useEffect, useState } from "react";
 
 const sidebarPlaceholders = ["Option 1", "Option 2", "Option 3", "Option 4"];
 
@@ -26,6 +27,27 @@ export default function LandingPage() {
     session?.user?.email ||
     "Guest";
   const loggedIn = Boolean(session);
+
+  const [studentProfile, setStudentProfile] = useState<any>(null);
+  const [loadingProfile, setLoadingProfile] = useState(true);
+
+  useEffect(() => {
+    if (!loggedIn) return;
+
+    async function loadProfile() {
+      try {
+        const res = await fetch("/api/my-proxy/api/v1/student/profile");
+        const data = await res.json();
+        setStudentProfile(data.profile);
+      } catch (err) {
+        console.error("Error fetching profile:", err);
+      } finally {
+        setLoadingProfile(false);
+      }
+    }
+
+    loadProfile();
+  }, [loggedIn]);
 
   if (!loggedIn) {
     return (
@@ -101,23 +123,67 @@ export default function LandingPage() {
 
       <SidebarBackdrop />
       <SidebarInset className="relative flex min-h-screen flex-1 flex-col bg-background text-foreground">
-        {/* Main Content */}
         <div className="flex flex-1 flex-col px-6 py-8">
           <div className="w-full max-w-6xl space-y-6">
             <div>
               <h1 className="text-xl sm:text-2xl font-semibold leading-tight">
-                Welcome, {userName}
+                Welcome,{" "}
+                {loadingProfile
+                  ? userName
+                  : studentProfile?.firstName || userName}
               </h1>
 
               <p className="text-sm text-muted-foreground mt-2">
                 Pick up right where you left off—profile, academics, or
                 internships—and keep recruiters informed.
               </p>
+
+              {/* Profile Info Display */}
+              {loadingProfile ? (
+                <div className="mt-4 p-4 rounded-lg border border-border bg-card">
+                  <p className="text-sm text-muted-foreground">
+                    Loading profile...
+                  </p>
+                </div>
+              ) : studentProfile ? (
+                <div className="mt-4 p-4 rounded-lg border border-border bg-card">
+                  <h3 className="text-sm font-semibold mb-2">
+                    Profile Information
+                  </h3>
+                  <div className="grid grid-cols-2 gap-2 text-sm">
+                    <div>
+                      <span className="text-muted-foreground">Name:</span>{" "}
+                      <span className="font-medium">
+                        {studentProfile.firstName} {studentProfile.middleName}{" "}
+                        {studentProfile.lastName}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">Email:</span>{" "}
+                      <span className="font-medium">
+                        {studentProfile.personalEmail}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">Phone:</span>{" "}
+                      <span className="font-medium">
+                        {studentProfile.phoneNo}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">Skills:</span>{" "}
+                      <span className="font-medium">
+                        {studentProfile.skills.length > 0
+                          ? studentProfile.skills.join(", ")
+                          : "None added"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ) : null}
             </div>
 
-            {/* Two boxes side by side */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-              {/* Notifications Box */}
               <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
                 <h2 className="text-lg font-semibold mb-4">Notifications</h2>
                 <div className="space-y-2">
@@ -127,7 +193,6 @@ export default function LandingPage() {
                 </div>
               </div>
 
-              {/* Applications Applied Box */}
               <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
                 <h2 className="text-lg font-semibold mb-4">
                   Applications Applied

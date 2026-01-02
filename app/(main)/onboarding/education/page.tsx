@@ -7,8 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
-const surfaceStyles =
-  "rounded-2xl border border-border bg-card p-6 shadow-sm";
+const surfaceStyles = "rounded-2xl border border-border bg-card p-6 shadow-sm";
 
 interface EducationFormData {
   branch: string;
@@ -78,11 +77,11 @@ const Education = () => {
 
       if (response.status === 200 || response.status === 201) {
         setStatusMessage("Education details saved successfully!");
-        
-        router.push("/internships");
+
+        router.push("/onboarding/internships");
       }
     } catch (error: any) {
-      console.log(error.response.data)
+      console.log(error.response.data);
       console.log(error.response?.data);
       if (error.response?.status === 409) {
         setErrorMessage(

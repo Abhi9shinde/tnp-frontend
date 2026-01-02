@@ -9,12 +9,13 @@ export async function GET(
     params: Promise<{ path: string[] }>;
   }
 ) {
-  const path = (await params).path;
-
   const { token } = await auth0.getAccessToken();
+  const path = (await params).path;
   const backendUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path
     .join("/")
     .replace(/^api\/my-proxy\/?/, "")}`;
+
+  console.log("Backend URL:", backendUrl);
 
   const res = await fetch(backendUrl, {
     method: "GET",
@@ -23,7 +24,10 @@ export async function GET(
     },
   });
 
-  return new NextResponse(await res.text(), { status: res.status });
+  const data = await res.json();
+
+  // Return properly formatted JSON response
+  return NextResponse.json(data, { status: res.status });
 }
 export async function POST(
   req: NextRequest,
@@ -69,7 +73,7 @@ export async function PUT(
   const backendUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path
     .join("/")
     .replace(/^api\/my-proxy\/?/, "")}`;
-   
+
   console.log("Proxy token:", token);
   console.log("Backend URL:", backendUrl);
 

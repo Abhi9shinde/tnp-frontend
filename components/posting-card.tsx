@@ -45,7 +45,7 @@ export function PostingCard({ posting, index, onViewDetails }: PostingCardProps)
                 {posting.company}
               </CardDescription>
             </div>
-            <Badge variant="secondary" className="font-semibold shrink-0">
+            <Badge variant="secondary" className="font-semibold shrink-0 max-w-[45%] whitespace-normal text-right">
               {posting.ctc}
             </Badge>
           </div>

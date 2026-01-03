@@ -176,8 +176,8 @@ export function PostingDetailsDialog({
                 <span>Deadline: {deadlineDate}</span>
              </div>
              <div className="flex items-center gap-2 font-medium">
-                <IndianRupee className="w-4 h-4 text-green-600" />
-                <span>{posting.ctc}</span>
+                <IndianRupee className="w-4 h-4 text-green-600 shrink-0" />
+                <span className="break-words text-right">{posting.ctc}</span>
              </div>
           </div>
 

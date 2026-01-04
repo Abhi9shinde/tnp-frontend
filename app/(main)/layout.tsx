@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/sidebar";
 import NavBar from "@/components/navbar";
 import { SidebarBackdrop } from "@/components/sidebar-backdrop";
+import Container from "@/components/Container";
 
 const sidebarPlaceholders = ["Option 1", "Option 2", "Option 3", "Option 4"];
 
@@ -50,7 +51,7 @@ export default async function MainLayout({
       <SidebarBackdrop />
       <SidebarInset className="relative flex min-h-screen flex-1 flex-col bg-background text-foreground">
         <NavBar />
-        <div className="flex flex-1 flex-col">{children}</div>
+        <Container className="max-w-6xl">{children}</Container>
       </SidebarInset>
     </SidebarProvider>
   );

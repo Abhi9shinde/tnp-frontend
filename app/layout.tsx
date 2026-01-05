@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { auth0 } from "@/lib/auth0";
 import { SessionProvider } from "@/providers/session-provider";
+import { QueryProvider } from "@/providers/query-provider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -31,7 +32,9 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <SessionProvider session={session}>{children}</SessionProvider>
+          <SessionProvider session={session}>
+            <QueryProvider>{children}</QueryProvider>
+          </SessionProvider>
         </ThemeProvider>
       </body>
     </html>

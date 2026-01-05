@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 
 const surfaceStyles = "rounded-2xl border border-border bg-card p-6 shadow-sm";
 const textareaStyles =
-  "min-h-[120px] w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm transition focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none";
+  "min-h-[120px] w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/50 shadow-sm transition focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none";
 
 interface InternshipEntry {
   company: string;

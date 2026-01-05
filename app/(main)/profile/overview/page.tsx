@@ -1,14 +1,22 @@
 "use client";
 
 import Image from "next/image";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useStudentProfile } from "@/hooks/useStudentProfile";
-import { IconBrandGithub, IconBrandLinkedin } from "@tabler/icons-react";
+import {
+  IconBrandGithub,
+  IconBrandLinkedin,
+  IconArrowNarrowRight,
+  IconExternalLink,
+} from "@tabler/icons-react";
 import Container from "@/components/Container";
+import { useSession } from "@/providers/session-provider";
+import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
 
 export default function OverviewPage() {
   const { data, isLoading, error } = useStudentProfile();
+  const session = useSession(); //For profile pic
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Failed to load profile</p>;
@@ -27,7 +35,7 @@ export default function OverviewPage() {
           <div className="flex gap-6">
             {/* Avatar */}
             <Image
-              src={"/avatar-placeholder.png"}
+              src={session?.user?.picture || "/default-user.jpg"}
               alt="Profile"
               width={64}
               height={64}
@@ -50,24 +58,29 @@ export default function OverviewPage() {
           </div>
 
           {/* Social Links */}
-          <div className="flex gap-2">
-            <Button
-              size="icon"
-              variant="ghost"
-              className="hover:text-neutral-500"
-            >
-              <IconBrandGithub className="h-4 w-4" />
-            </Button>
-            <Button
-              size="icon"
-              variant="ghost"
-              className="hover:text-neutral-500"
-            >
-              <IconBrandLinkedin className="h-4 w-4" />
-            </Button>
-          </div>
+          {profile.socials.length > 0 && (
+            <div className="flex gap-2">
+              {profile.socials.map((social: any, index: any) => (
+                <Link href={social.url} key={index} target="_blank">
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    key={social.id}
+                    className="capitalize"
+                  >
+                    {social.platform == "Github" ? (
+                      <IconBrandGithub className="h-4 w-4" />
+                    ) : (
+                      <IconBrandLinkedin className="h-4 w-4" />
+                    )}
+                  </Button>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
-        <div className="space-y-10">
+
+        <div className="space-y-10 mt-12">
           {/* Experience */}
           <div className="mt-6">
             <p className="mb-2 text-sm font-semibold text-neutral-500">
@@ -152,6 +165,71 @@ export default function OverviewPage() {
             )}
           </div>
 
+          {/* Projects */}
+          <div className="mt-6">
+            <p className="mb-2 text-sm font-semibold text-neutral-500">
+              Projects
+            </p>
+
+            {profile.projects?.length > 0 ? (
+              <div className="space-y-4">
+                {profile.projects.map((project: any) => (
+                  <div
+                    key={project.id}
+                    className="flex items-start justify-between gap-6"
+                  >
+                    {/* Left */}
+                    <div className="text-sm">
+                      <p className="font-semibold">
+                        {project.title}{" "}
+                        <span>
+                          <Link href={project.link}>
+                            <Button
+                              size="icon-sm"
+                              variant="ghost"
+                              className="capitalize"
+                            >
+                              <IconExternalLink className="" />
+                            </Button>
+                          </Link>
+                        </span>
+                      </p>
+                      <p className="text-neutral-500 font-medium pl-3 pt-0.5"></p>
+                      {project.description && (
+                        <p className="max-w-md text-sm font-normal text-neutral-500 pl-5">
+                          {project.description}
+                        </p>
+                      )}
+                      <div className="pl-3">
+                        {project.techStack &&
+                          project.techStack.map((tech: string, idx: number) => (
+                            <Badge
+                              key={idx}
+                              variant="default"
+                              className="mt-2 mx-0.5"
+                            >
+                              {tech}
+                            </Badge>
+                          ))}
+                      </div>
+                    </div>
+
+                    {/* Right */}
+                    {project.date && (
+                      <p className="text-xs text-neutral-500 mt-1">
+                        {new Date(project.date).toLocaleDateString()}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                No Projects added yet
+              </p>
+            )}
+          </div>
+
           {/* Education*/}
           <div className="mt-6">
             <p className="text-sm font-semibold text-neutral-500 mb-2">
@@ -182,38 +260,47 @@ export default function OverviewPage() {
               Certificates
             </p>
 
-            {profile.achievements?.length > 0 ? (
+            {profile.certifications?.length > 0 ? (
               <div className="space-y-4">
-                {profile.achievements.map((achievement: any) => (
+                {profile.certifications.map((certification: any) => (
                   <div
-                    key={achievement.id}
+                    key={certification.id}
                     className="flex items-start justify-between gap-6"
                   >
                     {/* Left */}
                     <div className="text-sm">
-                      <p className="font-semibold">{achievement.title}</p>
+                      <p className="font-semibold">{certification.title}</p>
                       <p className="text-neutral-500 font-medium pl-3 pt-0.5">
-                        {achievement.type}
+                        Platform : {certification.organization}
                       </p>
-                      {achievement.description && (
-                        <p className="max-w-md text-sm font-light text-neutral-400 pl-5">
-                          {achievement.description}
+                      {certification.issueDate && (
+                        <p className="max-w-md text-sm font-light text-neutral-400 pl-5 mt-1">
+                          {new Date(
+                            certification.issueDate
+                          ).toLocaleDateString()}{" "}
+                          - Issued Date
                         </p>
                       )}
                     </div>
 
                     {/* Right */}
-                    {achievement.date && (
-                      <p className="text-xs text-neutral-500 mt-1">
-                        {new Date(achievement.date).toLocaleDateString()}
-                      </p>
+                    {certification.credentialUrl && (
+                      <Link href={certification.credentialUrl}>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="text-xs text-neutral-500 mt-1 group"
+                        >
+                          <IconArrowNarrowRight className="h-4 w-4 group-hover:-rotate-45 transition-transform duration-200" />
+                        </Button>
+                      </Link>
                     )}
                   </div>
                 ))}
               </div>
             ) : (
               <p className="text-sm text-muted-foreground">
-                No Achievement added yet
+                No Certificates added yet
               </p>
             )}
           </div>

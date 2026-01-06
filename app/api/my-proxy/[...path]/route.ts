@@ -42,7 +42,7 @@ export async function POST(
   const backendUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path
     .join("/")
     .replace(/^api\/my-proxy\/?/, "")}`;
-  console.log("Proxy token:", token);
+
   console.log("Backend URL:", backendUrl);
 
   const parsedBody = await req.json().catch(() => undefined);
@@ -74,7 +74,6 @@ export async function PUT(
     .join("/")
     .replace(/^api\/my-proxy\/?/, "")}`;
 
-  console.log("Proxy token:", token);
   console.log("Backend URL:", backendUrl);
 
   const parsedBody = await req.json().catch(() => undefined);
@@ -86,6 +85,31 @@ export async function PUT(
       "Content-Type": "application/json",
     },
     body: parsedBody !== undefined ? JSON.stringify(parsedBody) : undefined,
+  });
+
+  return new NextResponse(await res.text(), { status: res.status });
+}
+
+export async function DELETE(
+  req: NextRequest,
+  {
+    params,
+  }: {
+    params: Promise<{ path: string[] }>;
+  }
+) {
+  const { token } = await auth0.getAccessToken();
+  const path = (await params).path;
+
+  const backendUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path
+    .join("/")
+    .replace(/^api\/my-proxy\/?/, "")}`;
+
+  const res = await fetch(backendUrl, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   });
 
   return new NextResponse(await res.text(), { status: res.status });

@@ -254,6 +254,27 @@ export default function OverviewPage() {
             </div>
           </div>
 
+          {/* Skills */}
+          <div className="mt-6">
+            <p className="mb-2 text-sm font-semibold text-neutral-500">
+              Skills
+            </p>
+
+            {profile.skills?.length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {profile.skills.map((skill: string, index: number) => (
+                  <Badge key={index} variant="default" className="capitalize">
+                    {skill}
+                  </Badge>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                No skills added yet
+              </p>
+            )}
+          </div>
+
           {/* Certificates */}
           <div className="mt-6">
             <p className="mb-2 text-sm font-semibold text-neutral-500">

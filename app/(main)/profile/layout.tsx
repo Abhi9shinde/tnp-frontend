@@ -9,8 +9,8 @@ import { cn } from "@/lib/utils";
 const tabs = [
   { label: "Overview", href: "/profile/overview" },
   { label: "Profile", href: "/profile/editProfile" },
-  { label: "Experience", href: "/profile/experience" },
-  { label: "Education", href: "/profile/education" },
+  { label: "Education", href: "/profile/editEducation" },
+  { label: "Experience", href: "/profile/editExperience" },
   { label: "Projects", href: "/profile/projects" },
   { label: "Skills", href: "/profile/skills" },
   { label: "Certifications", href: "/profile/certifications" },

@@ -167,6 +167,9 @@ export default function EditSocial() {
       },
       cancel: {
         label: "Cancel",
+        onClick: () => {
+          toast.dismiss();
+        },
       },
     });
   };

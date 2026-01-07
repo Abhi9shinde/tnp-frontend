@@ -161,6 +161,9 @@ export default function EditExperience() {
       },
       cancel: {
         label: "Cancel",
+        onClick: () => {
+          toast.dismiss();
+        },
       },
     });
   };

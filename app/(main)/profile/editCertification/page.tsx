@@ -146,6 +146,9 @@ export default function EditCertification() {
       },
       cancel: {
         label: "Cancel",
+        onClick: () => {
+          toast.dismiss();
+        },
       },
     });
   };

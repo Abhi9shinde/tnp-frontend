@@ -149,6 +149,9 @@ export default function EditProject() {
       },
       cancel: {
         label: "Cancel",
+        onClick: () => {
+          toast.dismiss();
+        },
       },
     });
   };

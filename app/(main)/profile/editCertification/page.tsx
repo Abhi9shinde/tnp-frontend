@@ -5,7 +5,6 @@ import Container from "@/components/Container";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textArea";
 import { useStudentProfile } from "@/hooks/useStudentProfile";
 import axios from "axios";
 import {
@@ -18,41 +17,46 @@ import {
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 
-type InternshipForm = {
+type CertificateForm = {
   id?: string;
-  company: string;
-  role: string;
-  duration: string;
-  description: string;
+  title: string;
+  organization: string;
+  issueDate: string;
+  expiryDate?: string;
+  credentialId?: string;
+  credentialUrl: string;
   isNew?: boolean;
   isEditing?: boolean;
 };
 
-export default function EditExperience() {
+export default function EditCertification() {
   const { data, isLoading, error } = useStudentProfile();
-  const internships = data?.profile?.internships || [];
-  const queryClient = useQueryClient();
+  const certificates = data?.profile?.certifications || [];
 
-  const [items, setItems] = useState<InternshipForm[]>([]);
+  const [items, setItems] = useState<CertificateForm[]>([]);
   const [savingId, setSavingId] = useState<string | null>(null);
+
+  const queryClient = useQueryClient();
 
   /* Prefill */
   useEffect(() => {
     setItems(
-      internships.map((i: any) => ({
-        id: i.id,
-        company: i.company,
-        role: i.role,
-        duration: i.duration,
-        description: i.description,
+      certificates.map((c: any) => ({
+        id: c.id,
+        title: c.title,
+        organization: c.organization,
+        issueDate: c.issueDate?.slice(0, 10),
+        expiryDate: c.expiryDate?.slice(0, 10) || "",
+        credentialId: c.credentialId || "",
+        credentialUrl: c.credentialUrl,
         isEditing: false,
       }))
     );
-  }, [internships]);
+  }, [certificates]);
 
   const updateField = (
     index: number,
-    field: keyof InternshipForm,
+    field: keyof CertificateForm,
     value: string
   ) => {
     setItems((prev) => {
@@ -62,100 +66,81 @@ export default function EditExperience() {
     });
   };
 
-  const enableEdit = (index: number) => {
+  const toggleEdit = (index: number, value: boolean) => {
     setItems((prev) => {
       const copy = [...prev];
-      copy[index].isEditing = true;
+      copy[index].isEditing = value;
       return copy;
     });
   };
 
-  const cancelEdit = (index: number) => {
-    if (items[index].isNew) {
-      setItems((prev) => prev.filter((_, i) => i !== index));
-      return;
-    }
-
-    setItems((prev) => {
-      const copy = [...prev];
-      copy[index] = {
-        ...internships[index],
-        isEditing: false,
-      };
-      return copy;
-    });
-  };
-
+  /* Add new */
   const addNew = () => {
     setItems((prev) => [
       ...prev,
       {
-        company: "",
-        role: "",
-        duration: "",
-        description: "",
+        title: "",
+        organization: "",
+        issueDate: "",
+        expiryDate: "",
+        credentialId: "",
+        credentialUrl: "",
         isNew: true,
         isEditing: true,
       },
     ]);
   };
 
-  const saveInternship = async (item: InternshipForm, index: number) => {
+  /* Save */
+  const saveCertificate = async (item: CertificateForm) => {
     setSavingId(item.id || "new");
 
     try {
       if (item.isNew) {
-        await axios.post("/api/my-proxy/api/v1/student/addInternship", {
-          company: item.company,
-          role: item.role,
-          duration: item.duration,
-          description: item.description,
-        });
-        toast.success("Experience added");
+        await axios.post("/api/my-proxy/api/v1/student/addCertificate", item);
+        toast.success("Certificate added successfully");
       } else {
-        await axios.put(`/api/my-proxy/api/v1/student/internship/${item.id}`, {
-          company: item.company,
-          role: item.role,
-          duration: item.duration,
-          description: item.description,
-        });
-        toast.success("Experience updated");
+        await axios.put(
+          `/api/my-proxy/api/v1/student/certificate/${item.id}`,
+          item
+        );
+        toast.success("Certificate updated successfully");
       }
 
       await queryClient.invalidateQueries({
         queryKey: ["student-profile"],
       });
     } catch (err: any) {
-      toast.error(err.response?.data?.error || "Failed to save internship");
+      toast.error(err.response?.data?.error || "Failed to save certificate");
     } finally {
       setSavingId(null);
     }
   };
 
-  const deleteInternship = async (item: InternshipForm) => {
+  /* Delete */
+  const deleteCertificate = async (item: CertificateForm) => {
     if (!item.id) {
       setItems((prev) => prev.filter((i) => i !== item));
       return;
     }
 
-    toast.warning("Delete Experience?", {
+    toast.warning("Delete this certificate?", {
       description: "This action cannot be undone.",
       action: {
         label: "Delete",
         onClick: async () => {
           try {
             await axios.delete(
-              `/api/my-proxy/api/v1/student/internship/${item.id}`
+              `/api/my-proxy/api/v1/student/certificate/${item.id}`
             );
+            toast.success("Certificate deleted successfully");
             await queryClient.invalidateQueries({
               queryKey: ["student-profile"],
             });
-            toast.success("Internship deleted");
           } catch (err: any) {
             toast.error(
-              err.response?.data?.error || "Failed to delete internship"
+              err.response?.data?.error || "Failed to delete certificate"
             );
-            return;
           }
         },
       },
@@ -166,94 +151,114 @@ export default function EditExperience() {
   };
 
   if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>Failed to load internships</p>;
+  if (error) return <p>Failed to load certificates</p>;
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Edit experience</h1>
+      <h1 className="text-2xl font-bold">Edit certifications</h1>
 
       <Container className="rounded-xl border !border-gray-300 py-6 px-8 max-w-4xl space-y-8">
+        {items.length === 0 && (
+          <p className="text-sm text-muted-foreground">
+            No certifications added yet
+          </p>
+        )}
+
         {items.map((item, index) => (
           <div
             key={item.id || index}
-            className="rounded-lg border border-border p-4 space-y-4"
+            className="rounded-lg border border-border bg-background p-4 space-y-4"
           >
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <Label>Company</Label>
+                <Label>Title</Label>
                 <Input
                   disabled={!item.isEditing}
-                  value={item.company}
-                  onChange={(e) =>
-                    updateField(index, "company", e.target.value)
-                  }
-                  required
+                  value={item.title}
+                  onChange={(e) => updateField(index, "title", e.target.value)}
                 />
               </div>
 
               <div>
-                <Label>Role</Label>
+                <Label>Organization</Label>
                 <Input
                   disabled={!item.isEditing}
-                  value={item.role}
-                  onChange={(e) => updateField(index, "role", e.target.value)}
-                  required
+                  value={item.organization}
+                  onChange={(e) =>
+                    updateField(index, "organization", e.target.value)
+                  }
                 />
               </div>
 
               <div>
-                <Label>Duration</Label>
+                <Label>Issue Date</Label>
                 <Input
+                  type="date"
                   disabled={!item.isEditing}
-                  value={item.duration}
+                  value={item.issueDate}
                   onChange={(e) =>
-                    updateField(index, "duration", e.target.value)
+                    updateField(index, "issueDate", e.target.value)
                   }
-                  required
+                />
+              </div>
+
+              <div>
+                <Label>Expiry Date (optional)</Label>
+                <Input
+                  type="date"
+                  disabled={!item.isEditing}
+                  value={item.expiryDate}
+                  onChange={(e) =>
+                    updateField(index, "expiryDate", e.target.value)
+                  }
                 />
               </div>
             </div>
+
             <div>
-              <Label>Description</Label>
-              <Textarea
+              <Label>Credential URL</Label>
+              <Input
                 disabled={!item.isEditing}
-                value={item.description}
+                value={item.credentialUrl}
                 onChange={(e) =>
-                  updateField(index, "description", e.target.value)
+                  updateField(index, "credentialUrl", e.target.value)
                 }
-                required
               />
             </div>
 
-            {/* Actions */}
-            <div className="flex justify-between items-center pt-2">
+            <div className="flex items-center justify-between pt-2">
               <Button
                 variant="ghost"
                 className="text-red-500"
-                onClick={() => deleteInternship(item)}
+                onClick={() => deleteCertificate(item)}
               >
                 <IconTrash className="h-4 w-4 mr-1" />
                 Delete
               </Button>
 
               {!item.isEditing ? (
-                <Button variant="ghost" onClick={() => enableEdit(index)}>
-                  <IconPencil className="h-4 w-4 mr-1" />
-                  Edit
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  onClick={() => toggleEdit(index, true)}
+                >
+                  <IconPencil className="h-4 w-4" />
                 </Button>
               ) : (
                 <div className="flex gap-2">
-                  <Button variant="ghost" onClick={() => cancelEdit(index)}>
-                    <IconX className="h-4 w-4 mr-1" />
-                    Cancel
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    onClick={() => toggleEdit(index, false)}
+                  >
+                    <IconX className="h-4 w-4" />
                   </Button>
 
                   <Button
-                    onClick={() => saveInternship(item, index)}
+                    onClick={() => saveCertificate(item)}
                     disabled={savingId === (item.id || "new")}
                   >
-                    <IconCheck className="h-4 w-4 mr-1" />
-                    Save
+                    {savingId === (item.id || "new") ? "Saving..." : "Save"}
                   </Button>
                 </div>
               )}
@@ -263,7 +268,7 @@ export default function EditExperience() {
 
         <Button className="w-full" onClick={addNew}>
           <IconPlus className="h-4 w-4 mr-2" />
-          Add internship
+          Add certificate
         </Button>
       </Container>
     </div>

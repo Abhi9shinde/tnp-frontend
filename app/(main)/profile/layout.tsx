@@ -11,9 +11,10 @@ const tabs = [
   { label: "Profile", href: "/profile/editProfile" },
   { label: "Education", href: "/profile/editEducation" },
   { label: "Experience", href: "/profile/editExperience" },
-  { label: "Projects", href: "/profile/projects" },
-  { label: "Skills", href: "/profile/skills" },
-  { label: "Certifications", href: "/profile/certifications" },
+  { label: "Projects", href: "/profile/editProject" },
+  { label: "Skills", href: "/profile/editSkill" },
+  { label: "Certifications", href: "/profile/editCertification" },
+  { label: "Socials", href: "/profile/editSocial" },
 ];
 
 const ProfileLayout = ({ children }: { children: React.ReactNode }) => {

@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/providers/theme-provider";
 import { auth0 } from "@/lib/auth0";
 import { SessionProvider } from "@/providers/session-provider";
 import { QueryProvider } from "@/providers/query-provider";
+import { Toaster, toast } from "sonner";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -33,7 +34,9 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           <SessionProvider session={session}>
-            <QueryProvider>{children}</QueryProvider>
+            <QueryProvider>
+              <Toaster position="top-right" /> {children}
+            </QueryProvider>
           </SessionProvider>
         </ThemeProvider>
       </body>

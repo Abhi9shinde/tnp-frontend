@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
+import { toast } from "sonner";
 import { useStudentProfile } from "@/hooks/useStudentProfile";
 import axios from "axios";
 
@@ -70,10 +70,11 @@ export default function EditEducation() {
         cgpa: Number(formData.cgpa),
         backlogs: Number(formData.backlogs),
       });
-
       setMessage("Education details saved successfully");
+      toast.success("Education details saved successfully");
     } catch (err: any) {
       setMessage(err.response?.data?.error || "Failed to save education");
+      toast.error(err.response?.data?.error || "Failed to save education");
     } finally {
       setSaving(false);
     }

@@ -3,17 +3,27 @@
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Posting } from "@/lib/types";
-import { Building, IndianRupee, Briefcase, Calendar, Check, X } from "lucide-react";
+import {
+  Building,
+  IndianRupee,
+  Briefcase,
+  Calendar,
+  CheckCircle2,
+  XCircle,
+  GraduationCap,
+  Percent,
+  AlertCircle
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge";
 
 interface PostingDetailsDialogProps {
   posting: Posting | null;
@@ -54,9 +64,6 @@ export function PostingDetailsDialog({
 }: PostingDetailsDialogProps) {
   const [eligibility, setEligibility] = useState<EligibilityCriteria | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  
-  // Student data for comparison (ideally fetched from API)
   const [studentEducation, setStudentEducation] = useState<StudentEducation | null>(null);
   const [isEligible, setIsEligible] = useState<boolean>(false);
   const [ineligibilityReasons, setIneligibilityReasons] = useState<string[]>([]);
@@ -65,19 +72,17 @@ export function PostingDetailsDialog({
   useEffect(() => {
     if (isOpen && posting) {
       fetchEligibility(posting.id);
-      fetchStudentData(); 
+      fetchStudentData();
     } else {
-        // Reset state when closed
-        setEligibility(null);
-        setError(null);
-        setIneligibilityReasons([]);
-        setIsEligible(false);
+      setEligibility(null);
+      setIneligibilityReasons([]);
+      setIsEligible(false);
     }
   }, [isOpen, posting]);
 
   useEffect(() => {
     if (eligibility && studentEducation) {
-        checkEligibility(eligibility, studentEducation);
+      checkEligibility(eligibility, studentEducation);
     }
   }, [eligibility, studentEducation]);
 
@@ -86,64 +91,58 @@ export function PostingDetailsDialog({
       setLoading(true);
       const response = await axios.get<EligibilityCriteria>(`/api/my-proxy/api/v1/admin/getEligibilityCriteria/${jobId}`);
       if (response.data) {
-          setEligibility(response.data);
-      } else {
-        console.warn("Eligibility data is empty/null");
+        setEligibility(response.data);
       }
     } catch (err) {
       console.error("Failed to fetch eligibility criteria:", err);
-      // Don't show error to user immediately, just log it. Data might be missing.
     } finally {
       setLoading(false);
     }
   };
 
   const fetchStudentData = async () => {
-       try {
-           setStudentLoading(true);
-            const response = await axios.get<{ education: StudentEducation }>('/api/my-proxy/api/v1/student/education'); 
-            console.log("Student Education Response:", response.data.education?.branch);
-            setStudentEducation(response.data.education);
-       } catch (err) {
-           console.error("Failed to fetch student education:", err);
-           // If 404, maybe student hasn't filled education?
-       } finally {
-           setStudentLoading(false);
-       }
+    try {
+      setStudentLoading(true);
+      const response = await axios.get<{ education: StudentEducation }>('/api/my-proxy/api/v1/student/education');
+      setStudentEducation(response.data.education);
+    } catch (err) {
+      console.error("Failed to fetch student education:", err);
+    } finally {
+      setStudentLoading(false);
+    }
   };
 
   const checkEligibility = (criteria: EligibilityCriteria, student: StudentEducation) => {
-      const reasons: string[] = [];
-      
-      if (student.cgpa < criteria.minCGPA) {
-          reasons.push(`CGPA is ${student.cgpa}, required ${criteria.minCGPA}`);
-      }
-      
-      if (student.tenthPercent < criteria.minTenth) {
-          reasons.push(`10th % is ${student.tenthPercent}, required ${criteria.minTenth}`);
-      }
-      
-      if (student.twelfthPercent < criteria.minTwelfth) {
-          reasons.push(`12th % is ${student.twelfthPercent}, required ${criteria.minTwelfth}`);
-      }
-      
-      if (student.backlogs > criteria.maxBacklogs) {
-           reasons.push(`Backlogs: ${student.backlogs}, max allowed ${criteria.maxBacklogs}`);
-      }
-      
-      // Check if student branch is in allowed branches
-      if (criteria.allowedBranches && criteria.allowedBranches.length > 0) {
-          const isAllowed = criteria.allowedBranches.some(branch => 
-              student.branch.toLowerCase().includes(branch.toLowerCase()) || branch === "All"
-          );
-          
-          if (!isAllowed) {
-               reasons.push(`Branch mismatch. Allowed: ${criteria.allowedBranches.join(", ")}`); 
-          }
-      }
+    const reasons: string[] = [];
 
-      setIneligibilityReasons(reasons);
-      setIsEligible(reasons.length === 0);
+    if (student.cgpa < criteria.minCGPA) {
+      reasons.push(`Minimum CGPA required is ${criteria.minCGPA}`);
+    }
+
+    if (student.tenthPercent < criteria.minTenth) {
+      reasons.push(`Minimum 10th % required is ${criteria.minTenth}`);
+    }
+
+    if (student.twelfthPercent < criteria.minTwelfth) {
+      reasons.push(`Minimum 12th % required is ${criteria.minTwelfth}`);
+    }
+
+    if (student.backlogs > criteria.maxBacklogs) {
+      reasons.push(`Max allowed backlogs is ${criteria.maxBacklogs}`);
+    }
+
+    if (criteria.allowedBranches && criteria.allowedBranches.length > 0) {
+      const isAllowed = criteria.allowedBranches.some(branch =>
+        student.branch.toLowerCase().includes(branch.toLowerCase()) || branch === "All"
+      );
+
+      if (!isAllowed) {
+        reasons.push(`Role not open for ${student.branch} students`);
+      }
+    }
+
+    setIneligibilityReasons(reasons);
+    setIsEligible(reasons.length === 0);
   };
 
   const deadlineDate = posting ? new Date(posting.deadline).toLocaleDateString("en-US", {
@@ -156,88 +155,124 @@ export function PostingDetailsDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">{posting.role}</DialogTitle>
-          <DialogDescription className="text-base flex items-center gap-2 mt-2">
-            <Building className="w-4 h-4" />
-            <span className="font-medium text-foreground">{posting.company}</span>
-          </DialogDescription>
-        </DialogHeader>
+      <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-hidden flex flex-col p-0 gap-0">
         
-        <div className="space-y-6 py-4">
-          <div className="grid grid-cols-2 gap-4">
-             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Briefcase className="w-4 h-4 text-primary" />
-                <span>{posting.companyInfo}</span>
-             </div>
-             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Calendar className="w-4 h-4 text-primary" />
-                <span>Deadline: {deadlineDate}</span>
-             </div>
-             <div className="flex items-center gap-2 font-medium">
-                <IndianRupee className="w-4 h-4 text-green-600 shrink-0" />
-                <span className="break-words text-right">{posting.ctc}</span>
-             </div>
+        {/* Header Section */}
+        <DialogHeader className="p-6 pb-4 border-b bg-muted/20">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
+            <div className="space-y-1">
+              <DialogTitle className="text-2xl font-bold text-primary">{posting.role}</DialogTitle>
+              <div className="flex items-center gap-2 text-muted-foreground font-medium">
+                <Building className="w-4 h-4" />
+                <span>{posting.company}</span>
+                <span className="hidden sm:inline text-muted-foreground/50">•</span>
+                <span className="text-sm font-normal sm:ml-0 flex items-center gap-1">
+                  <Briefcase className="w-3.5 h-3.5" />
+                  {posting.companyInfo}
+                </span>
+              </div>
+            </div>
+            
+            <div className="flex flex-wrap gap-2 sm:flex-col sm:items-end sm:gap-1">
+               <Badge variant="secondary" className="text-sm font-semibold px-2 py-1 flex items-center gap-1 bg-green-50 text-green-700 hover:bg-green-50 border-green-200">
+                  <IndianRupee className="w-3.5 h-3.5" />
+                  {posting.ctc}
+               </Badge>
+               <Badge variant="outline" className="text-xs font-normal flex items-center gap-1 text-muted-foreground">
+                  <Calendar className="w-3 h-3" />
+                  Deadline: {deadlineDate}
+               </Badge>
+            </div>
           </div>
+        </DialogHeader>
 
-          <div className="space-y-2">
-            <h3 className="font-semibold text-lg">Job Description</h3>
-            <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
+        {/* Scrollable Content */}
+        <div className="overflow-y-auto p-6 space-y-8 flex-1">
+          
+          {/* Job Description */}
+          <div className="space-y-3">
+            <h3 className="font-semibold text-lg flex items-center gap-2">
+              Job Description
+            </h3>
+            <div className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap bg-muted/30 p-4 rounded-lg border border-border/50">
               {posting.description}
-            </p>
+            </div>
           </div>
 
-          <div className="space-y-2 border-t pt-4">
-            <h3 className="font-semibold text-lg">Eligibility Criteria</h3>
+          {/* Eligibility Section */}
+          <div className="space-y-4">
+            <h3 className="font-semibold text-lg flex items-center gap-2">
+              Eligibility Criteria
+            </h3>
+            
             {loading ? (
-                 <div className="space-y-2">
-                     <Skeleton className="h-4 w-3/4" />
-                     <Skeleton className="h-4 w-1/2" />
-                 </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {[1, 2, 3, 4].map((i) => (
+                  <Skeleton key={i} className="h-20 w-full rounded-lg" />
+                ))}
+              </div>
             ) : eligibility ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm bg-muted/50 p-4 rounded-lg">
-                    <div className="flex justify-between">
-                        <span className="text-muted-foreground">Min CGPA:</span>
-                        <span className="font-medium">{eligibility.minCGPA}</span>
-                    </div>
-                    <div className="flex justify-between">
-                        <span className="text-muted-foreground">10th Percentage:</span>
-                        <span className="font-medium">{eligibility.minTenth}%</span>
-                    </div>
-                    <div className="flex justify-between">
-                        <span className="text-muted-foreground">12th Percentage:</span>
-                        <span className="font-medium">{eligibility.minTwelfth}%</span>
-                    </div>
-                    <div className="flex justify-between">
-                        <span className="text-muted-foreground">Max Backlogs:</span>
-                        <span className="font-medium">{eligibility.maxBacklogs}</span>
-                    </div>
-                    <div className="flex justify-between md:col-span-2">
-                         <span className="text-muted-foreground">Eligible Courses:</span>
-                         <span className="font-medium">{eligibility.allowedBranches.join(", ")}</span>
-                    </div>
-                </div>
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                 <EligibilityCard 
+                    label="Minimum CGPA" 
+                    value={eligibility.minCGPA} 
+                    icon={<GraduationCap className="w-4 h-4" />}
+                    status={studentEducation ? (studentEducation.cgpa >= eligibility.minCGPA ? 'pass' : 'fail') : 'neutral'}
+                    studentValue={studentEducation?.cgpa.toString()}
+                 />
+                 <EligibilityCard 
+                    label="10th Percentage" 
+                    value={`${eligibility.minTenth}%`} 
+                    icon={<Percent className="w-4 h-4" />}
+                    status={studentEducation ? (studentEducation.tenthPercent >= eligibility.minTenth ? 'pass' : 'fail') : 'neutral'}
+                    studentValue={studentEducation ? `${studentEducation.tenthPercent}%` : undefined}
+                 />
+                 <EligibilityCard 
+                    label="12th Percentage" 
+                    value={`${eligibility.minTwelfth}%`} 
+                    icon={<Percent className="w-4 h-4" />}
+                    status={studentEducation ? (studentEducation.twelfthPercent >= eligibility.minTwelfth ? 'pass' : 'fail') : 'neutral'}
+                    studentValue={studentEducation ? `${studentEducation.twelfthPercent}%` : undefined}
+                 />
+                 <EligibilityCard 
+                    label="Max Backlogs" 
+                    value={eligibility.maxBacklogs} 
+                    icon={<AlertCircle className="w-4 h-4" />}
+                    status={studentEducation ? (studentEducation.backlogs <= eligibility.maxBacklogs ? 'pass' : 'fail') : 'neutral'}
+                    studentValue={studentEducation?.backlogs.toString()}
+                 />
+               </div>
             ) : (
-                <p className="text-sm text-muted-foreground italic">
-                    {posting.eligibility || "No specific eligibility criteria defined."}
-                </p>
+                <div className="bg-muted p-4 rounded-lg text-sm text-center italic text-muted-foreground">
+                   {posting.eligibility || "No specific automated criteria provided."}
+                </div>
             )}
             
-            {/* Eligibility Status */}
-            {studentEducation && eligibility && (
-                <div className={`mt-4 p-3 rounded-md flex items-start gap-2 ${isEligible ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"}`}>
+            {/* Overall Eligibility Status Message */}
+             {studentEducation && eligibility && (
+                <div className={`mt-4 p-4 rounded-lg border flex items-start gap-3 transition-colors ${
+                    isEligible 
+                    ? "bg-green-50/50 border-green-200 text-green-800" 
+                    : "bg-destructive/5 border-destructive/20 text-destructive"
+                }`}>
                     {isEligible ? (
                         <>
-                             <Check className="w-5 h-5 shrink-0" />
-                             <span className="font-medium">You are eligible for this role!</span>
+                             <div className="p-1 bg-green-100 rounded-full shrink-0">
+                                <CheckCircle2 className="w-5 h-5 text-green-600" />
+                             </div>
+                             <div>
+                                <h4 className="font-semibold">You are eligible!</h4>
+                                <p className="text-sm opacity-90">Your profile meets all the requirements for this role.</p>
+                             </div>
                         </>
                     ) : (
                         <>
-                             <X className="w-5 h-5 shrink-0" />
-                             <div className="space-y-1">
-                                <span className="font-medium">You are not eligible:</span>
-                                <ul className="list-disc pl-4 text-xs space-y-1">
+                             <div className="p-1 bg-red-100 rounded-full shrink-0">
+                                <XCircle className="w-5 h-5 text-red-600" />
+                             </div>
+                             <div>
+                                <h4 className="font-semibold">Not Eligible</h4>
+                                <ul className="list-disc list-inside text-sm mt-1 opacity-90 space-y-0.5">
                                     {ineligibilityReasons.map((reason, i) => (
                                         <li key={i}>{reason}</li>
                                     ))}
@@ -247,29 +282,69 @@ export function PostingDetailsDialog({
                     )}
                 </div>
             )}
-            
-            {!studentEducation && !studentLoading && (
-                 <p className="text-xs text-amber-600 mt-2">
-                    * Could not verify eligibility (Education details missing or API unavailable).
-                 </p>
-            )}
           </div>
-
         </div>
-        
-        <DialogFooter className="gap-2 sm:gap-0">
-          <Button variant="outline" onClick={onClose}>
-            Close
-          </Button>
-          <Button 
-            onClick={() => alert("Application submitted successfully!")} 
-            disabled={loading || studentLoading || (!!eligibility && !!studentEducation && !isEligible)}
-            className={isEligible ? "bg-primary" : ""}
-          >
-            {isEligible ? "Apply Now" : "Not Eligible"}
-          </Button>
+
+        {/* Footer */}
+        <DialogFooter className="p-6 pt-2 border-t bg-muted/20 sm:justify-between items-center">
+             <div className="text-xs text-muted-foreground hidden sm:block">
+                {studentLoading && "Checking eligibility..."}
+             </div>
+             <div className="flex gap-3 w-full sm:w-auto">
+                <Button variant="outline" onClick={onClose} className="flex-1 sm:flex-none">
+                    Close
+                </Button>
+                <Button 
+                    onClick={() => alert("Application submitted successfully!")} 
+                    disabled={loading || studentLoading || (!!eligibility && !!studentEducation && !isEligible)}
+                    className={`flex-1 sm:flex-none font-semibold ${isEligible ? "bg-primary hover:bg-primary/90" : ""}`}
+                >
+                    {isEligible ? "Apply Now" : "Not Eligible"}
+                </Button>
+            </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
+}
+
+function EligibilityCard({ label, value, icon, status, studentValue }: { 
+    label: string, 
+    value: string | number, 
+    icon: React.ReactNode, 
+    status: 'pass' | 'fail' | 'neutral',
+    studentValue?: string
+}) {
+    const statusColors = {
+        pass: "bg-green-50 border-green-100 text-green-700",
+        fail: "bg-red-50 border-red-100 text-red-700",
+        neutral: "bg-card border-border text-foreground"
+    };
+
+    const iconColors = {
+        pass: "text-green-600",
+        fail: "text-red-500",
+        neutral: "text-muted-foreground"
+    };
+
+    return (
+        <div className={`p-4 rounded-lg border transition-all ${statusColors[status]} flex items-center justify-between`}>
+            <div className="space-y-1">
+                <span className="text-xs font-medium opacity-70 uppercase tracking-wider">{label}</span>
+                <div className="text-xl font-bold flex items-baseline gap-1">
+                    {value}
+                </div>
+                {studentValue && status !== 'neutral' && (
+                     <div className="text-xs opacity-80 flex items-center gap-1">
+                        Your score: <span className="font-semibold">{studentValue}</span>
+                     </div>
+                )}
+            </div>
+            <div className={`p-2 rounded-full bg-white/50 backdrop-blur-sm ${iconColors[status]}`}>
+                {status === 'pass' ? <CheckCircle2 className="w-5 h-5" /> : 
+                 status === 'fail' ? <XCircle className="w-5 h-5" /> : 
+                 icon}
+            </div>
+        </div>
+    );
 }

@@ -254,7 +254,7 @@ export default function EditSocial() {
                   <SelectContent>
                     {PLATFORMS.filter(
                       (p) =>
-                        !usedPlatforms.includes(p.value) ||
+                        !usedPlatforms.includes(p.value as Platform) ||
                         p.value === item.platform
                     ).map((p) => (
                       <SelectItem key={p.value} value={p.value}>

@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
+import { BRANCHES as branches } from "@/constants/branches";
 const surfaceStyles = "rounded-2xl border border-border bg-card p-6 shadow-sm";
 
 interface EducationFormData {
@@ -44,15 +44,7 @@ const initialFormState: EducationFormData = {
   backlogs: 0,
 };
 
-const BRANCHES = [
-  "Mechanical",
-  "Electronics and Communication",
-  "Computer Science",
-  "Information Technology",
-  "AIDS",
-  "AIML",
-  "ECE",
-];
+const BRANCHES = branches; //from constants
 
 const Education = () => {
   const [formData, setFormData] = useState<EducationFormData>(initialFormState);

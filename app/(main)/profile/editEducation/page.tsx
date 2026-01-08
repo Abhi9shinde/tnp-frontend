@@ -15,10 +15,14 @@ import {
 import { toast } from "sonner";
 import { useStudentProfile } from "@/hooks/useStudentProfile";
 import axios from "axios";
+import { BRANCHES as branches } from "@/constants/branches";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function EditEducation() {
   const { data, isLoading, error } = useStudentProfile();
   const education = data?.profile?.education;
+
+  const queryClient = useQueryClient();
 
   const [formData, setFormData] = useState({
     branch: "",
@@ -49,12 +53,12 @@ export default function EditEducation() {
       tenthYear: education.tenthYear?.toString() || "",
       twelfthPercent: education.twelfthPercent?.toString() || "",
       twelfthYear: education.twelfthYear?.toString() || "",
-      diplomaPercent: education.diplomaPercent?.toString() || "N/A",
-      diplomaYear: education.diplomaYear?.toString() || "N/A",
+      diplomaPercent: education.diplomaPercent?.toString() || "",
+      diplomaYear: education.diplomaYear?.toString() || "",
     });
   }, [education]);
 
-  const updateField = (field: string, value: string) => {
+  const updateField = (field: keyof typeof formData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -65,11 +69,30 @@ export default function EditEducation() {
 
     try {
       await axios.put("/api/my-proxy/api/v1/student/editEducation", {
-        ...formData,
+        branch: formData.branch,
         enrollmentYear: Number(formData.enrollmentYear),
         cgpa: Number(formData.cgpa),
         backlogs: Number(formData.backlogs),
+        tenthPercent: formData.tenthPercent
+          ? Number(formData.tenthPercent)
+          : null,
+        tenthYear: formData.tenthYear ? Number(formData.tenthYear) : null,
+
+        twelfthPercent: formData.twelfthPercent
+          ? Number(formData.twelfthPercent)
+          : null,
+        twelfthYear: formData.twelfthYear ? Number(formData.twelfthYear) : null,
+
+        diplomaPercent: formData.diplomaPercent
+          ? Number(formData.diplomaPercent)
+          : null,
+        diplomaYear: formData.diplomaYear ? Number(formData.diplomaYear) : null,
       });
+
+      await queryClient.invalidateQueries({
+        queryKey: ["student-profile"],
+      });
+
       setMessage("Education details saved successfully");
       toast.success("Education details saved successfully");
     } catch (err: any) {
@@ -80,15 +103,7 @@ export default function EditEducation() {
     }
   };
 
-  const BRANCHES = [
-    "Mechanical",
-    "Electronics and Communication",
-    "Computer Science",
-    "Information Technology",
-    "AIDS",
-    "AIML",
-    "ECE",
-  ];
+  const BRANCHES = branches; //from constants
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Failed to load education</p>;

@@ -7,6 +7,8 @@ import {
   IconBrandGithub,
   IconBrandLinkedin,
   IconBrandLeetcode,
+  IconBrandMedium,
+  IconLink,
   IconArrowNarrowRight,
   IconExternalLink,
 } from "@tabler/icons-react";
@@ -75,7 +77,11 @@ export default function OverviewPage() {
                       <IconBrandLinkedin className="h-4 w-4" />
                     ) : social.platform == "leetcode" ? (
                       <IconBrandLeetcode className="h-4 w-4" />
-                    ) : null}
+                    ) : social.platform == "medium" ? (
+                      <IconBrandMedium className="h-4 w-4" />
+                    ) : (
+                      <IconLink className="h-4 w-4" />
+                    )}
                   </Button>
                 </Link>
               ))}

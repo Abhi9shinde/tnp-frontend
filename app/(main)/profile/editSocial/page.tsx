@@ -23,26 +23,30 @@ import {
 } from "@tabler/icons-react";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
+import {
+  PLATFORMS as platforms,
+  PLATFORM_URL_REGEX as platform_regex,
+} from "@/constants/socials";
 
 type SocialForm = {
   id?: string;
-  platform: "github" | "linkedin" | "leetcode" | "";
+  platform:
+    | "github"
+    | "linkedin"
+    | "leetcode"
+    | "kaggle"
+    | "hackster"
+    | "grabCad"
+    | "medium"
+    | "";
   url: string;
   isNew?: boolean;
   isEditing?: boolean;
 };
 
-const PLATFORMS = [
-  { label: "GitHub", value: "github" },
-  { label: "LinkedIn", value: "linkedin" },
-  { label: "LeetCode", value: "leetcode" },
-];
+const PLATFORMS = platforms; //from constants
 
-const PLATFORM_URL_REGEX: Record<string, RegExp> = {
-  github: /^https?:\/\/(www\.)?github\.com\/[A-Za-z0-9_-]+\/?$/,
-  linkedin: /^https?:\/\/(www\.)?linkedin\.com\/in\/[A-Za-z0-9_-]+\/?$/,
-  leetcode: /^https?:\/\/(www\.)?leetcode\.com\/[A-Za-z0-9_-]+\/?$/,
-};
+const PLATFORM_URL_REGEX: Record<string, RegExp> = platform_regex; //from constants
 
 export default function EditSocial() {
   const { data, isLoading, error } = useStudentProfile();

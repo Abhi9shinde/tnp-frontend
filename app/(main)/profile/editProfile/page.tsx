@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
+import { toast } from "sonner";
 
 export default function EditProfilePage() {
   const { data, isLoading, error } = useStudentProfile();
@@ -53,8 +54,10 @@ export default function EditProfilePage() {
     try {
       await axios.put("/api/my-proxy/api/v1/student/editProfile", formData);
       setMessage("Profile updated successfully");
+      toast.success("Profile updated successfully");
     } catch (err: any) {
       setMessage(err.response?.data?.error || "Update failed");
+      toast.error(err.response?.data?.error || "Update failed");
     } finally {
       setSaving(false);
     }

@@ -5,6 +5,7 @@ import Container from "@/components/Container";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textArea";
 import { useStudentProfile } from "@/hooks/useStudentProfile";
 import axios from "axios";
 import {
@@ -14,6 +15,7 @@ import {
   IconCheck,
   IconX,
 } from "@tabler/icons-react";
+import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 
 type InternshipForm = {
@@ -109,6 +111,7 @@ export default function EditExperience() {
           duration: item.duration,
           description: item.description,
         });
+        toast.success("Experience added");
       } else {
         await axios.put(`/api/my-proxy/api/v1/student/internship/${item.id}`, {
           company: item.company,
@@ -116,13 +119,14 @@ export default function EditExperience() {
           duration: item.duration,
           description: item.description,
         });
+        toast.success("Experience updated");
       }
 
       await queryClient.invalidateQueries({
         queryKey: ["student-profile"],
       });
     } catch (err: any) {
-      alert(err.response?.data?.error || "Failed to save internship");
+      toast.error(err.response?.data?.error || "Failed to save internship");
     } finally {
       setSavingId(null);
     }
@@ -134,11 +138,33 @@ export default function EditExperience() {
       return;
     }
 
-    if (!confirm("Delete this internship?")) return;
-
-    await axios.delete(`/api/my-proxy/api/v1/student/internship/${item.id}`);
-    await queryClient.invalidateQueries({
-      queryKey: ["student-profile"],
+    toast.warning("Delete Experience?", {
+      description: "This action cannot be undone.",
+      action: {
+        label: "Delete",
+        onClick: async () => {
+          try {
+            await axios.delete(
+              `/api/my-proxy/api/v1/student/internship/${item.id}`
+            );
+            await queryClient.invalidateQueries({
+              queryKey: ["student-profile"],
+            });
+            toast.success("Internship deleted");
+          } catch (err: any) {
+            toast.error(
+              err.response?.data?.error || "Failed to delete internship"
+            );
+            return;
+          }
+        },
+      },
+      cancel: {
+        label: "Cancel",
+        onClick: () => {
+          toast.dismiss();
+        },
+      },
     });
   };
 
@@ -164,6 +190,7 @@ export default function EditExperience() {
                   onChange={(e) =>
                     updateField(index, "company", e.target.value)
                   }
+                  required
                 />
               </div>
 
@@ -173,6 +200,7 @@ export default function EditExperience() {
                   disabled={!item.isEditing}
                   value={item.role}
                   onChange={(e) => updateField(index, "role", e.target.value)}
+                  required
                 />
               </div>
 
@@ -184,18 +212,19 @@ export default function EditExperience() {
                   onChange={(e) =>
                     updateField(index, "duration", e.target.value)
                   }
+                  required
                 />
               </div>
             </div>
-
             <div>
               <Label>Description</Label>
-              <Input
+              <Textarea
                 disabled={!item.isEditing}
                 value={item.description}
                 onChange={(e) =>
                   updateField(index, "description", e.target.value)
                 }
+                required
               />
             </div>
 

@@ -14,15 +14,16 @@ import {
   IconCheck,
   IconX,
 } from "@tabler/icons-react";
+import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 
-type CertificationForm = {
+type CertificateForm = {
   id?: string;
-  name: string;
-  issuingOrganization: string;
+  title: string;
+  organization: string;
   issueDate: string;
-  expirationDate: string;
-  credentialId: string;
+  expiryDate?: string;
+  credentialId?: string;
   credentialUrl: string;
   isNew?: boolean;
   isEditing?: boolean;
@@ -30,31 +31,32 @@ type CertificationForm = {
 
 export default function EditCertification() {
   const { data, isLoading, error } = useStudentProfile();
-  const certifications = data?.profile?.certifications || [];
-  const queryClient = useQueryClient();
+  const certificates = data?.profile?.certifications || [];
 
-  const [items, setItems] = useState<CertificationForm[]>([]);
+  const [items, setItems] = useState<CertificateForm[]>([]);
   const [savingId, setSavingId] = useState<string | null>(null);
+
+  const queryClient = useQueryClient();
 
   /* Prefill */
   useEffect(() => {
     setItems(
-      certifications.map((c: any) => ({
+      certificates.map((c: any) => ({
         id: c.id,
-        name: c.name,
-        issuingOrganization: c.issuingOrganization,
-        issueDate: c.issueDate ? new Date(c.issueDate).toISOString().split('T')[0] : "",
-        expirationDate: c.expirationDate ? new Date(c.expirationDate).toISOString().split('T')[0] : "",
+        title: c.title,
+        organization: c.organization,
+        issueDate: c.issueDate?.slice(0, 10),
+        expiryDate: c.expiryDate?.slice(0, 10) || "",
         credentialId: c.credentialId || "",
-        credentialUrl: c.credentialUrl || "",
+        credentialUrl: c.credentialUrl,
         isEditing: false,
       }))
     );
-  }, [certifications]);
+  }, [certificates]);
 
   const updateField = (
     index: number,
-    field: keyof CertificationForm,
+    field: keyof CertificateForm,
     value: string
   ) => {
     setItems((prev) => {
@@ -64,45 +66,23 @@ export default function EditCertification() {
     });
   };
 
-  const enableEdit = (index: number) => {
+  const toggleEdit = (index: number, value: boolean) => {
     setItems((prev) => {
       const copy = [...prev];
-      copy[index].isEditing = true;
+      copy[index].isEditing = value;
       return copy;
     });
   };
 
-  const cancelEdit = (index: number) => {
-    if (items[index].isNew) {
-      setItems((prev) => prev.filter((_, i) => i !== index));
-      return;
-    }
-
-    const original = certifications.find((c: any) => c.id === items[index].id);
-    setItems((prev) => {
-      const copy = [...prev];
-      copy[index] = {
-        id: original.id,
-        name: original.name,
-        issuingOrganization: original.issuingOrganization,
-        issueDate: original.issueDate ? new Date(original.issueDate).toISOString().split('T')[0] : "",
-        expirationDate: original.expirationDate ? new Date(original.expirationDate).toISOString().split('T')[0] : "",
-        credentialId: original.credentialId || "",
-        credentialUrl: original.credentialUrl || "",
-        isEditing: false,
-      };
-      return copy;
-    });
-  };
-
+  /* Add new */
   const addNew = () => {
     setItems((prev) => [
       ...prev,
       {
-        name: "",
-        issuingOrganization: "",
+        title: "",
+        organization: "",
         issueDate: "",
-        expirationDate: "",
+        expiryDate: "",
         credentialId: "",
         credentialUrl: "",
         isNew: true,
@@ -111,91 +91,105 @@ export default function EditCertification() {
     ]);
   };
 
-  const saveCertification = async (item: CertificationForm, index: number) => {
+  /* Save */
+  const saveCertificate = async (item: CertificateForm) => {
     setSavingId(item.id || "new");
 
     try {
       if (item.isNew) {
-        await axios.post("/api/my-proxy/api/v1/student/addCertification", {
-            name: item.name,
-            issuingOrganization: item.issuingOrganization,
-            issueDate: item.issueDate ? new Date(item.issueDate).toISOString() : null,
-            expirationDate: item.expirationDate ? new Date(item.expirationDate).toISOString() : null,
-            credentialId: item.credentialId,
-            credentialUrl: item.credentialUrl,
-        });
+        await axios.post("/api/my-proxy/api/v1/student/addCertificate", item);
+        toast.success("Certificate added successfully");
       } else {
-        await axios.put(`/api/my-proxy/api/v1/student/certification/${item.id}`, {
-            name: item.name,
-            issuingOrganization: item.issuingOrganization,
-            issueDate: item.issueDate ? new Date(item.issueDate).toISOString() : null,
-            expirationDate: item.expirationDate ? new Date(item.expirationDate).toISOString() : null,
-            credentialId: item.credentialId,
-            credentialUrl: item.credentialUrl,
-        });
+        await axios.put(
+          `/api/my-proxy/api/v1/student/certificate/${item.id}`,
+          item
+        );
+        toast.success("Certificate updated successfully");
       }
 
       await queryClient.invalidateQueries({
         queryKey: ["student-profile"],
       });
     } catch (err: any) {
-      alert(err.response?.data?.error || "Failed to save certification");
+      toast.error(err.response?.data?.error || "Failed to save certificate");
     } finally {
       setSavingId(null);
     }
   };
 
-  const deleteCertification = async (item: CertificationForm) => {
+  /* Delete */
+  const deleteCertificate = async (item: CertificateForm) => {
     if (!item.id) {
       setItems((prev) => prev.filter((i) => i !== item));
       return;
     }
 
-    if (!confirm("Delete this certification?")) return;
-
-    try {
-        await axios.delete(`/api/my-proxy/api/v1/student/certification/${item.id}`);
-        await queryClient.invalidateQueries({
-        queryKey: ["student-profile"],
-        });
-    } catch (err: any) {
-        alert(err.response?.data?.error || "Failed to delete certification");
-    }
+    toast.warning("Delete this certificate?", {
+      description: "This action cannot be undone.",
+      action: {
+        label: "Delete",
+        onClick: async () => {
+          try {
+            await axios.delete(
+              `/api/my-proxy/api/v1/student/certificate/${item.id}`
+            );
+            toast.success("Certificate deleted successfully");
+            await queryClient.invalidateQueries({
+              queryKey: ["student-profile"],
+            });
+          } catch (err: any) {
+            toast.error(
+              err.response?.data?.error || "Failed to delete certificate"
+            );
+          }
+        },
+      },
+      cancel: {
+        label: "Cancel",
+        onClick: () => {
+          toast.dismiss();
+        },
+      },
+    });
   };
 
   if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>Failed to load certifications</p>;
+  if (error) return <p>Failed to load certificates</p>;
 
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">Edit certifications</h1>
 
       <Container className="rounded-xl border !border-gray-300 py-6 px-8 max-w-4xl space-y-8">
+        {items.length === 0 && (
+          <p className="text-sm text-muted-foreground">
+            No certifications added yet
+          </p>
+        )}
+
         {items.map((item, index) => (
           <div
             key={item.id || index}
-            className="rounded-lg border border-border p-4 space-y-4"
+            className="rounded-lg border border-border bg-background p-4 space-y-4"
           >
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <Label>Name</Label>
+                <Label>Title</Label>
                 <Input
                   disabled={!item.isEditing}
-                  value={item.name}
-                  onChange={(e) =>
-                    updateField(index, "name", e.target.value)
-                  }
-                  required
+                  value={item.title}
+                  onChange={(e) => updateField(index, "title", e.target.value)}
                 />
               </div>
 
               <div>
-                <Label>Issuing Organization</Label>
+                <Label>Organization</Label>
                 <Input
                   disabled={!item.isEditing}
-                  value={item.issuingOrganization}
-                  onChange={(e) => updateField(index, "issuingOrganization", e.target.value)}
-                  required
+                  value={item.organization}
+                  onChange={(e) =>
+                    updateField(index, "organization", e.target.value)
+                  }
                 />
               </div>
 
@@ -208,74 +202,66 @@ export default function EditCertification() {
                   onChange={(e) =>
                     updateField(index, "issueDate", e.target.value)
                   }
-                  required
                 />
               </div>
 
               <div>
-                <Label>Expiration Date</Label>
+                <Label>Expiry Date (optional)</Label>
                 <Input
                   type="date"
                   disabled={!item.isEditing}
-                  value={item.expirationDate}
+                  value={item.expiryDate}
                   onChange={(e) =>
-                    updateField(index, "expirationDate", e.target.value)
-                  }
-                />
-              </div>
-              
-              <div>
-                <Label>Credential ID</Label>
-                <Input
-                  disabled={!item.isEditing}
-                  value={item.credentialId}
-                  onChange={(e) =>
-                    updateField(index, "credentialId", e.target.value)
-                  }
-                />
-              </div>
-
-              <div>
-                <Label>Credential URL</Label>
-                <Input
-                  disabled={!item.isEditing}
-                  value={item.credentialUrl}
-                  onChange={(e) =>
-                    updateField(index, "credentialUrl", e.target.value)
+                    updateField(index, "expiryDate", e.target.value)
                   }
                 />
               </div>
             </div>
 
-            {/* Actions */}
-            <div className="flex justify-between items-center pt-2">
+            <div>
+              <Label>Credential URL</Label>
+              <Input
+                disabled={!item.isEditing}
+                value={item.credentialUrl}
+                onChange={(e) =>
+                  updateField(index, "credentialUrl", e.target.value)
+                }
+              />
+            </div>
+
+            <div className="flex items-center justify-between pt-2">
               <Button
                 variant="ghost"
                 className="text-red-500"
-                onClick={() => deleteCertification(item)}
+                onClick={() => deleteCertificate(item)}
               >
                 <IconTrash className="h-4 w-4 mr-1" />
                 Delete
               </Button>
 
               {!item.isEditing ? (
-                <Button variant="ghost" onClick={() => enableEdit(index)}>
-                  <IconPencil className="h-4 w-4 mr-1" />
-                  Edit
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  onClick={() => toggleEdit(index, true)}
+                >
+                  <IconPencil className="h-4 w-4" />
                 </Button>
               ) : (
                 <div className="flex gap-2">
-                  <Button variant="ghost" onClick={() => cancelEdit(index)}>
-                    <IconX className="h-4 w-4 mr-1" />
-                    Cancel
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    onClick={() => toggleEdit(index, false)}
+                  >
+                    <IconX className="h-4 w-4" />
                   </Button>
 
                   <Button
-                    onClick={() => saveCertification(item, index)}
+                    onClick={() => saveCertificate(item)}
                     disabled={savingId === (item.id || "new")}
                   >
-                    <IconCheck className="h-4 w-4 mr-1" />
-                    Save
+                    {savingId === (item.id || "new") ? "Saving..." : "Save"}
                   </Button>
                 </div>
               )}
@@ -285,7 +271,7 @@ export default function EditCertification() {
 
         <Button className="w-full" onClick={addNew}>
           <IconPlus className="h-4 w-4 mr-2" />
-          Add certification
+          Add certificate
         </Button>
       </Container>
     </div>

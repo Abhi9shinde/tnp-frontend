@@ -6,7 +6,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { BRANCHES as branches } from "@/constants/branches";
 const surfaceStyles = "rounded-2xl border border-border bg-card p-6 shadow-sm";
 
 interface EducationFormData {
@@ -36,6 +43,8 @@ const initialFormState: EducationFormData = {
   diplomaYear: 0,
   backlogs: 0,
 };
+
+const BRANCHES = branches; //from constants
 
 const Education = () => {
   const [formData, setFormData] = useState<EducationFormData>(initialFormState);
@@ -126,17 +135,24 @@ const Education = () => {
               </p>
             </div>
             <div className="mt-6 grid gap-5 sm:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="branch">Branch</Label>
-                <Input
-                  id="branch"
-                  placeholder="Computer Engineering"
-                  value={formData.branch}
-                  onChange={(event) =>
-                    updateField("branch", event.target.value)
-                  }
-                  required
-                />
+              <div>
+                <Label>Branch</Label>
+                <Select
+                  key={formData.branch}
+                  value={formData.branch || undefined}
+                  onValueChange={(value) => updateField("branch", value)}
+                >
+                  <SelectTrigger className="">
+                    <SelectValue placeholder="Select your branch" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {BRANCHES.map((branch) => (
+                      <SelectItem key={branch} value={branch}>
+                        {branch}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="enrollmentYear">Enrollment Year</Label>
@@ -319,7 +335,7 @@ const Education = () => {
             <div className="flex justify-center gap-3 sm:justify-end">
               <Button
                 type="button"
-                variant="outline"
+                variant="ghost"
                 onClick={() => {
                   setFormData(initialFormState);
                   setStatusMessage("");

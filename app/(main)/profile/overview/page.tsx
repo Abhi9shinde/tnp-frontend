@@ -6,6 +6,9 @@ import { useStudentProfile } from "@/hooks/useStudentProfile";
 import {
   IconBrandGithub,
   IconBrandLinkedin,
+  IconBrandLeetcode,
+  IconBrandMedium,
+  IconLink,
   IconArrowNarrowRight,
   IconExternalLink,
 } from "@tabler/icons-react";
@@ -68,10 +71,16 @@ export default function OverviewPage() {
                     key={social.id}
                     className="capitalize"
                   >
-                    {social.platform == "Github" ? (
+                    {social.platform == "github" ? (
                       <IconBrandGithub className="h-4 w-4" />
-                    ) : (
+                    ) : social.platform == "linkedin" ? (
                       <IconBrandLinkedin className="h-4 w-4" />
+                    ) : social.platform == "leetcode" ? (
+                      <IconBrandLeetcode className="h-4 w-4" />
+                    ) : social.platform == "medium" ? (
+                      <IconBrandMedium className="h-4 w-4" />
+                    ) : (
+                      <IconLink className="h-4 w-4" />
                     )}
                   </Button>
                 </Link>
@@ -182,17 +191,19 @@ export default function OverviewPage() {
                     <div className="text-sm">
                       <p className="font-semibold">
                         {project.title}{" "}
-                        <span>
-                          <Link href={project.link}>
-                            <Button
-                              size="icon-sm"
-                              variant="ghost"
-                              className="capitalize"
-                            >
-                              <IconExternalLink className="" />
-                            </Button>
-                          </Link>
-                        </span>
+                        {project.link && (
+                          <span>
+                            <Link href={project.link}>
+                              <Button
+                                size="icon-sm"
+                                variant="ghost"
+                                className="capitalize"
+                              >
+                                <IconExternalLink className="" />
+                              </Button>
+                            </Link>
+                          </span>
+                        )}
                       </p>
                       <p className="text-neutral-500 font-medium pl-3 pt-0.5"></p>
                       {project.description && (

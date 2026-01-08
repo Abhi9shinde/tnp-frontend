@@ -10,7 +10,7 @@ const AccessDenied = () => {
 
     const timer = setTimeout(() => {
       router.push("/");
-    }, 5000);
+    }, 5500);
 
     return () => clearTimeout(timer);
   }, [router]);

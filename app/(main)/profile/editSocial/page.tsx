@@ -28,17 +28,19 @@ import {
   PLATFORM_URL_REGEX as platform_regex,
 } from "@/constants/socials";
 
+type Platform =
+  | "github"
+  | "linkedin"
+  | "leetcode"
+  | "kaggle"
+  | "hackster"
+  | "grabCad"
+  | "medium"
+  | "";
+
 type SocialForm = {
   id?: string;
-  platform:
-    | "github"
-    | "linkedin"
-    | "leetcode"
-    | "kaggle"
-    | "hackster"
-    | "grabCad"
-    | "medium"
-    | "";
+  platform: Platform;
   url: string;
   isNew?: boolean;
   isEditing?: boolean;
@@ -46,7 +48,11 @@ type SocialForm = {
 
 const PLATFORMS = platforms; //from constants
 
-const PLATFORM_URL_REGEX: Record<string, RegExp> = platform_regex; //from constants
+const PLATFORM_URL_REGEX: Record<
+  Exclude<Platform, "">,
+  RegExp
+> = platform_regex;
+//from constants
 
 export default function EditSocial() {
   const { data, isLoading, error } = useStudentProfile();
@@ -296,7 +302,7 @@ export default function EditSocial() {
   );
 }
 
-function validateSocialUrl(platform: string, url: string): string | null {
+function validateSocialUrl(platform: Platform, url: string): string | null {
   if (!platform) return "Select platform first";
 
   const regex = PLATFORM_URL_REGEX[platform];

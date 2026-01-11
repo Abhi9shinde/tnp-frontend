@@ -155,35 +155,49 @@ export function PostingDetailsDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-hidden flex flex-col p-0 gap-0">
+      <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-hidden flex flex-col p-0 gap-0 [&>button]:hidden">
         
         {/* Header Section */}
-        <DialogHeader className="p-6 pb-4 border-b bg-muted/20">
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
-            <div className="space-y-1">
-              <DialogTitle className="text-2xl font-bold text-primary">{posting.role}</DialogTitle>
-              <div className="flex items-center gap-2 text-muted-foreground font-medium">
-                <Building className="w-4 h-4" />
-                <span>{posting.company}</span>
-                <span className="hidden sm:inline text-muted-foreground/50">•</span>
-                <span className="text-sm font-normal sm:ml-0 flex items-center gap-1">
-                  <Briefcase className="w-3.5 h-3.5" />
-                  {posting.companyInfo}
-                </span>
+        <DialogHeader className="p-0 border-b bg-muted/20 text-left">
+           <div className="flex flex-col gap-4 p-6 pb-4">
+              <div className="flex justify-between items-start gap-4">
+                 <div className="space-y-1.5 flex-1">
+                    <DialogTitle className="text-2xl font-bold text-primary leading-tight">{posting.role}</DialogTitle>
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-muted-foreground font-medium">
+                       <span className="flex items-center gap-1.5">
+                          <Building className="w-4 h-4" />
+                          {posting.company}
+                       </span>
+                       <span className="hidden sm:inline text-muted-foreground/40 text-xs">•</span>
+                       <span className="text-sm font-normal flex items-center gap-1.5">
+                          <Briefcase className="w-4 h-4" />
+                          {posting.companyInfo}
+                       </span>
+                    </div>
+                 </div>
+                 
+                 <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="h-8 w-8 rounded-full hover:bg-black/10 -mr-2 -mt-2 shrink-0" 
+                    onClick={onClose}
+                 >
+                    <XCircle className="w-6 h-6 text-muted-foreground/70 hover:text-foreground transition-colors" />
+                    <span className="sr-only">Close</span>
+                 </Button>
               </div>
-            </div>
-            
-            <div className="flex flex-wrap gap-2 sm:flex-col sm:items-end sm:gap-1">
-               <Badge variant="secondary" className="text-sm font-semibold px-2 py-1 flex items-center gap-1 bg-green-50 text-green-700 hover:bg-green-50 border-green-200">
-                  <IndianRupee className="w-3.5 h-3.5" />
-                  {posting.ctc}
-               </Badge>
-               <Badge variant="outline" className="text-xs font-normal flex items-center gap-1 text-muted-foreground">
-                  <Calendar className="w-3 h-3" />
-                  Deadline: {deadlineDate}
-               </Badge>
-            </div>
-          </div>
+
+              <div className="flex flex-wrap gap-2">
+                 <Badge variant="secondary" className="px-2.5 py-1 text-sm font-semibold flex items-center gap-1.5 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border-emerald-200">
+                    <IndianRupee className="w-3.5 h-3.5" />
+                    {posting.ctc}
+                 </Badge>
+                 <Badge variant="outline" className="px-2.5 py-1 text-xs font-medium flex items-center gap-1.5 bg-background shadow-sm">
+                    <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
+                    Deadline: <span className="text-foreground font-semibold">{deadlineDate}</span>
+                 </Badge>
+              </div>
+           </div>
         </DialogHeader>
 
         {/* Scrollable Content */}

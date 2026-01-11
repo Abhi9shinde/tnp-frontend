@@ -68,6 +68,7 @@ export function PostingDetailsDialog({
   const [isEligible, setIsEligible] = useState<boolean>(false);
   const [ineligibilityReasons, setIneligibilityReasons] = useState<string[]>([]);
   const [studentLoading, setStudentLoading] = useState(false);
+  const [isApplying, setIsApplying] = useState(false);
 
   useEffect(() => {
     if (isOpen && posting) {
@@ -143,6 +144,23 @@ export function PostingDetailsDialog({
 
     setIneligibilityReasons(reasons);
     setIsEligible(reasons.length === 0);
+  };
+
+  const handleApply = async () => {
+    if (!posting) return;
+    try {
+      setIsApplying(true);
+      console.log("Posting ID:", posting.id);
+      await axios.post("/api/my-proxy/api/v1/student/applyforJob", {
+        postingId: posting.id,
+      });
+      alert("Applied successfully");
+    } catch (error) {
+       console.error("Error applying for job:", error);
+       alert("Failed to apply");
+    } finally {
+      setIsApplying(false);
+    }
   };
 
   const deadlineDate = posting ? new Date(posting.deadline).toLocaleDateString("en-US", {
@@ -309,11 +327,11 @@ export function PostingDetailsDialog({
                     Close
                 </Button>
                 <Button 
-                    onClick={() => alert("Application submitted successfully!")} 
-                    disabled={loading || studentLoading || (!!eligibility && !!studentEducation && !isEligible)}
+                    onClick={handleApply} 
+                    disabled={loading || studentLoading || isApplying || (!!eligibility && !!studentEducation && !isEligible)}
                     className={`flex-1 sm:flex-none font-semibold ${isEligible ? "bg-primary hover:bg-primary/90" : ""}`}
                 >
-                    {isEligible ? "Apply Now" : "Not Eligible"}
+                    {isApplying ? "Applying..." : (isEligible ? "Apply Now" : "Not Eligible")}
                 </Button>
             </div>
         </DialogFooter>

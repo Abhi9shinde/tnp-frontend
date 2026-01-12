@@ -20,7 +20,11 @@ interface PostingCardProps {
   onViewDetails: (posting: Posting) => void;
 }
 
-export function PostingCard({ posting, index, onViewDetails }: PostingCardProps) {
+export function PostingCard({
+  posting,
+  index,
+  onViewDetails,
+}: PostingCardProps) {
   const deadlineDate = new Date(posting.deadline).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
@@ -45,7 +49,10 @@ export function PostingCard({ posting, index, onViewDetails }: PostingCardProps)
                 {posting.company}
               </CardDescription>
             </div>
-            <Badge variant="secondary" className="font-semibold shrink-0 max-w-[45%] whitespace-normal text-right">
+            <Badge
+              variant="secondary"
+              className="font-semibold shrink-0 max-w-[45%] whitespace-normal text-right"
+            >
               {posting.ctc}
             </Badge>
           </div>
@@ -54,20 +61,25 @@ export function PostingCard({ posting, index, onViewDetails }: PostingCardProps)
           <p className="text-sm text-muted-foreground line-clamp-3">
             {posting.description}
           </p>
-          
+
           <div className="grid grid-cols-2 gap-2 text-sm text-muted-foreground">
-             <div className="flex items-center gap-2">
-                <Briefcase className="w-4 h-4 text-primary/70" />
-                <span className="truncate" title={posting.companyInfo}>{posting.companyInfo}</span>
-             </div>
-             <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-primary/70" />
-                <span>Deadline: {deadlineDate}</span>
-             </div>
+            <div className="flex items-center gap-2">
+              <Briefcase className="w-4 h-4 text-primary/70" />
+              <span className="truncate" title={posting.companyInfo}>
+                {posting.companyInfo}
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Calendar className="w-4 h-4 text-primary/70" />
+              <span>Deadline: {deadlineDate}</span>
+            </div>
           </div>
         </CardContent>
         <CardFooter>
-          <Button className="w-full font-semibold group" onClick={() => onViewDetails(posting)}>
+          <Button
+            className="w-full font-semibold group"
+            onClick={() => onViewDetails(posting)}
+          >
             View Details
           </Button>
         </CardFooter>

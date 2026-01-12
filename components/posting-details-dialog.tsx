@@ -70,12 +70,15 @@ export function PostingDetailsDialog({
   const { data, isLoading, error } = useStudentProfile();
 
   const [isApplying, setIsApplying] = useState(false);
+  const [hasApplied, setHasApplied] = useState(false);
 
   useEffect(() => {
     if (isOpen && posting) {
       fetchEligibility(posting.id);
+      checkApplicationStatus(posting.id);
     } else {
       setEligibility(null);
+      setHasApplied(false);
     }
   }, [isOpen, posting]);
 
@@ -94,6 +97,20 @@ export function PostingDetailsDialog({
       console.error("Failed to fetch eligibility criteria:", err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const checkApplicationStatus = async (jobId: string) => {
+    try {
+        const response = await axios.get(`/api/my-proxy/api/v1/student/applications`);
+        const applications = response.data;
+        console.log(applications);
+        const application = applications.find((app: any) => app.jobPostId === posting?.id);
+        if(application) {
+          setHasApplied(true);
+        }
+    } catch (error) {
+        console.log("Could not verify application status", error);
     }
   };
 
@@ -156,6 +173,7 @@ export function PostingDetailsDialog({
         postingId: posting.id,
       });
       alert("Applied successfully");
+      setHasApplied(true);
     } catch (error) {
       console.error("Error applying for job:", error);
       alert("Failed to apply");
@@ -410,14 +428,17 @@ export function PostingDetailsDialog({
                 loading ||
                 isLoading ||
                 isApplying ||
+                hasApplied ||
                 (!!eligibility && !!studentEducation && !isEligible)
               }
               className={`flex-1 sm:flex-none font-semibold ${
-                isEligible ? "bg-primary hover:bg-primary/90" : ""
+                isEligible || hasApplied ? "bg-primary hover:bg-primary/90" : ""
               }`}
             >
               {isApplying
                 ? "Applying..."
+                : hasApplied
+                ? "Applied"
                 : isEligible
                 ? "Apply Now"
                 : "Not Eligible"}

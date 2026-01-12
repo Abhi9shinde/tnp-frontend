@@ -12,8 +12,14 @@ import {
 import NavBar from "@/components/navbar";
 import { SidebarBackdrop } from "@/components/sidebar-backdrop";
 import Container from "@/components/Container";
+import Link from "next/link";
 
-const sidebarPlaceholders = ["Option 1", "Option 2", "Option 3", "Option 4"];
+const sidebarPlaceholders = [
+  {
+    label: "Postings",
+    href: "/postings",
+  },
+];
 
 export default async function MainLayout({
   children,
@@ -35,11 +41,11 @@ export default async function MainLayout({
             <SidebarGroupLabel>Quick Access</SidebarGroupLabel>
             <SidebarMenu>
               {sidebarPlaceholders.map((label) => (
-                <SidebarMenuItem key={label}>
+                <SidebarMenuItem key={label.label}>
                   <SidebarMenuButton asChild>
-                    <button type="button" className="w-full justify-start">
-                      {label}
-                    </button>
+                    <Link href={label.href} className="w-full justify-start">
+                      <button type="button">{label.label}</button>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

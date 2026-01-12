@@ -20,7 +20,7 @@ import {
   Percent,
   AlertCircle,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
@@ -67,33 +67,19 @@ export function PostingDetailsDialog({
     null
   );
   const [loading, setLoading] = useState(false);
-  const [studentEducation, setStudentEducation] =
-    useState<StudentEducation | null>(null);
   const { data, isLoading, error } = useStudentProfile();
 
-  const [isEligible, setIsEligible] = useState<boolean>(false);
-  const [ineligibilityReasons, setIneligibilityReasons] = useState<string[]>(
-    []
-  );
-  const [studentLoading, setStudentLoading] = useState(false);
   const [isApplying, setIsApplying] = useState(false);
 
   useEffect(() => {
     if (isOpen && posting) {
       fetchEligibility(posting.id);
-      fetchStudentData();
     } else {
       setEligibility(null);
-      setIneligibilityReasons([]);
-      setIsEligible(false);
     }
   }, [isOpen, posting]);
 
-  useEffect(() => {
-    if (eligibility && studentEducation) {
-      checkEligibility(eligibility, studentEducation);
-    }
-  }, [eligibility, studentEducation]);
+  const studentEducation = data?.profile?.education ?? null;
 
   const fetchEligibility = async (jobId: string) => {
     try {
@@ -111,62 +97,55 @@ export function PostingDetailsDialog({
     }
   };
 
-  const fetchStudentData = async () => {
-    try {
-      setStudentLoading(true);
-      setStudentEducation(data.profile.education);
-    } catch (err) {
-      console.error("Failed to fetch student education:", err);
-    } finally {
-      setStudentLoading(false);
+  const eligibilityResult = useMemo(() => {
+    if (!eligibility || !studentEducation) {
+      return { isEligible: false, reasons: [] as string[] };
     }
-  };
 
-  const checkEligibility = (
-    criteria: EligibilityCriteria,
-    student: StudentEducation
-  ) => {
     const reasons: string[] = [];
 
-    if (student.cgpa < criteria.minCGPA) {
-      reasons.push(`Minimum CGPA required is ${criteria.minCGPA}`);
+    if (studentEducation.cgpa < eligibility.minCGPA) {
+      reasons.push(`Minimum CGPA required is ${eligibility.minCGPA}`);
     }
 
-    if (student.tenthPercent < criteria.minTenth) {
-      reasons.push(`Minimum 10th % required is ${criteria.minTenth}`);
+    if (studentEducation.tenthPercent < eligibility.minTenth) {
+      reasons.push(`Minimum 10th % required is ${eligibility.minTenth}`);
     }
 
     if (
-      student.twelfthPercent != 0 &&
-      student.twelfthPercent < criteria.minTwelfth
+      studentEducation.twelfthPercent
+        ? studentEducation.twelfthPercent < eligibility.minTwelfth
+        : studentEducation.diplomaPercent < eligibility.minDiploma
     ) {
-      reasons.push(`Minimum 12th % required is ${criteria.minTwelfth}`);
-    } else if (
-      student.twelfthPercent == 0 &&
-      student.diplomaPercent < criteria.minDiploma
-    ) {
-      reasons.push(`Minimum Diploma % required is ${criteria.minDiploma}`);
-    }
-
-    if (student.backlogs > criteria.maxBacklogs) {
-      reasons.push(`Max allowed backlogs is ${criteria.maxBacklogs}`);
-    }
-
-    if (criteria.allowedBranches && criteria.allowedBranches.length > 0) {
-      const isAllowed = criteria.allowedBranches.some(
-        (branch) =>
-          student.branch.toLowerCase().includes(branch.toLowerCase()) ||
-          branch === "All"
+      reasons.push(
+        studentEducation.twelfthPercent
+          ? `Minimum 12th % required is ${eligibility.minTwelfth}`
+          : `Minimum Diploma % required is ${eligibility.minDiploma}`
       );
-
-      if (!isAllowed) {
-        reasons.push(`Role not open for ${student.branch} students`);
-      }
     }
 
-    setIneligibilityReasons(reasons);
-    setIsEligible(reasons.length === 0);
-  };
+    if (studentEducation.backlogs > eligibility.maxBacklogs) {
+      reasons.push(`Max allowed backlogs is ${eligibility.maxBacklogs}`);
+    }
+
+    if (
+      eligibility.allowedBranches?.length &&
+      !eligibility.allowedBranches.some(
+        (b) =>
+          b === "All" ||
+          studentEducation.branch.toLowerCase().includes(b.toLowerCase())
+      )
+    ) {
+      reasons.push(`Role not open for ${studentEducation.branch} students`);
+    }
+
+    return {
+      isEligible: reasons.length === 0,
+      reasons,
+    };
+  }, [eligibility, studentEducation]);
+
+  const { isEligible, reasons: ineligibilityReasons } = eligibilityResult;
 
   const handleApply = async () => {
     if (!posting) return;
@@ -330,7 +309,11 @@ export function PostingDetailsDialog({
                 />
                 <EligibilityCard
                   label="Diploma Percentage"
-                  value={`${eligibility.minDiploma}%`}
+                  value={
+                    eligibility.minDiploma != null
+                      ? `${eligibility.minDiploma}%`
+                      : "N/A"
+                  }
                   icon={<Percent className="w-4 h-4" />}
                   status={
                     studentEducation
@@ -411,7 +394,7 @@ export function PostingDetailsDialog({
         {/* Footer */}
         <DialogFooter className="p-6 pt-2 border-t bg-muted/20 sm:justify-between items-center">
           <div className="text-xs text-muted-foreground hidden sm:block">
-            {studentLoading && "Checking eligibility..."}
+            {isLoading && "Checking eligibility..."}
           </div>
           <div className="flex gap-3 w-full sm:w-auto">
             <Button
@@ -425,7 +408,7 @@ export function PostingDetailsDialog({
               onClick={handleApply}
               disabled={
                 loading ||
-                studentLoading ||
+                isLoading ||
                 isApplying ||
                 (!!eligibility && !!studentEducation && !isEligible)
               }

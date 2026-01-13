@@ -16,7 +16,7 @@ import {
 import { SidebarBackdrop } from "@/components/sidebar-backdrop";
 import { useSession } from "@/providers/session-provider";
 import { useStudentProfile } from "@/hooks/useStudentProfile";
-import { useEffect, useState } from "react";
+import { ApplicationsSection } from "./applications-section";
 
 const sidebarPlaceholders = ["Option 1", "Option 2", "Option 3", "Option 4"];
 
@@ -118,7 +118,6 @@ export default function LandingPage() {
               </p>
 
               {/* Profile Info Display */}
-              {/* Profile Info Display */}
               {isLoading && (
                 <div className="mt-4 p-4 rounded-lg border border-border bg-card">
                   <p className="text-sm text-muted-foreground">
@@ -179,16 +178,7 @@ export default function LandingPage() {
                 </div>
               </div>
 
-              <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
-                <h2 className="text-lg font-semibold mb-4">
-                  Applications Applied
-                </h2>
-                <div className="space-y-2">
-                  <p className="text-sm text-muted-foreground">
-                    No applications yet
-                  </p>
-                </div>
-              </div>
+              <ApplicationsSection />
             </div>
           </div>
         </div>

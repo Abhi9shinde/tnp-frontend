@@ -1,15 +1,17 @@
 "use client";
 
 import React from "react";
-import { Link } from "lucide-react";
+
 import { useJobPostings } from "@/hooks/useJobPostings";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
+import { useRouter } from "next/navigation";
 
 export default function AdminDashboardComponent() {
   const { data: postings, isLoading } = useJobPostings();
+  const router = useRouter();
 
   // Placeholder stats - in a real app these would likely come from an API
   const stats = [
@@ -97,7 +99,7 @@ export default function AdminDashboardComponent() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {/* Post New Application - Hero Card */}
         <Card className="col-span-1 md:col-span-2 row-span-1 lg:row-span-1 bg-gradient-to-br from-primary to-purple-900 text-primary-foreground border-none overflow-hidden relative group">
-           <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
            <CardHeader>
             <CardTitle className="text-xl">Create New Job Posting</CardTitle>
             <CardDescription className="text-primary-foreground/80">
@@ -105,7 +107,7 @@ export default function AdminDashboardComponent() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button variant="secondary" className="w-full sm:w-auto font-semibold hover:bg-white/90">
+            <Button variant="secondary" className="w-full sm:w-auto font-semibold hover:bg-white/90" onClick={() => router.push("/admin/posting")}>
               Post Application
             </Button>
           </CardContent>

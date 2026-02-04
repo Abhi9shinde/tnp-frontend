@@ -5,7 +5,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
-
+import { BRANCHES as branches } from "@/constants/branches";
 import {
   Card,
   CardContent,
@@ -21,22 +21,39 @@ import { Button } from "@/components/ui/button";
 export default function Posting() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+
   const [formData, setFormData] = useState({
+    // Posting
     role: "",
     company: "",
     companyInfo: "",
     description: "",
     ctc: "",
     deadline: "",
+
+    // Eligibility
+    minCGPA: "",
+    minTenth: "",
+    minTwelfth: "",
+    minDiploma: "",
+    maxBacklogs: "",
+    passingYear: "",
+    allowedBranches: [] as string[],
   });
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const toggleBranch = (branch: string) => {
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      allowedBranches: prev.allowedBranches.includes(branch)
+        ? prev.allowedBranches.filter((b) => b !== branch)
+        : [...prev.allowedBranches, branch],
     }));
   };
 
@@ -44,101 +61,104 @@ export default function Posting() {
     e.preventDefault();
     setLoading(true);
 
-    // Basic validation
-    if (
-      !formData.role ||
-      !formData.company ||
-      !formData.description ||
-      !formData.ctc ||
-      !formData.deadline
-    ) {
-      toast.error("Please fill in all required fields");
-      setLoading(false);
-      return;
-    }
-
     try {
-      await axios.post("/api/my-proxy/api/v1/admin/addPostingDetails", {
-        ...formData,
-        // Ensure ctc is string if backend expects string, though input is already text
-        // Ensure deadline is in a format Date constructor can parse
-        deadline: new Date(formData.deadline).toISOString(),
+      // 1️Create Job Posting
+      await axios.post("/api/my-proxy/api/v1/admin/createJobWithEligibility", {
+        job: {
+          role: formData.role,
+          company: formData.company,
+          companyInfo: formData.companyInfo,
+          description: formData.description,
+          ctc: formData.ctc,
+          deadline: new Date(formData.deadline).toISOString(),
+        },
+        eligibility: {
+          minCGPA: Number(formData.minCGPA),
+          minTenth: Number(formData.minTenth),
+          minTwelfth: Number(formData.minTwelfth),
+          minDiploma: Number(formData.minDiploma),
+          maxBacklogs: Number(formData.maxBacklogs),
+          allowedBranches: formData.allowedBranches,
+          passingYear: Number(formData.passingYear),
+        },
       });
 
       toast.success("Job posting created successfully");
       router.push("/admin/dashboard");
-      // Optional: Reset form if staying on page
-      // setFormData({ role: "", company: "", ... });
     } catch (error: any) {
-      console.error("Error creating posting:", error);
-      const errorMessage =
-        error.response?.data?.error || "Failed to create job posting";
-      toast.error(errorMessage);
+      toast.error(
+        error.response?.data?.error || "Failed to create job posting",
+      );
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col gap-4 p-4 md:gap-8 md:p-8 max-w-4xl mx-auto w-full">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight md:text-3xl text-primary">
-          Create New Job Posting
-        </h1>
-      </div>
+    <div className="flex flex-col gap-8 p-4 md:p-8 max-w-5xl mx-auto w-full">
+      <h1 className="text-3xl font-bold tracking-tight text-primary">
+        Create Job Posting
+      </h1>
 
-      <Card className="border-border/50">
+      {/* Job Details */}
+      <Card>
         <CardHeader>
           <CardTitle>Job Details</CardTitle>
           <CardDescription>
-            Enter the details for the new placement drive. Make sure all information is accurate.
+            Basic information about the placement drive
           </CardDescription>
         </CardHeader>
+
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label htmlFor="role">Job Role <span className="text-destructive">*</span></Label>
+                <Label>
+                  Job Role <span className="text-destructive">*</span>
+                </Label>
                 <Input
-                  id="role"
                   name="role"
-                  placeholder="e.g. Software Engineer"
                   value={formData.role}
                   onChange={handleChange}
                   required
+                  placeholder="Enter Job Role"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="company">Company Name <span className="text-destructive">*</span></Label>
+                <Label>
+                  Company Name <span className="text-destructive">*</span>
+                </Label>
                 <Input
-                  id="company"
                   name="company"
-                  placeholder="e.g. Google"
                   value={formData.company}
                   onChange={handleChange}
                   required
+                  placeholder="Company Name"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="ctc">CTC (LPA) <span className="text-destructive">*</span></Label>
+                <Label>
+                  CTC (LPA) <span className="text-destructive">*</span>
+                </Label>
                 <Input
-                  id="ctc"
                   name="ctc"
-                  placeholder="e.g. 12"
                   value={formData.ctc}
                   onChange={handleChange}
                   required
+                  placeholder="CTC in Lakhs"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="deadline">Application Deadline <span className="text-destructive">*</span></Label>
+                <Label>
+                  Application Deadline{" "}
+                  <span className="text-destructive">*</span>
+                </Label>
                 <Input
-                  id="deadline"
+                  type="date"
                   name="deadline"
-                  type="datetime-local"
                   value={formData.deadline}
                   onChange={handleChange}
                   required
@@ -147,11 +167,9 @@ export default function Posting() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="companyInfo">Company Information</Label>
+              <Label>Company Information</Label>
               <Textarea
-                id="companyInfo"
                 name="companyInfo"
-                placeholder="Brief description about the company..."
                 value={formData.companyInfo}
                 onChange={handleChange}
                 className="min-h-[100px]"
@@ -159,11 +177,11 @@ export default function Posting() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description">Job Description <span className="text-destructive">*</span></Label>
+              <Label>
+                Job Description <span className="text-destructive">*</span>
+              </Label>
               <Textarea
-                id="description"
                 name="description"
-                placeholder="Detailed job responsibilities and requirements..."
                 value={formData.description}
                 onChange={handleChange}
                 className="min-h-[150px]"
@@ -171,10 +189,75 @@ export default function Posting() {
               />
             </div>
 
+            {/* Eligibility */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Eligibility Criteria</CardTitle>
+                <CardDescription>
+                  Academic requirements for applying
+                </CardDescription>
+              </CardHeader>
+
+              <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <InputField
+                  label="Minimum CGPA"
+                  name="minCGPA"
+                  onChange={handleChange}
+                />
+                <InputField
+                  label="Max Backlogs"
+                  name="maxBacklogs"
+                  onChange={handleChange}
+                />
+                <InputField
+                  label="Minimum 10th %"
+                  name="minTenth"
+                  onChange={handleChange}
+                />
+                <InputField
+                  label="Minimum 12th %"
+                  name="minTwelfth"
+                  onChange={handleChange}
+                />
+                <InputField
+                  label="Minimum Diploma %"
+                  name="minDiploma"
+                  onChange={handleChange}
+                />
+                <InputField
+                  label="Passing Year"
+                  name="passingYear"
+                  onChange={handleChange}
+                />
+
+                <div className="md:col-span-2 space-y-2">
+                  <Label>Allowed Branches</Label>
+                  <div className="flex flex-wrap gap-2">
+                    {branches.map((branch) => (
+                      <Button
+                        key={branch}
+                        type="button"
+                        size="sm"
+                        variant={
+                          formData.allowedBranches.includes(branch)
+                            ? "default"
+                            : "ghost"
+                        }
+                        onClick={() => toggleBranch(branch)}
+                      >
+                        {branch}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Actions */}
             <div className="flex justify-end gap-4">
               <Button
                 type="button"
-                variant="outline"
+                variant="ghost"
                 onClick={() => router.back()}
                 disabled={loading}
               >
@@ -188,6 +271,23 @@ export default function Posting() {
           </form>
         </CardContent>
       </Card>
+    </div>
+  );
+}
+
+function InputField({
+  label,
+  name,
+  onChange,
+}: {
+  label: string;
+  name: string;
+  onChange: React.ChangeEventHandler<HTMLInputElement>;
+}) {
+  return (
+    <div className="space-y-2">
+      <Label>{label}</Label>
+      <Input type="number" name={name} onChange={onChange} />
     </div>
   );
 }

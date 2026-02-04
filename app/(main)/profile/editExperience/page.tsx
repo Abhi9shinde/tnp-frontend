@@ -46,14 +46,14 @@ export default function EditExperience() {
         duration: i.duration,
         description: i.description,
         isEditing: false,
-      }))
+      })),
     );
   }, [internships]);
 
   const updateField = (
     index: number,
     field: keyof InternshipForm,
-    value: string
+    value: string,
   ) => {
     setItems((prev) => {
       const copy = [...prev];
@@ -145,7 +145,7 @@ export default function EditExperience() {
         onClick: async () => {
           try {
             await axios.delete(
-              `/api/my-proxy/api/v1/student/internship/${item.id}`
+              `/api/my-proxy/api/v1/student/internship/${item.id}`,
             );
             await queryClient.invalidateQueries({
               queryKey: ["student-profile"],
@@ -153,7 +153,7 @@ export default function EditExperience() {
             toast.success("Internship deleted");
           } catch (err: any) {
             toast.error(
-              err.response?.data?.error || "Failed to delete internship"
+              err.response?.data?.error || "Failed to delete internship",
             );
             return;
           }

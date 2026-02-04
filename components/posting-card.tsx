@@ -53,7 +53,7 @@ export function PostingCard({
               variant="secondary"
               className="font-semibold shrink-0 max-w-[45%] whitespace-normal text-right"
             >
-              {posting.ctc}
+              {posting.ctc} LPA
             </Badge>
           </div>
         </CardHeader>

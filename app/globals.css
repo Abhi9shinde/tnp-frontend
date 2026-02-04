@@ -136,34 +136,33 @@
 
   /* Pink/Dark Theme */
   --background: #FFFFFF;
-  --foreground: #000000;
+  --foreground: #0f172a;
 
   /* Pale Pink Forms */
-  --card: #FDF5F6;
-  --card-foreground: #000000;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
 
-  --popover: #FDF5F6;
-  --popover-foreground: #000000;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
 
   /* Dark Purple Buttons */
   --primary: #1E0E24;
   --primary-foreground: #FFFFFF;
 
-  --secondary: #FDF5F6;
-  --secondary-foreground: #000000;
+  --secondary: #f8fafc;
+  --secondary-foreground: #0f172a;
 
-  --muted: #FDF5F6;
-  --muted-foreground: #000000;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
 
-  --accent: #FDF5F6;
-  --accent-foreground: #000000;
+  --accent: #f1f5f9;
+  --accent-foreground: #0f172a;
 
-  --destructive: oklch(0.577 0.245 27.325);
+  --destructive: #dc2626;
 
-  --border: #1E0E24;
-  /* Using Dark Purple for borders to match buttons/theme */
-  --input: #1E0E24;
-  --ring: #1E0E24;
+  --border: #e2e8f0; /* slate-200 */
+  --input: #e2e8f0;
+  --ring: #2563eb;
 
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);

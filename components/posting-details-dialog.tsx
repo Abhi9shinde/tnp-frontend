@@ -64,7 +64,7 @@ export function PostingDetailsDialog({
   onClose,
 }: PostingDetailsDialogProps) {
   const [eligibility, setEligibility] = useState<EligibilityCriteria | null>(
-    null
+    null,
   );
   const [loading, setLoading] = useState(false);
   const { data, isLoading, error } = useStudentProfile();
@@ -88,7 +88,7 @@ export function PostingDetailsDialog({
     try {
       setLoading(true);
       const response = await axios.get<EligibilityCriteria>(
-        `/api/my-proxy/api/v1/admin/getEligibilityCriteria/${jobId}`
+        `/api/my-proxy/api/v1/admin/getEligibilityCriteria/${jobId}`,
       );
       if (response.data) {
         setEligibility(response.data);
@@ -102,15 +102,19 @@ export function PostingDetailsDialog({
 
   const checkApplicationStatus = async (jobId: string) => {
     try {
-        const response = await axios.get(`/api/my-proxy/api/v1/student/applications`);
-        const applications = response.data;
-        console.log(applications);
-        const application = applications.find((app: any) => app.jobPostId === posting?.id);
-        if(application) {
-          setHasApplied(true);
-        }
+      const response = await axios.get(
+        `/api/my-proxy/api/v1/student/applications`,
+      );
+      const applications = response.data;
+      console.log(applications);
+      const application = applications.find(
+        (app: any) => app.jobPostId === posting?.id,
+      );
+      if (application) {
+        setHasApplied(true);
+      }
     } catch (error) {
-        console.log("Could not verify application status", error);
+      console.log("Could not verify application status", error);
     }
   };
 
@@ -137,10 +141,17 @@ export function PostingDetailsDialog({
       reasons.push(
         studentEducation.twelfthPercent
           ? `Minimum 12th % required is ${eligibility.minTwelfth}`
-          : `Minimum Diploma % required is ${eligibility.minDiploma}`
+          : `Minimum Diploma % required is ${eligibility.minDiploma}`,
       );
     }
-
+    if (
+      eligibility.passingYear &&
+      studentEducation.passingYear !== eligibility.passingYear
+    ) {
+      reasons.push(
+        `Only ${eligibility.passingYear} batch students are eligible`,
+      );
+    }
     if (studentEducation.backlogs > eligibility.maxBacklogs) {
       reasons.push(`Max allowed backlogs is ${eligibility.maxBacklogs}`);
     }
@@ -150,7 +161,7 @@ export function PostingDetailsDialog({
       !eligibility.allowedBranches.some(
         (b) =>
           b === "All" ||
-          studentEducation.branch.toLowerCase().includes(b.toLowerCase())
+          studentEducation.branch.toLowerCase().includes(b.toLowerCase()),
       )
     ) {
       reasons.push(`Role not open for ${studentEducation.branch} students`);
@@ -235,7 +246,7 @@ export function PostingDetailsDialog({
                 className="px-2.5 py-1 text-sm font-semibold flex items-center gap-1.5 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border-emerald-200"
               >
                 <IndianRupee className="w-3.5 h-3.5" />
-                {posting.ctc}
+                {posting.ctc} LPA
               </Badge>
               <Badge
                 variant="outline"
@@ -438,10 +449,10 @@ export function PostingDetailsDialog({
               {isApplying
                 ? "Applying..."
                 : hasApplied
-                ? "Applied"
-                : isEligible
-                ? "Apply Now"
-                : "Not Eligible"}
+                  ? "Applied"
+                  : isEligible
+                    ? "Apply Now"
+                    : "Not Eligible"}
             </Button>
           </div>
         </DialogFooter>

@@ -47,7 +47,7 @@ export default function OnboardingProfilePage() {
     try {
       const response = await axios.post(
         "/api/my-proxy/api/v1/student/registerStudent",
-        formData
+        formData,
       );
 
       if (response.status === 200 || response.status === 201) {
@@ -61,7 +61,7 @@ export default function OnboardingProfilePage() {
         return;
       }
       setErrorMessage(
-        error.response?.data?.error || "Profile completion failed. Try again."
+        error.response?.data?.error || "Profile completion failed. Try again.",
       );
     } finally {
       setIsSubmitting(false);
@@ -94,7 +94,7 @@ export default function OnboardingProfilePage() {
                 <Label htmlFor="firstName">First Name</Label>
                 <Input
                   id="firstName"
-                  placeholder="Pranav"
+                  placeholder="First Name"
                   value={formData.firstName}
                   onChange={(event) =>
                     updateField("firstName", event.target.value)
@@ -106,7 +106,7 @@ export default function OnboardingProfilePage() {
                 <Label htmlFor="middleName">Middle Name</Label>
                 <Input
                   id="middleName"
-                  placeholder="Prakash"
+                  placeholder="Middle Name"
                   value={formData.middleName}
                   onChange={(event) =>
                     updateField("middleName", event.target.value)
@@ -118,7 +118,7 @@ export default function OnboardingProfilePage() {
                 <Label htmlFor="lastName">Last Name</Label>
                 <Input
                   id="lastName"
-                  placeholder="Turkar"
+                  placeholder="Last Name"
                   value={formData.lastName}
                   onChange={(event) =>
                     updateField("lastName", event.target.value)
@@ -152,7 +152,7 @@ export default function OnboardingProfilePage() {
                 <Input
                   id="personalEmail"
                   type="email"
-                  placeholder="pranav@gmail.com"
+                  placeholder="Personal Email"
                   value={formData.personalEmail}
                   onChange={(event) =>
                     updateField("personalEmail", event.target.value)
@@ -165,7 +165,7 @@ export default function OnboardingProfilePage() {
                 <Input
                   id="phoneNo"
                   type="tel"
-                  placeholder="9876543210"
+                  placeholder="Phone Number"
                   value={formData.phoneNo}
                   onChange={(event) =>
                     updateField("phoneNo", event.target.value)

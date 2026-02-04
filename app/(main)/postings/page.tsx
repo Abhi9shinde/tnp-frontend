@@ -18,7 +18,7 @@ export default function PostingsPage() {
       try {
         setLoading(true);
         const response = await axios.get<any>(
-          "/api/my-proxy/api/v1/admin/postings"
+          "/api/my-proxy/api/v1/admin/postings",
         );
         console.log("API Response:", response.data);
 
@@ -85,20 +85,20 @@ export default function PostingsPage() {
               </div>
             ))
           : postings.length > 0
-          ? postings.map((posting, index) => (
-              <PostingCard
-                key={posting.id}
-                posting={posting}
-                index={index}
-                onViewDetails={setSelectedPosting}
-              />
-            ))
-          : !loading &&
-            !error && (
-              <p className="col-span-full text-center text-muted-foreground py-10">
-                No job postings available at the moment.
-              </p>
-            )}
+            ? postings.map((posting, index) => (
+                <PostingCard
+                  key={posting.id}
+                  posting={posting}
+                  index={index}
+                  onViewDetails={setSelectedPosting}
+                />
+              ))
+            : !loading &&
+              !error && (
+                <p className="col-span-full text-center text-muted-foreground py-10">
+                  No job postings available at the moment.
+                </p>
+              )}
       </div>
 
       <PostingDetailsDialog

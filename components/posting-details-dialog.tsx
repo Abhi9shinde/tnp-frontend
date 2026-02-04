@@ -353,9 +353,9 @@ export function PostingDetailsDialog({
                       : "neutral"
                   }
                   studentValue={
-                    studentEducation
+                    studentEducation?.diplomaPercent != null
                       ? `${studentEducation.diplomaPercent}%`
-                      : undefined
+                      : "N/A"
                   }
                 />
                 <EligibilityCard

@@ -85,8 +85,8 @@ export default function EditEducation() {
 
         diplomaPercent: formData.diplomaPercent
           ? Number(formData.diplomaPercent)
-          : null,
-        diplomaYear: formData.diplomaYear ? Number(formData.diplomaYear) : null,
+          : 0,
+        diplomaYear: formData.diplomaYear ? Number(formData.diplomaYear) : 0,
       });
 
       await queryClient.invalidateQueries({

@@ -55,7 +55,7 @@ const Education = () => {
 
   const updateField = (
     field: keyof EducationFormData,
-    value: string | number
+    value: string | number,
   ) => {
     setFormData((prev) => {
       if (field === "branch") {
@@ -81,7 +81,7 @@ const Education = () => {
     try {
       const response = await axios.post(
         "/api/my-proxy/api/v1/student/addEducation",
-        formData
+        formData,
       );
 
       if (response.status === 200 || response.status === 201) {
@@ -94,7 +94,7 @@ const Education = () => {
       console.log(error.response?.data);
       if (error.response?.status === 409) {
         setErrorMessage(
-          "Education details already exist. You cannot submit again."
+          "Education details already exist. You cannot submit again.",
         );
         return;
       }
@@ -105,7 +105,7 @@ const Education = () => {
       }
       setErrorMessage(
         error.response?.data?.error ||
-          "Failed to save education details. Try again."
+          "Failed to save education details. Try again.",
       );
     } finally {
       setIsSubmitting(false);
@@ -298,7 +298,7 @@ const Education = () => {
                   type="number"
                   step="0.01"
                   placeholder="75.0"
-                  value={formData.diplomaPercent || ""}
+                  value={formData.diplomaPercent || 0}
                   onChange={(event) =>
                     updateField("diplomaPercent", event.target.value)
                   }

@@ -14,6 +14,7 @@ const tabs = [
   { label: "Projects", href: "/profile/editProject" },
   { label: "Skills", href: "/profile/editSkill" },
   { label: "Certifications", href: "/profile/editCertification" },
+  { label: "Achievements", href: "/profile/editAchievement" },
   { label: "Socials", href: "/profile/editSocial" },
 ];
 
@@ -44,7 +45,7 @@ const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
                     "relative pb-2 text-sm font-medium transition-colors",
                     isActive
                       ? "text-foreground after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-foreground"
-                      : "text-muted-foreground hover:text-foreground"
+                      : "text-muted-foreground hover:text-foreground",
                   )}
                 >
                   {tab.label}

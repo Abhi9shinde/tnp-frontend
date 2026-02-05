@@ -64,7 +64,7 @@ const InternshipsPage = () => {
   const updateInternship = <K extends keyof InternshipEntry>(
     index: number,
     field: K,
-    value: InternshipEntry[K]
+    value: InternshipEntry[K],
   ) => {
     setFormData((prev) => {
       const next = [...prev.internships];
@@ -76,7 +76,7 @@ const InternshipsPage = () => {
   const updateCertification = <K extends keyof CertificationEntry>(
     index: number,
     field: K,
-    value: CertificationEntry[K]
+    value: CertificationEntry[K],
   ) => {
     setFormData((prev) => {
       const next = [...prev.certifications];
@@ -115,12 +115,12 @@ const InternshipsPage = () => {
     try {
       const response = await axios.post(
         "/api/my-proxy/api/v1/student/internships",
-        formData
+        formData,
       );
 
       if (response.status === 200) {
         setStatusMessage(
-          "Internship & certification details saved successfully!"
+          "Internship & certification details saved successfully!",
         );
         router.push("/onboarding/certification");
       }
@@ -132,7 +132,7 @@ const InternshipsPage = () => {
       }
       setErrorMessage(
         error.response?.data?.error ||
-          "Failed to save internship details. Try again."
+          "Failed to save internship details. Try again.",
       );
     }
   };
@@ -226,7 +226,7 @@ const InternshipsPage = () => {
                           updateInternship(
                             index,
                             "duration",
-                            event.target.value
+                            event.target.value,
                           )
                         }
                         required
@@ -245,7 +245,7 @@ const InternshipsPage = () => {
                           updateInternship(
                             index,
                             "description",
-                            event.target.value
+                            event.target.value,
                           )
                         }
                       />
@@ -304,7 +304,7 @@ const InternshipsPage = () => {
                           updateCertification(
                             index,
                             "title",
-                            event.target.value
+                            event.target.value,
                           )
                         }
                         required
@@ -322,7 +322,7 @@ const InternshipsPage = () => {
                           updateCertification(
                             index,
                             "organization",
-                            event.target.value
+                            event.target.value,
                           )
                         }
                         required
@@ -338,7 +338,7 @@ const InternshipsPage = () => {
                           updateCertification(
                             index,
                             "issueDate",
-                            event.target.value
+                            event.target.value,
                           )
                         }
                       />
@@ -353,7 +353,7 @@ const InternshipsPage = () => {
                           updateCertification(
                             index,
                             "expiryDate",
-                            event.target.value
+                            event.target.value,
                           )
                         }
                       />
@@ -370,7 +370,7 @@ const InternshipsPage = () => {
                           updateCertification(
                             index,
                             "credentialId",
-                            event.target.value
+                            event.target.value,
                           )
                         }
                       />
@@ -388,7 +388,7 @@ const InternshipsPage = () => {
                           updateCertification(
                             index,
                             "credentialUrl",
-                            event.target.value
+                            event.target.value,
                           )
                         }
                       />

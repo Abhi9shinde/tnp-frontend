@@ -9,7 +9,7 @@ import {
   SidebarMenuItem,
   SidebarInset,
 } from "@/components/ui/sidebar";
-import NavBar from "@/components/navbar";
+import NavBar from "@/components/navbar/studentNavbar";
 import { SidebarBackdrop } from "@/components/sidebar-backdrop";
 import Container from "@/components/Container";
 import Link from "next/link";
@@ -17,7 +17,7 @@ import Link from "next/link";
 const sidebarPlaceholders = [
   {
     label: "Postings",
-    href: "/postings",
+    href: "/student/postings",
   },
 ];
 

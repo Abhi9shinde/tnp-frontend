@@ -52,7 +52,7 @@ export default function OnboardingProfilePage() {
 
       if (response.status === 200 || response.status === 201) {
         setStatusMessage("Profile saved. Redirecting to education form...");
-        router.push("/onboarding/education");
+        router.push("/student/onboarding/education");
       }
     } catch (error: any) {
       if (error.response?.data?.needsAuth) {

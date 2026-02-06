@@ -9,40 +9,57 @@ export default function Home() {
   const session = useSession();
   const router = useRouter();
 
-  const [checkingOnboarding, setCheckingOnboarding] = useState(true);
+  const [checkingUser, setCheckingUser] = useState(true);
 
   useEffect(() => {
     if (!session) {
-      setCheckingOnboarding(false);
+      setCheckingUser(false);
       return;
     }
 
-    const checkOnboarding = async () => {
+    const checkUserFlow = async () => {
       try {
         const res = await fetch("/api/my-proxy/api/v1/user/me");
+
         if (!res.ok) {
-          setCheckingOnboarding(false);
+          setCheckingUser(false);
           return;
         }
 
         const data = await res.json();
+
+        const role = data.user.role;
         const step = data.user.onboardingStep;
 
-        if (step !== "COMPLETED") {
-          router.replace(`/onboarding/${step.toLowerCase()}`);
-        } else {
-          setCheckingOnboarding(false);
+        /* ---------------- STUDENT FLOW ---------------- */
+        if (role === "STUDENT") {
+          if (step !== "COMPLETED") {
+            router.replace(`/student/onboarding/${step.toLowerCase()}`);
+            return;
+          }
+
+          // onboarding done → student home
+          router.replace("/student/home");
+          return;
         }
-      } catch {
-        setCheckingOnboarding(false);
+
+        /* ---------------- ADMIN / TNP FLOW ---------------- */
+        if (role === "ADMIN" || role === "TNP_OFFICER") {
+          router.replace("/admin/dashboard");
+          return;
+        }
+
+        setCheckingUser(false);
+      } catch (err) {
+        setCheckingUser(false);
       }
     };
 
-    checkOnboarding();
+    checkUserFlow();
   }, [session, router]);
 
-  /* ---------------- Loading ---------------- */
-  if (session && checkingOnboarding) {
+  /* ---------------- LOADING ---------------- */
+  if (session && checkingUser) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <p className="text-sm text-muted-foreground animate-pulse">
@@ -52,7 +69,7 @@ export default function Home() {
     );
   }
 
-  /* ---------------- Logged out ---------------- */
+  /* ---------------- LOGGED OUT UI ---------------- */
   if (!session) {
     return (
       <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden">
@@ -99,6 +116,6 @@ export default function Home() {
     );
   }
 
-  /* ---------------- Logged in ---------------- */
+  /* ---------------- FALLBACK (won’t render often) ---------------- */
   return <LandingPage />;
 }

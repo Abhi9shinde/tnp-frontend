@@ -20,9 +20,11 @@ export default function OnboardingLayout({
       {/* Progress */}
       <div className="border-b border-border px-6 py-3">
         <div className="max-w-4xl mx-auto flex items-center gap-4 text-sm">
-          <span className="font-medium">Profile</span>
-          <span className="text-muted-foreground">→</span>
+          <span className="text-muted-foreground">Profile</span>
+          <span className="font-medium">→</span>
           <span className="text-muted-foreground">Education</span>
+          <span className="font-medium">→</span>
+          <span className="text-muted-foreground">Internship</span>
         </div>
       </div>
 

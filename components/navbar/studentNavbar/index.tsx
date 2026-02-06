@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState, useRef, useEffect } from "react";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useSession } from "@/providers/session-provider";
 
 export default function NavBar() {
@@ -17,10 +18,28 @@ export default function NavBar() {
     "Guest";
   const avatarSrc = session?.user?.picture;
 
+  useEffect(() => {
+    function handleClickOutside(event: any) {
+      if (
+        dropdownRef.current &&
+        !(dropdownRef.current as any).contains(event.target)
+      ) {
+        setMenuOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
     <nav className="sticky top-0 z-50 flex items-center justify-between border-b border-border bg-background/80 px-6 py-4 backdrop-blur-sm">
       <div className="flex items-center gap-4">
-        <a href="/home" className="text-lg font-semibold text-foreground">
+        <SidebarTrigger className="rounded-md border border-border bg-background/70 px-4 py-2 text-sm font-semibold text-foreground shadow-sm transition hover:border-zinc-300" />
+        <a
+          href="/student/home"
+          className="text-lg font-semibold text-foreground"
+        >
           Centralized Placement System
         </a>
       </div>

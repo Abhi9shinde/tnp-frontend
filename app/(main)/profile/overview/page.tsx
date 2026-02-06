@@ -308,7 +308,7 @@ export default function OverviewPage() {
                       {certification.issueDate && (
                         <p className="max-w-md text-sm font-light text-neutral-400 pl-5 mt-1">
                           {new Date(
-                            certification.issueDate
+                            certification.issueDate,
                           ).toLocaleDateString()}{" "}
                           - Issued Date
                         </p>
@@ -337,6 +337,15 @@ export default function OverviewPage() {
             )}
           </div>
         </div>
+        <Button
+          className="mt-6"
+          onClick={() => {
+            window.location.href =
+              "/api/my-proxy/api/v1/student/download-resume";
+          }}
+        >
+          Download Resume (Word)
+        </Button>
       </Container>
     </div>
   );

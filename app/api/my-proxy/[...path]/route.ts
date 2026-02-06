@@ -7,10 +7,11 @@ export async function GET(
     params,
   }: {
     params: Promise<{ path: string[] }>;
-  }
+  },
 ) {
   const { token } = await auth0.getAccessToken();
   const path = (await params).path;
+
   const backendUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path
     .join("/")
     .replace(/^api\/my-proxy\/?/, "")}`;
@@ -18,24 +19,38 @@ export async function GET(
   console.log("Backend URL:", backendUrl);
 
   const res = await fetch(backendUrl, {
-    method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
 
-  const data = await res.json();
+  const contentType = res.headers.get("content-type") || "";
 
-  // Return properly formatted JSON response
-  return NextResponse.json(data, { status: res.status });
+  // ✅ JSON response
+  if (contentType.includes("application/json")) {
+    const data = await res.json();
+    return NextResponse.json(data, { status: res.status });
+  }
+
+  // ✅ Everything else (Word, PDF, HTML, binary)
+  const buffer = await res.arrayBuffer();
+
+  return new NextResponse(buffer, {
+    status: res.status,
+    headers: {
+      "Content-Type": contentType,
+      "Content-Disposition": res.headers.get("content-disposition") || "",
+    },
+  });
 }
+
 export async function POST(
   req: NextRequest,
   {
     params,
   }: {
     params: Promise<{ path: string[] }>;
-  }
+  },
 ) {
   const { token } = await auth0.getAccessToken();
   const path = (await params).path;
@@ -65,7 +80,7 @@ export async function PUT(
     params,
   }: {
     params: Promise<{ path: string[] }>;
-  }
+  },
 ) {
   const path = (await params).path;
 
@@ -96,7 +111,7 @@ export async function DELETE(
     params,
   }: {
     params: Promise<{ path: string[] }>;
-  }
+  },
 ) {
   const { token } = await auth0.getAccessToken();
   const path = (await params).path;

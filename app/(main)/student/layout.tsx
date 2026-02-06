@@ -1,3 +1,4 @@
+"use client";
 import {
   SidebarProvider,
   Sidebar,
@@ -13,6 +14,9 @@ import NavBar from "@/components/navbar/studentNavbar";
 import { SidebarBackdrop } from "@/components/sidebar-backdrop";
 import Container from "@/components/Container";
 import Link from "next/link";
+import { useEffect } from "react";
+import { useMe } from "@/hooks/useMe";
+import { useRouter } from "next/navigation";
 
 const sidebarPlaceholders = [
   {
@@ -21,11 +25,31 @@ const sidebarPlaceholders = [
   },
 ];
 
-export default async function MainLayout({
+export default function StudentLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const router = useRouter();
+  const { data: me, isLoading } = useMe();
+
+  useEffect(() => {
+    if (isLoading) return;
+    if (!me || me.role !== "STUDENT") {
+      router.replace("/home");
+    }
+  }, [me, isLoading, router]);
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        Loading...
+      </div>
+    );
+  }
+  if (!me || me.role !== "STUDENT") {
+    return null; // don't render student UI at all
+  }
   return (
     <SidebarProvider
       defaultOpen={false}
@@ -44,7 +68,7 @@ export default async function MainLayout({
                 <SidebarMenuItem key={label.label}>
                   <SidebarMenuButton asChild>
                     <Link href={label.href} className="w-full justify-start">
-                      <button type="button">{label.label}</button>
+                      {label.label}
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

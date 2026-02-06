@@ -87,7 +87,7 @@ const Education = () => {
       if (response.status === 200 || response.status === 201) {
         setStatusMessage("Education details saved successfully!");
 
-        router.push("/onboarding/internships");
+        router.push("/student/onboarding/internships");
       }
     } catch (error: any) {
       console.log(error.response.data);
@@ -243,6 +243,7 @@ const Education = () => {
                   type="number"
                   step="0.01"
                   placeholder="92.5"
+                  min={0}
                   value={formData.tenthPercent || ""}
                   onChange={(event) =>
                     updateField("tenthPercent", event.target.value)
@@ -255,6 +256,7 @@ const Education = () => {
                   id="tenthYear"
                   type="number"
                   placeholder="2019"
+                  min={0}
                   value={formData.tenthYear || ""}
                   onChange={(event) =>
                     updateField("tenthYear", event.target.value)
@@ -267,6 +269,7 @@ const Education = () => {
                   id="twelfthPercent"
                   type="number"
                   step="0.01"
+                  min={0}
                   placeholder="88.0"
                   value={formData.twelfthPercent || ""}
                   onChange={(event) =>
@@ -279,6 +282,7 @@ const Education = () => {
                 <Input
                   id="twelfthYear"
                   type="number"
+                  min={0}
                   placeholder="2021"
                   value={formData.twelfthYear || ""}
                   onChange={(event) =>
@@ -297,6 +301,7 @@ const Education = () => {
                   id="diplomaPercent"
                   type="number"
                   step="0.01"
+                  min={0}
                   placeholder="75.0"
                   value={formData.diplomaPercent || 0}
                   onChange={(event) =>
@@ -309,6 +314,7 @@ const Education = () => {
                 <Input
                   id="diplomaYear"
                   type="number"
+                  min={0}
                   placeholder="2020"
                   value={formData.diplomaYear || ""}
                   onChange={(event) =>

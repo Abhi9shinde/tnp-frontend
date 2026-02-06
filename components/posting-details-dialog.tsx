@@ -427,7 +427,7 @@ export function PostingDetailsDialog({
           </div>
           <div className="flex gap-3 w-full sm:w-auto">
             <Button
-              variant="outline"
+              variant="ghost"
               onClick={onClose}
               className="flex-1 sm:flex-none"
             >

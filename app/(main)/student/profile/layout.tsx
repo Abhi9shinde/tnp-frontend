@@ -7,15 +7,15 @@ import Container from "@/components/Container";
 import { cn } from "@/lib/utils";
 
 const tabs = [
-  { label: "Overview", href: "/profile/overview" },
-  { label: "Profile", href: "/profile/editProfile" },
-  { label: "Education", href: "/profile/editEducation" },
-  { label: "Experience", href: "/profile/editExperience" },
-  { label: "Projects", href: "/profile/editProject" },
-  { label: "Skills", href: "/profile/editSkill" },
-  { label: "Certifications", href: "/profile/editCertification" },
-  { label: "Achievements", href: "/profile/editAchievement" },
-  { label: "Socials", href: "/profile/editSocial" },
+  { label: "Overview", href: "/student/profile/overview" },
+  { label: "Profile", href: "/student/profile/editProfile" },
+  { label: "Education", href: "/student/profile/editEducation" },
+  { label: "Experience", href: "/student/profile/editExperience" },
+  { label: "Projects", href: "/student/profile/editProject" },
+  { label: "Skills", href: "/student/profile/editSkill" },
+  { label: "Certifications", href: "/student/profile/editCertification" },
+  { label: "Achievements", href: "/student/profile/editAchievement" },
+  { label: "Socials", href: "/student/profile/editSocial" },
 ];
 
 const ProfileLayout = ({ children }: { children: React.ReactNode }) => {

@@ -148,6 +148,7 @@ export default function EditEducation() {
                 <Input
                   type="number"
                   value={formData.enrollmentYear}
+                  min={0}
                   onChange={(e) =>
                     updateField("enrollmentYear", e.target.value)
                   }
@@ -160,6 +161,7 @@ export default function EditEducation() {
                 <Input
                   type="number"
                   step="0.01"
+                  min={0}
                   value={formData.cgpa}
                   onChange={(e) => updateField("cgpa", e.target.value)}
                   required
@@ -170,6 +172,7 @@ export default function EditEducation() {
                 <Label>Backlogs</Label>
                 <Input
                   type="number"
+                  min={0}
                   value={formData.backlogs}
                   onChange={(e) => updateField("backlogs", e.target.value)}
                   required
@@ -189,6 +192,7 @@ export default function EditEducation() {
                 <Label>10th Percentage</Label>
                 <Input
                   value={formData.tenthPercent}
+                  min={0}
                   onChange={(e) => updateField("tenthPercent", e.target.value)}
                 />
               </div>
@@ -197,6 +201,7 @@ export default function EditEducation() {
                 <Label>10th Passing Year</Label>
                 <Input
                   type="number"
+                  min={0}
                   value={formData.tenthYear}
                   onChange={(e) => updateField("tenthYear", e.target.value)}
                 />
@@ -206,6 +211,7 @@ export default function EditEducation() {
                 <Label>12th Percentage</Label>
                 <Input
                   value={formData.twelfthPercent}
+                  min={0}
                   onChange={(e) =>
                     updateField("twelfthPercent", e.target.value)
                   }
@@ -216,6 +222,7 @@ export default function EditEducation() {
                 <Label>12th Passing Year</Label>
                 <Input
                   type="number"
+                  min={0}
                   value={formData.twelfthYear}
                   onChange={(e) => updateField("twelfthYear", e.target.value)}
                 />
@@ -234,6 +241,7 @@ export default function EditEducation() {
                 <Label>Diploma Percentage</Label>
                 <Input
                   value={formData.diplomaPercent}
+                  min={0}
                   onChange={(e) =>
                     updateField("diplomaPercent", e.target.value)
                   }
@@ -244,6 +252,7 @@ export default function EditEducation() {
                 <Label>Diploma Passing Year</Label>
                 <Input
                   type="number"
+                  min={0}
                   value={formData.diplomaYear}
                   onChange={(e) => updateField("diplomaYear", e.target.value)}
                 />

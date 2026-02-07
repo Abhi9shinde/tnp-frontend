@@ -88,7 +88,7 @@ export function PostingDetailsDialog({
     try {
       setLoading(true);
       const response = await axios.get<EligibilityCriteria>(
-        `/api/my-proxy/api/v1/admin/getEligibilityCriteria/${jobId}`,
+        `/api/my-proxy/api/v1/student/getEligibilityCriteria/${jobId}`,
       );
       if (response.data) {
         setEligibility(response.data);

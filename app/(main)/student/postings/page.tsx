@@ -17,9 +17,7 @@ export default function PostingsPage() {
     const fetchPostings = async () => {
       try {
         setLoading(true);
-        const response = await axios.get<any>(
-          "/api/my-proxy/api/v1/admin/postings",
-        );
+        const response = await axios.get<any>("/api/my-proxy/api/v1/postings");
         console.log("API Response:", response.data);
 
         // Handle potentially wrapped response

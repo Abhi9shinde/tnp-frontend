@@ -2,64 +2,51 @@
 
 import { useSession } from "@/providers/session-provider";
 import LandingPage from "@/components/landing/landing-page";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useMe } from "@/hooks/useMe";
 
 export default function Home() {
   const session = useSession();
   const router = useRouter();
 
-  const [checkingUser, setCheckingUser] = useState(true);
+  const { data: me, isLoading } = useMe();
+
+  /* ---------------- Handle redirect logic ---------------- */
 
   useEffect(() => {
-    if (!session) {
-      setCheckingUser(false);
+    if (!session) return;
+
+    if (isLoading) return;
+
+    if (!me) return;
+
+    const role = me.role;
+    const step = me.onboardingStep;
+
+    /* -------- STUDENT FLOW -------- */
+
+    if (role === "STUDENT") {
+      if (step !== "COMPLETED") {
+        router.replace(`/student/onboarding/${step.toLowerCase()}`);
+        return;
+      }
+
+      router.replace("/student/home");
       return;
     }
 
-    const checkUserFlow = async () => {
-      try {
-        const res = await fetch("/api/my-proxy/api/v1/user/me");
+    /* -------- ADMIN / TNP FLOW -------- */
 
-        if (!res.ok) {
-          setCheckingUser(false);
-          return;
-        }
-
-        const data = await res.json();
-
-        const role = data.user.role;
-        const step = data.user.onboardingStep;
-
-        /* ---------------- STUDENT FLOW ---------------- */
-        if (role === "STUDENT") {
-          if (step !== "COMPLETED") {
-            router.replace(`/student/onboarding/${step.toLowerCase()}`);
-            return;
-          }
-
-          // onboarding done → student home
-          router.replace("/student/home");
-          return;
-        }
-
-        /* ---------------- ADMIN / TNP FLOW ---------------- */
-        if (role === "ADMIN" || role === "TNP_OFFICER") {
-          router.replace("/admin/dashboard");
-          return;
-        }
-
-        setCheckingUser(false);
-      } catch (err) {
-        setCheckingUser(false);
-      }
-    };
-
-    checkUserFlow();
-  }, [session, router]);
+    if (role === "ADMIN" || role === "TNP_OFFICER") {
+      router.replace("/admin/dashboard");
+      return;
+    }
+  }, [session, me, isLoading, router]);
 
   /* ---------------- LOADING ---------------- */
-  if (session && checkingUser) {
+
+  if (session && isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <p className="text-sm text-muted-foreground animate-pulse">
@@ -70,10 +57,10 @@ export default function Home() {
   }
 
   /* ---------------- LOGGED OUT UI ---------------- */
+
   if (!session) {
     return (
       <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden">
-        {/* Background */}
         <div className="absolute inset-0 -z-10 bg-gradient-to-b from-blue-50 via-white to-white dark:from-neutral-900 dark:via-neutral-950 dark:to-neutral-950" />
 
         <section className="mx-auto max-w-3xl px-6 text-center space-y-8">
@@ -116,6 +103,7 @@ export default function Home() {
     );
   }
 
-  /* ---------------- FALLBACK (won’t render often) ---------------- */
+  /* ---------------- FALLBACK ---------------- */
+
   return <LandingPage />;
 }

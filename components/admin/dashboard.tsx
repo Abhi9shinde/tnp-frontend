@@ -2,15 +2,21 @@
 
 import React from "react";
 
-import { useJobPostings } from "@/hooks/useJobPostings";
+import { useAdminJobPostings } from "@/hooks/useAdminJobPostings";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/navigation";
 
 export default function AdminDashboardComponent() {
-  const { data: postings, isLoading } = useJobPostings();
+  const { data: postings, isLoading } = useAdminJobPostings();
   const router = useRouter();
 
   // Placeholder stats - in a real app these would likely come from an API
@@ -84,7 +90,7 @@ export default function AdminDashboardComponent() {
     <div className="flex flex-col gap-4 p-4 md:gap-8 md:p-8">
       <div className="flex items-center justify-between">
         <div>
-           <h1 className="text-2xl font-bold tracking-tight md:text-3xl text-primary">
+          <h1 className="text-2xl font-bold tracking-tight md:text-3xl text-primary">
             Admin Dashboard
           </h1>
           <p className="text-muted-foreground">
@@ -92,7 +98,7 @@ export default function AdminDashboardComponent() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-            {/* Additional actions can go here */}
+          {/* Additional actions can go here */}
         </div>
       </div>
 
@@ -100,14 +106,18 @@ export default function AdminDashboardComponent() {
         {/* Post New Application - Hero Card */}
         <Card className="col-span-1 md:col-span-2 row-span-1 lg:row-span-1 bg-gradient-to-br from-primary to-purple-900 text-primary-foreground border-none overflow-hidden relative group">
           <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-           <CardHeader>
+          <CardHeader>
             <CardTitle className="text-xl">Create New Job Posting</CardTitle>
             <CardDescription className="text-primary-foreground/80">
               Launch a new drive for students.
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button variant="secondary" className="w-full sm:w-auto font-semibold hover:bg-white/90" onClick={() => router.push("/admin/posting")}>
+            <Button
+              variant="secondary"
+              className="w-full sm:w-auto font-semibold hover:bg-white/90"
+              onClick={() => router.push("/admin/posting")}
+            >
               Post Application
             </Button>
           </CardContent>
@@ -115,7 +125,10 @@ export default function AdminDashboardComponent() {
 
         {/* Stats Cards */}
         {stats.map((stat, i) => (
-          <Card key={i} className="hover:shadow-lg transition-shadow duration-300 border-border/50">
+          <Card
+            key={i}
+            className="hover:shadow-lg transition-shadow duration-300 border-border/50"
+          >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
                 {stat.title}
@@ -124,9 +137,7 @@ export default function AdminDashboardComponent() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stat.value}</div>
-              <p className="text-xs text-muted-foreground">
-                {stat.change}
-              </p>
+              <p className="text-xs text-muted-foreground">{stat.change}</p>
             </CardContent>
           </Card>
         ))}
@@ -143,45 +154,50 @@ export default function AdminDashboardComponent() {
           </CardHeader>
           <CardContent>
             {isLoading ? (
-                <div className="space-y-4">
-                    {[1, 2, 3].map((i) => (
-                        <div key={i} className="flex items-center space-x-4">
-                            <Skeleton className="h-12 w-12 rounded-full" />
-                            <div className="space-y-2">
-                                <Skeleton className="h-4 w-[250px]" />
-                                <Skeleton className="h-4 w-[200px]" />
-                            </div>
-                        </div>
-                    ))}
-                </div>
+              <div className="space-y-4">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="flex items-center space-x-4">
+                    <Skeleton className="h-12 w-12 rounded-full" />
+                    <div className="space-y-2">
+                      <Skeleton className="h-4 w-[250px]" />
+                      <Skeleton className="h-4 w-[200px]" />
+                    </div>
+                  </div>
+                ))}
+              </div>
             ) : (
-             <div className="space-y-4">
+              <div className="space-y-4">
                 {postings?.slice(0, 5).map((posting, index) => (
                   <div
                     key={index}
                     className="flex items-center justify-between p-4 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors"
                   >
                     <div className="flex flex-col gap-1">
-                      <p className="font-semibold leading-none">{posting.role}</p>
+                      <p className="font-semibold leading-none">
+                        {posting.role}
+                      </p>
                       <p className="text-sm text-muted-foreground">
                         {posting.company}
                       </p>
                     </div>
                     <div className="flex items-center gap-4">
-                        <div className="hidden sm:flex flex-col items-end gap-1 text-sm text-muted-foreground">
-                            <span>CTC: {posting.ctc}</span>
-                            <span>Deadline: {new Date(posting.deadline).toLocaleDateString()}</span>
-                        </div>
-                        <Badge variant="success" className="ml-auto">
-                            Active
-                        </Badge>
+                      <div className="hidden sm:flex flex-col items-end gap-1 text-sm text-muted-foreground">
+                        <span>CTC: {posting.ctc}</span>
+                        <span>
+                          Deadline:{" "}
+                          {new Date(posting.deadline).toLocaleDateString()}
+                        </span>
+                      </div>
+                      <Badge variant="success" className="ml-auto">
+                        Active
+                      </Badge>
                     </div>
                   </div>
                 ))}
                 {!postings?.length && (
-                    <div className="text-center py-8 text-muted-foreground">
-                        No recent postings found.
-                    </div>
+                  <div className="text-center py-8 text-muted-foreground">
+                    No recent postings found.
+                  </div>
                 )}
               </div>
             )}
@@ -197,22 +213,24 @@ export default function AdminDashboardComponent() {
             </CardDescription>
           </CardHeader>
           <CardContent className="flex items-center justify-center min-h-[300px]">
-             <div className="text-center space-y-4">
-                 <div className="relative flex h-32 w-32 mx-auto items-center justify-center rounded-full border-4 border-primary/20">
-                     <span className="text-3xl font-bold text-primary">68%</span>
-                 </div>
-                 <p className="text-sm text-muted-foreground">Total Placement Rate</p>
-                 <div className="grid grid-cols-2 gap-4 text-xs">
-                     <div className="flex flex-col">
-                         <span className="font-medium">CSE</span>
-                         <span className="text-muted-foreground">85% Placed</span>
-                     </div>
-                     <div className="flex flex-col">
-                         <span className="font-medium">ENTC</span>
-                         <span className="text-muted-foreground">62% Placed</span>
-                     </div>
-                 </div>
-             </div>
+            <div className="text-center space-y-4">
+              <div className="relative flex h-32 w-32 mx-auto items-center justify-center rounded-full border-4 border-primary/20">
+                <span className="text-3xl font-bold text-primary">68%</span>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Total Placement Rate
+              </p>
+              <div className="grid grid-cols-2 gap-4 text-xs">
+                <div className="flex flex-col">
+                  <span className="font-medium">CSE</span>
+                  <span className="text-muted-foreground">85% Placed</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="font-medium">ENTC</span>
+                  <span className="text-muted-foreground">62% Placed</span>
+                </div>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>

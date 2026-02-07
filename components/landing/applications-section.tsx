@@ -2,11 +2,13 @@
 
 import React from "react";
 import { useStudentApplications } from "@/hooks/useStudentApplications";
-import { useJobPostings } from "@/hooks/useJobPostings";
+import { useStudentJobPostings } from "@/hooks/useStudentJobPostings";
 
 export function ApplicationsSection() {
-  const { data: applications, isLoading: appsLoading } = useStudentApplications();
-  const { data: postings, isLoading: postingsLoading } = useJobPostings();
+  const { data: applications, isLoading: appsLoading } =
+    useStudentApplications();
+  const { data: postings, isLoading: postingsLoading } =
+    useStudentJobPostings();
 
   const loading = appsLoading || postingsLoading;
 
@@ -19,7 +21,9 @@ export function ApplicationsSection() {
       <h2 className="text-lg font-semibold mb-4">Applications Applied</h2>
       <div className="space-y-4">
         {loading ? (
-          <p className="text-sm text-muted-foreground">Loading applications...</p>
+          <p className="text-sm text-muted-foreground">
+            Loading applications...
+          </p>
         ) : applications && applications.length > 0 ? (
           applications.map((app) => {
             const job = getJobDetails(app.jobPostId);

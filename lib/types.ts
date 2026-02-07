@@ -16,4 +16,5 @@ export interface Posting {
   ctc: string;
   deadline: string;
   eligibility?: string;
+  status: "DRAFT" | "OPEN" | "CLOSED" | "ARCHIVED";
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useAdminJobPostings } from "@/hooks/useAdminJobPostings";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -40,39 +41,41 @@ export default function AdminDrivesPage() {
           ))
         ) : (
           postings?.map((posting) => (
-            <Card key={posting.id} className="hover:shadow-md transition-shadow">
-              <CardHeader className="pb-3">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <CardTitle className="text-lg font-semibold">{posting.role}</CardTitle>
-                    <CardDescription className="flex items-center gap-1 mt-1">
-                      <BuildingIcon className="h-3 w-3" />
-                      {posting.company}
-                    </CardDescription>
-                  </div>
-                  <Badge variant={new Date(posting.deadline) > new Date() ? "secondary" : "destructive"}>
-                    {new Date(posting.deadline) > new Date() ? "Active" : "Closed"}
-                  </Badge>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-2">
-                    <BanknoteIcon className="h-4 w-4" />
-                    <span>{posting.ctc}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CalendarIcon className="h-4 w-4" />
-                    <span>Deadline: {new Date(posting.deadline).toLocaleDateString()}</span>
-                  </div>
-                  {posting.description && (
-                    <p className="mt-2 line-clamp-2 text-xs">
-                      {posting.description}
-                    </p>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
+            <Link key={posting.id} href={`/admin/drives/${posting.id}`} className="block h-full">
+                <Card className="hover:shadow-md transition-shadow h-full cursor-pointer hover:border-primary/50">
+                <CardHeader className="pb-3">
+                    <div className="flex justify-between items-start">
+                    <div>
+                        <CardTitle className="text-lg font-semibold">{posting.role}</CardTitle>
+                        <CardDescription className="flex items-center gap-1 mt-1">
+                        <BuildingIcon className="h-3 w-3" />
+                        {posting.company}
+                        </CardDescription>
+                    </div>
+                    <Badge variant={new Date(posting.deadline) > new Date() ? "secondary" : "destructive"}>
+                        {new Date(posting.deadline) > new Date() ? "Active" : "Closed"}
+                    </Badge>
+                    </div>
+                </CardHeader>
+                <CardContent>
+                    <div className="space-y-2 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-2">
+                        <BanknoteIcon className="h-4 w-4" />
+                        <span>{posting.ctc}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <CalendarIcon className="h-4 w-4" />
+                        <span>Deadline: {new Date(posting.deadline).toLocaleDateString()}</span>
+                    </div>
+                    {posting.description && (
+                        <p className="mt-2 line-clamp-2 text-xs">
+                        {posting.description}
+                        </p>
+                    )}
+                    </div>
+                </CardContent>
+                </Card>
+            </Link>
           ))
         )}
         

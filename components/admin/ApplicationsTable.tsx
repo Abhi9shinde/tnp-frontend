@@ -25,12 +25,15 @@ import { toast } from "sonner";
 type Props = {
   applications: any[];
   onUpdated?: () => void;
+  className?: string;
 };
 
-export function ApplicationsTable({ applications, onUpdated }: Props) {
+export function ApplicationsTable({ applications, onUpdated, className }: Props) {
   const [isUpdating, setIsUpdating] = useState(false);
   const [selected, setSelected] = useState<string[]>([]);
   const [status, setStatus] = useState<string>("");
+  
+  // ... (keep existing state and logic)
 
   const hasSelection = selected.length > 0;
 
@@ -73,8 +76,16 @@ export function ApplicationsTable({ applications, onUpdated }: Props) {
     }
   };
 
+  // If a className is provided, we assume the caller wants to override default card styles.
+  // Or we could check if className includes "border-0" etc.
+  // Better yet, just append className to the default base classes.
+  // But wait, the default is "rounded-lg border overflow-hidden".
+  // If we pass "border-0 shadow-none rounded-none", tailwind-merge (if used) would handle it.
+  // But this file doesn't seem to import `cn` or `twMerge`.
+  // Let's modify imports to include `cn` from `@/lib/utils`.
+
   return (
-    <div className="rounded-lg border overflow-hidden">
+    <div className={`overflow-hidden ${className ? className : "rounded-lg border"}`}>
       {/* Bulk action bar */}
       {hasSelection && (
         <div className="flex items-center gap-4 p-4 border-b bg-muted">
@@ -98,7 +109,7 @@ export function ApplicationsTable({ applications, onUpdated }: Props) {
       )}
 
       <div className="relative w-full overflow-x-auto">
-        <Table className="min-w-[1600px]">
+        <Table className="min-w-[1000px] md:min-w-full">
           <TableHeader>
             <TableRow>
               <TableHead className="w-[40px]">

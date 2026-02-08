@@ -2,9 +2,9 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Posting } from "@/lib/types";
 
-export function useJobPostings() {
+export function useStudentJobPostings() {
   return useQuery({
-    queryKey: ["job-postings"],
+    queryKey: ["student-job-postings"],
     queryFn: async () => {
       const { data } = await axios.get<any>("/api/my-proxy/api/v1/postings");
 

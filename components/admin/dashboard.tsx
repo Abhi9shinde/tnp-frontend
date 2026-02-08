@@ -147,7 +147,7 @@ export default function AdminDashboardComponent() {
         {/* Open Applications List */}
         <Card 
           className="col-span-1 md:col-span-2 lg:col-span-4 border-border/50 cursor-pointer hover:shadow-md transition-all duration-200"
-          onClick={() => router.push("/admin/drives")}
+          onClick={() => router.push("/admin/jobs")}
         >
           <CardHeader>
             <div className="flex items-center justify-between">

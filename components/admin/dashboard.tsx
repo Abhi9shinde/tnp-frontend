@@ -145,12 +145,20 @@ export default function AdminDashboardComponent() {
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
         {/* Open Applications List */}
-        <Card className="col-span-1 md:col-span-2 lg:col-span-4 border-border/50">
+        <Card 
+          className="col-span-1 md:col-span-2 lg:col-span-4 border-border/50 cursor-pointer hover:shadow-md transition-all duration-200"
+          onClick={() => router.push("/admin/drives")}
+        >
           <CardHeader>
-            <CardTitle>Recent Job Postings</CardTitle>
-            <CardDescription>
-              Currently active and recently closed applications.
-            </CardDescription>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle>Recent Job Postings</CardTitle>
+                <CardDescription>
+                  Currently active and recently closed applications.
+                </CardDescription>
+              </div>
+              <Badge variant="outline" className="hidden sm:inline-flex">View All</Badge>
+            </div>
           </CardHeader>
           <CardContent>
             {isLoading ? (

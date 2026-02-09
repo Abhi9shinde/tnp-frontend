@@ -41,7 +41,7 @@ export function ApplicationsSection() {
                       {job?.company || "Unknown Company"}
                     </p>
                   </div>
-                  <span className={`text-[10px] px-2 py-0.5 rounded-full bg-yellow-400 text-black uppercase font-bold tracking-wider`+app.status === "APPLIED" ? "bg-yellow-400" : app.status === "INTERVIEW" ? "bg-blue-400" : app.status === "SELECTED" ? "bg-green-400" : app.status === "REJECTED" ? "bg-red-400" : "bg-gray-400"}>
+                  <span className={`text-[10px] px-2 py-0.5 rounded-full bg-yellow-400 text-black uppercase font-bold tracking-wider`+ app.status === "APPLIED" ? "bg-yellow-400" : app.status === "INTERVIEW" ? "bg-blue-400" : app.status === "SELECTED" ? "bg-green-400" : app.status === "REJECTED" ? "bg-red-400" : "bg-gray-400"}>
                     {app.status}
                   </span>
                 </div>

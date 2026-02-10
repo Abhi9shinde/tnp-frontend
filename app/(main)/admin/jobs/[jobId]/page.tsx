@@ -1,6 +1,7 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
+import { useState, useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,9 +12,17 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ApplicationsTable } from "@/components/admin/ApplicationsTable";
 import { useAdminJob } from "@/hooks/useAdminJob";
 import { useJobApplications } from "@/hooks/useJobApplications";
+
+type ApplicationTab =
+  | "ALL"
+  | "PENDING"
+  | "SHORTLISTED"
+  | "SELECTED"
+  | "REJECTED";
 
 export default function AdminJobDetailPage() {
   const statusVariant: any = {
@@ -22,6 +31,9 @@ export default function AdminJobDetailPage() {
     CLOSED: "warning",
     ARCHIVED: "outline",
   } as const;
+
+  const [activeTab, setActiveTab] = useState<ApplicationTab>("ALL");
+
   const router = useRouter();
   const { jobId } = useParams<{ jobId: string }>();
 
@@ -31,6 +43,27 @@ export default function AdminJobDetailPage() {
     isLoading: isApplicationsLoading,
     refetch,
   } = useJobApplications(jobId);
+
+  const filteredApplications = useMemo(() => {
+    if (!applications) return [];
+
+    switch (activeTab) {
+      case "PENDING":
+        return applications.filter((a) => a.status === "PENDING");
+
+      case "SHORTLISTED":
+        return applications.filter((a) => a.status === "SHORTLISTED");
+
+      case "SELECTED":
+        return applications.filter((a) => a.status === "SELECTED");
+
+      case "REJECTED":
+        return applications.filter((a) => a.status === "REJECTED");
+
+      default:
+        return applications;
+    }
+  }, [applications, activeTab]);
 
   if (isLoading) return <div className="p-8">Loading…</div>;
   if (!data) return <div className="p-8 text-red-500">Job not found</div>;
@@ -137,6 +170,28 @@ export default function AdminJobDetailPage() {
         <Stat title="Shortlisted" value={stats.shortlisted} />
         <Stat title="Selected" value={stats.selected} />
       </div>
+      <Card className="border-dashed">
+        <CardHeader>
+          <CardTitle>Eligible Students</CardTitle>
+          <CardDescription>
+            Students who meet criteria but haven’t applied yet
+          </CardDescription>
+        </CardHeader>
+
+        <CardContent className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <p className="text-3xl font-bold">{stats.eligibleNotApplied}</p>
+            <p className="text-sm text-muted-foreground">
+              Eligible & not applied
+            </p>
+          </div>
+
+          <Button disabled={stats.eligibleNotApplied === 0}>
+            Notify Eligible Students
+          </Button>
+        </CardContent>
+      </Card>
+
       {/* Applications */}
       <Card>
         <CardHeader>
@@ -145,6 +200,15 @@ export default function AdminJobDetailPage() {
         </CardHeader>
 
         <CardContent>
+          <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)}>
+            <TabsList className="grid grid-cols-3 md:grid-cols-5 w-full">
+              <TabsTrigger value="ALL">All</TabsTrigger>
+              <TabsTrigger value="PENDING">Pending</TabsTrigger>
+              <TabsTrigger value="SHORTLISTED">Shortlisted</TabsTrigger>
+              <TabsTrigger value="SELECTED">Selected</TabsTrigger>
+              <TabsTrigger value="REJECTED">Rejected</TabsTrigger>
+            </TabsList>
+          </Tabs>
           {isApplicationsLoading ? (
             <p className="text-sm text-muted-foreground">
               Loading applications…
@@ -153,7 +217,7 @@ export default function AdminJobDetailPage() {
             <p className="text-sm text-muted-foreground">No applications yet</p>
           ) : (
             <ApplicationsTable
-              applications={applications}
+              applications={filteredApplications}
               onUpdated={refetch}
             />
           )}

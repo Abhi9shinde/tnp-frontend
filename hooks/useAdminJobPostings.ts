@@ -1,3 +1,4 @@
+// This hook is used to fetch the job postings for the admin dashboard.
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Posting } from "@/lib/types";

@@ -41,7 +41,21 @@ export function ApplicationsSection() {
                       {job?.company || "Unknown Company"}
                     </p>
                   </div>
-                  <span className={`text-[10px] px-2 py-0.5 rounded-full bg-yellow-400 text-black uppercase font-bold tracking-wider`+ app.status === "APPLIED" ? "bg-yellow-400 text-[10px] px-2 py-0.5 rounded-full" : app.status === "INTERVIEW" ? "bg-blue-400 text-[10px] px-2 py-0.5 rounded-full" : app.status === "SELECTED" ? "bg-green-400 text-[10px] px-2 py-0.5 rounded-full" : app.status === "REJECTED" ? "bg-red-400 text-[10px] px-2 py-0.5 rounded-full" : "bg-gray-400 text-[10px] px-2 py-0.5 rounded-full"}>
+                  <span
+                    className={
+                      `text-[10px] px-2 py-0.5 rounded-full bg-yellow-400 text-black uppercase font-bold tracking-wider` +
+                        app.status ===
+                      "APPLIED"
+                        ? "bg-yellow-400 text-[10px] px-2 py-0.5 rounded-full"
+                        : app.status === "INTERVIEW"
+                          ? "bg-blue-400 text-[10px] px-2 py-0.5 rounded-full"
+                          : app.status === "SELECTED"
+                            ? "bg-green-400 text-[10px] px-2 py-0.5 rounded-full"
+                            : app.status === "REJECTED"
+                              ? "bg-red-400 text-[10px] px-2 py-0.5 rounded-full"
+                              : "bg-gray-400 text-[10px] px-2 py-0.5 rounded-full"
+                    }
+                  >
                     {app.status}
                   </span>
                 </div>

@@ -1,3 +1,4 @@
+//Get the details of a job for admin users. This is used in the JobDetails page.
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 

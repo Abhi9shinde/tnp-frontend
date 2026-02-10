@@ -49,16 +49,16 @@ export default function AdminJobDetailPage() {
 
     switch (activeTab) {
       case "PENDING":
-        return applications.filter((a) => a.status === "PENDING");
+        return applications.filter((a: any) => a.status === "PENDING");
 
       case "SHORTLISTED":
-        return applications.filter((a) => a.status === "SHORTLISTED");
+        return applications.filter((a: any) => a.status === "SHORTLISTED");
 
       case "SELECTED":
-        return applications.filter((a) => a.status === "SELECTED");
+        return applications.filter((a: any) => a.status === "SELECTED");
 
       case "REJECTED":
-        return applications.filter((a) => a.status === "REJECTED");
+        return applications.filter((a: any) => a.status === "REJECTED");
 
       default:
         return applications;

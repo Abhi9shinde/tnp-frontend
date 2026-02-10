@@ -1,3 +1,4 @@
+// This hook fetches the student's profile information from the API and caches it for 5 minutes using React Query.
 import { useQuery } from "@tanstack/react-query";
 
 export function useStudentProfile() {

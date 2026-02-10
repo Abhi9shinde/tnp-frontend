@@ -1,3 +1,4 @@
+// This hook fetches the current user's information using React Query.
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 

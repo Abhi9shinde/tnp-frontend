@@ -1,3 +1,4 @@
+// This hook fetches the job applications for a given job ID using React Query.
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 

@@ -1,3 +1,4 @@
+// This hook fetches job postings for students from the API and returns the data along with loading and error states.
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Posting } from "@/lib/types";

@@ -12,9 +12,11 @@ export async function GET(
   const { token } = await auth0.getAccessToken();
   const path = (await params).path;
 
+  const search = req.nextUrl.search;
+
   const backendUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path
     .join("/")
-    .replace(/^api\/my-proxy\/?/, "")}`;
+    .replace(/^api\/my-proxy\/?/, "")}${search}`;
 
   console.log("Backend URL:", backendUrl);
 

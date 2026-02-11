@@ -16,6 +16,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ApplicationsTable } from "@/components/admin/ApplicationsTable";
 import { useAdminJob } from "@/hooks/useAdminJob";
 import { useJobApplications } from "@/hooks/useJobApplications";
+import { Checkbox } from "@/components/ui/checkbox";
 
 type ApplicationTab =
   | "ALL"
@@ -33,6 +34,7 @@ export default function AdminJobDetailPage() {
   } as const;
 
   const [activeTab, setActiveTab] = useState<ApplicationTab>("ALL");
+  const [selectedFields, setSelectedFields] = useState<string[]>(["education"]);
 
   const router = useRouter();
   const { jobId } = useParams<{ jobId: string }>();
@@ -64,6 +66,12 @@ export default function AdminJobDetailPage() {
         return applications;
     }
   }, [applications, activeTab]);
+  //allow toggling which fields to show in excel
+  const toggleField = (field: string) => {
+    setSelectedFields((prev) =>
+      prev.includes(field) ? prev.filter((f) => f !== field) : [...prev, field],
+    );
+  };
 
   if (isLoading) return <div className="p-8">Loading…</div>;
   if (!data) return <div className="p-8 text-red-500">Job not found</div>;
@@ -221,6 +229,42 @@ export default function AdminJobDetailPage() {
               onUpdated={refetch}
             />
           )}
+          <Card className="mt-4 border-dashed">
+            <CardHeader>
+              <CardTitle>Export Settings</CardTitle>
+              <CardDescription>
+                Select the fields needed in Excel export. By default, only
+                education details are included.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {[
+                "projects",
+                "internships",
+                "achievements",
+                "certifications",
+              ].map((field) => (
+                <div key={field} className="flex items-center gap-2">
+                  <Checkbox
+                    checked={selectedFields.includes(field)}
+                    onCheckedChange={() => toggleField(field)}
+                  />
+                  <span className="capitalize">{field}</span>
+                </div>
+              ))}
+
+              <Button
+                onClick={() =>
+                  window.open(
+                    `/api/my-proxy/api/v1/admin/jobs/${job.id}/applications/download?fields=${selectedFields.join(",")}`,
+                    "_blank",
+                  )
+                }
+              >
+                Download Excel
+              </Button>
+            </CardContent>
+          </Card>
         </CardContent>
       </Card>
     </div>

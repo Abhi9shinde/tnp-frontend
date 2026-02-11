@@ -79,13 +79,15 @@ export default function NavBar() {
                 >
                   Edit Profile
                 </Link>
-                <Link
-                  href="/auth/logout"
-                  className="block rounded-lg px-3 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-50"
-                  onClick={() => setMenuOpen(false)}
+                <button
+                  onClick={() => {
+                    setMenuOpen(false);
+                    window.location.href = "/auth/logout";
+                  }}
+                  className="block w-full text-left rounded-lg px-3 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-50"
                 >
                   Logout
-                </Link>
+                </button>
               </>
             ) : (
               <>

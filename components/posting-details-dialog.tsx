@@ -263,164 +263,163 @@ export function PostingDetailsDialog({
           </div>
         </DialogHeader>
 
-            {/* Scrollable Content */}
-            <div className="overflow-y-auto p-6 space-y-8 flex-1">
-              {/* Job Description */}
-              <div className="space-y-3">
-                <h3 className="font-semibold text-lg flex items-center gap-2">
-                  Job Description
-                </h3>
-                <div className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap bg-muted/30 p-4 rounded-lg border border-border/50">
-                  {posting.description}
-                </div>
-              </div>
-
-              {/* Eligibility Section */}
-              <div className="space-y-4">
-                <h3 className="font-semibold text-lg flex items-center gap-2">
-                  Eligibility Criteria
-                </h3>
-
-                {loading ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {[1, 2, 3, 4].map((i) => (
-                      <Skeleton key={i} className="h-20 w-full rounded-lg" />
-                    ))}
-                  </div>
-                ) : eligibility ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <EligibilityCard
-                      label="Minimum CGPA"
-                      value={eligibility.minCGPA}
-                      icon={<GraduationCap className="w-4 h-4" />}
-                      status={
-                        studentEducation
-                          ? studentEducation.cgpa >= eligibility.minCGPA
-                            ? "pass"
-                            : "fail"
-                          : "neutral"
-                      }
-                      studentValue={studentEducation?.cgpa.toString()}
-                    />
-                    <EligibilityCard
-                      label="10th Percentage"
-                      value={`${eligibility.minTenth}%`}
-                      icon={<Percent className="w-4 h-4" />}
-                      status={
-                        studentEducation
-                          ? studentEducation.tenthPercent >= eligibility.minTenth
-                            ? "pass"
-                            : "fail"
-                          : "neutral"
-                      }
-                      studentValue={
-                        studentEducation
-                          ? `${studentEducation.tenthPercent}%`
-                          : undefined
-                      }
-                    />
-                    <EligibilityCard
-                      label="12th Percentage"
-                      value={`${eligibility.minTwelfth}%`}
-                      icon={<Percent className="w-4 h-4" />}
-                      status={
-                        studentEducation
-                          ? studentEducation.twelfthPercent >=
-                            eligibility.minTwelfth
-                            ? "pass"
-                            : "fail"
-                          : "neutral"
-                      }
-                      studentValue={
-                        studentEducation
-                          ? `${studentEducation.twelfthPercent}%`
-                          : undefined
-                      }
-                    />
-                    <EligibilityCard
-                      label="Diploma Percentage"
-                      value={
-                        eligibility.minDiploma != null
-                          ? `${eligibility.minDiploma}%`
-                          : "N/A"
-                      }
-                      icon={<Percent className="w-4 h-4" />}
-                      status={
-                        studentEducation
-                          ? studentEducation.diplomaPercent >=
-                            eligibility.minDiploma
-                            ? "pass"
-                            : "fail"
-                          : "neutral"
-                      }
-                      studentValue={
-                        studentEducation?.diplomaPercent != null
-                          ? `${studentEducation.diplomaPercent}%`
-                          : "N/A"
-                      }
-                    />
-                    <EligibilityCard
-                      label="Max Backlogs"
-                      value={eligibility.maxBacklogs}
-                      icon={<AlertCircle className="w-4 h-4" />}
-                      status={
-                        studentEducation
-                          ? studentEducation.backlogs <= eligibility.maxBacklogs
-                            ? "pass"
-                            : "fail"
-                          : "neutral"
-                      }
-                      studentValue={studentEducation?.backlogs.toString()}
-                    />
-                  </div>
-                ) : (
-                  <div className="bg-muted p-4 rounded-lg text-sm text-center italic text-muted-foreground">
-                    {posting.eligibility ||
-                      "No specific automated criteria provided."}
-                  </div>
-                )}
-
-                {/* Overall Eligibility Status Message */}
-                {studentEducation && eligibility && (
-                  <div
-                    className={`mt-4 p-4 rounded-lg border flex items-start gap-3 transition-colors ${
-                      isEligible
-                        ? "bg-green-50/50 border-green-200 text-green-800"
-                        : "bg-destructive/5 border-destructive/20 text-destructive"
-                    }`}
-                  >
-                    {isEligible ? (
-                      <>
-                        <div className="p-1 bg-green-100 rounded-full shrink-0">
-                          <CheckCircle2 className="w-5 h-5 text-green-600" />
-                        </div>
-                        <div>
-                          <h4 className="font-semibold">You are eligible!</h4>
-                          <p className="text-sm opacity-90">
-                            Your profile meets all the requirements for this
-                            role.
-                          </p>
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <div className="p-1 bg-red-100 rounded-full shrink-0">
-                          <XCircle className="w-5 h-5 text-red-600" />
-                        </div>
-                        <div>
-                          <h4 className="font-semibold">Not Eligible</h4>
-                          <ul className="list-disc list-inside text-sm mt-1 opacity-90 space-y-0.5">
-                            {ineligibilityReasons.map((reason, i) => (
-                              <li key={i}>{reason}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      </>
-                    )}
-                  </div>
-                )}
-              </div>
+        {/* Scrollable Content */}
+        <div className="overflow-y-auto p-6 space-y-8 flex-1">
+          {/* Job Description */}
+          <div className="space-y-3">
+            <h3 className="font-semibold text-lg flex items-center gap-2">
+              Job Description
+            </h3>
+            <div className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap bg-muted/30 p-4 rounded-lg border border-border/50">
+              {posting.description}
             </div>
+          </div>
+
+          {/* Eligibility Section */}
+          <div className="space-y-4">
+            <h3 className="font-semibold text-lg flex items-center gap-2">
+              Eligibility Criteria
+            </h3>
+
+            {loading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {[1, 2, 3, 4].map((i) => (
+                  <Skeleton key={i} className="h-20 w-full rounded-lg" />
+                ))}
+              </div>
+            ) : eligibility ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <EligibilityCard
+                  label="Minimum CGPA"
+                  value={eligibility.minCGPA}
+                  icon={<GraduationCap className="w-4 h-4" />}
+                  status={
+                    studentEducation
+                      ? studentEducation.cgpa >= eligibility.minCGPA
+                        ? "pass"
+                        : "fail"
+                      : "neutral"
+                  }
+                  studentValue={studentEducation?.cgpa.toString()}
+                />
+                <EligibilityCard
+                  label="10th Percentage"
+                  value={`${eligibility.minTenth}%`}
+                  icon={<Percent className="w-4 h-4" />}
+                  status={
+                    studentEducation
+                      ? studentEducation.tenthPercent >= eligibility.minTenth
+                        ? "pass"
+                        : "fail"
+                      : "neutral"
+                  }
+                  studentValue={
+                    studentEducation
+                      ? `${studentEducation.tenthPercent}%`
+                      : undefined
+                  }
+                />
+                <EligibilityCard
+                  label="12th Percentage"
+                  value={`${eligibility.minTwelfth}%`}
+                  icon={<Percent className="w-4 h-4" />}
+                  status={
+                    studentEducation
+                      ? studentEducation.twelfthPercent >=
+                        eligibility.minTwelfth
+                        ? "pass"
+                        : "fail"
+                      : "neutral"
+                  }
+                  studentValue={
+                    studentEducation
+                      ? `${studentEducation.twelfthPercent}%`
+                      : undefined
+                  }
+                />
+                <EligibilityCard
+                  label="Diploma Percentage"
+                  value={
+                    eligibility.minDiploma != null
+                      ? `${eligibility.minDiploma}%`
+                      : "N/A"
+                  }
+                  icon={<Percent className="w-4 h-4" />}
+                  status={
+                    studentEducation
+                      ? studentEducation.diplomaPercent >=
+                        eligibility.minDiploma
+                        ? "pass"
+                        : "fail"
+                      : "neutral"
+                  }
+                  studentValue={
+                    studentEducation?.diplomaPercent != null
+                      ? `${studentEducation.diplomaPercent}%`
+                      : "N/A"
+                  }
+                />
+                <EligibilityCard
+                  label="Max Backlogs"
+                  value={eligibility.maxBacklogs}
+                  icon={<AlertCircle className="w-4 h-4" />}
+                  status={
+                    studentEducation
+                      ? studentEducation.backlogs <= eligibility.maxBacklogs
+                        ? "pass"
+                        : "fail"
+                      : "neutral"
+                  }
+                  studentValue={studentEducation?.backlogs.toString()}
+                />
+              </div>
+            ) : (
+              <div className="bg-muted p-4 rounded-lg text-sm text-center italic text-muted-foreground">
+                {posting.eligibility ||
+                  "No specific automated criteria provided."}
+              </div>
+            )}
+
+            {/* Overall Eligibility Status Message */}
+            {studentEducation && eligibility && (
+              <div
+                className={`mt-4 p-4 rounded-lg border flex items-start gap-3 transition-colors ${
+                  isEligible
+                    ? "bg-green-50/50 border-green-200 text-green-800"
+                    : "bg-destructive/5 border-destructive/20 text-destructive"
+                }`}
+              >
+                {isEligible ? (
+                  <>
+                    <div className="p-1 bg-green-100 rounded-full shrink-0">
+                      <CheckCircle2 className="w-5 h-5 text-green-600" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold">You are eligible!</h4>
+                      <p className="text-sm opacity-90">
+                        Your profile meets all the requirements for this role.
+                      </p>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="p-1 bg-red-100 rounded-full shrink-0">
+                      <XCircle className="w-5 h-5 text-red-600" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold">Not Eligible</h4>
+                      <ul className="list-disc list-inside text-sm mt-1 opacity-90 space-y-0.5">
+                        {ineligibilityReasons.map((reason, i) => (
+                          <li key={i}>{reason}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
 
         {/* Footer */}
         <DialogFooter className="p-6 pt-2 border-t bg-muted/20 sm:justify-between items-center">
@@ -444,6 +443,7 @@ export function PostingDetailsDialog({
                 hasApplied ||
                 (!!eligibility && !!studentEducation && !isEligible)
               }
+              variant={hasApplied ? "secondary" : "default"}
               className={`flex-1 sm:flex-none font-semibold ${
                 isEligible || hasApplied ? "bg-primary hover:bg-primary/90" : ""
               }`}

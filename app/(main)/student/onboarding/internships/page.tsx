@@ -122,10 +122,11 @@ export default function InternshipsPage() {
                       <Label>Company</Label>
                       <Input
                         value={internship.company}
-                        placeholder="TechCorp Pvt Ltd"
+                        placeholder="Company name"
                         onChange={(e) =>
                           updateField(index, "company", e.target.value)
                         }
+                        required
                       />
                     </div>
 
@@ -133,10 +134,11 @@ export default function InternshipsPage() {
                       <Label>Role</Label>
                       <Input
                         value={internship.role}
-                        placeholder="Frontend Intern"
+                        placeholder="Your Role (e.g. Software Engineer Intern)"
                         onChange={(e) =>
                           updateField(index, "role", e.target.value)
                         }
+                        required
                       />
                     </div>
 
@@ -144,10 +146,11 @@ export default function InternshipsPage() {
                       <Label>Duration</Label>
                       <Input
                         value={internship.duration}
-                        placeholder="3 months"
+                        placeholder="Eg: 3 months"
                         onChange={(e) =>
                           updateField(index, "duration", e.target.value)
                         }
+                        required
                       />
                     </div>
 

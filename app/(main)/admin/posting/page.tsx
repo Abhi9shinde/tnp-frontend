@@ -61,6 +61,12 @@ export default function Posting() {
     e.preventDefault();
     setLoading(true);
 
+    if (formData.allowedBranches.length === 0) {
+      toast.error("Please select at least one allowed branch");
+      setLoading(false);
+      return;
+    }
+
     try {
       // 1️Create Job Posting
       await axios.post("/api/my-proxy/api/v1/admin/createJobWithEligibility", {
@@ -167,12 +173,15 @@ export default function Posting() {
             </div>
 
             <div className="space-y-2">
-              <Label>Company Information</Label>
+              <Label>
+                Company Information <span className="text-destructive">*</span>
+              </Label>
               <Textarea
                 name="companyInfo"
                 value={formData.companyInfo}
                 onChange={handleChange}
                 className="min-h-[100px]"
+                required
               />
             </div>
 
@@ -231,7 +240,9 @@ export default function Posting() {
                 />
 
                 <div className="md:col-span-2 space-y-2">
-                  <Label>Allowed Branches</Label>
+                  <Label>
+                    Allowed Branches <span className="text-destructive">*</span>
+                  </Label>
                   <div className="flex flex-wrap gap-2">
                     {branches.map((branch) => (
                       <Button
@@ -286,8 +297,10 @@ function InputField({
 }) {
   return (
     <div className="space-y-2">
-      <Label>{label}</Label>
-      <Input type="number" name={name} onChange={onChange} />
+      <Label>
+        {label} <span className="text-destructive">*</span>
+      </Label>
+      <Input type="number" name={name} onChange={onChange} required/>
     </div>
   );
 }

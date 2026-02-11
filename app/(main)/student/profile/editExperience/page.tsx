@@ -183,7 +183,7 @@ export default function EditExperience() {
           >
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <Label>Company</Label>
+                <Label>Company <span className="text-destructive">*</span></Label>
                 <Input
                   disabled={!item.isEditing}
                   value={item.company}
@@ -195,7 +195,7 @@ export default function EditExperience() {
               </div>
 
               <div>
-                <Label>Role</Label>
+                <Label>Role <span className="text-destructive">*</span></Label>
                 <Input
                   disabled={!item.isEditing}
                   value={item.role}
@@ -205,7 +205,7 @@ export default function EditExperience() {
               </div>
 
               <div>
-                <Label>Duration</Label>
+                <Label>Duration <span className="text-destructive">*</span></Label>
                 <Input
                   disabled={!item.isEditing}
                   value={item.duration}

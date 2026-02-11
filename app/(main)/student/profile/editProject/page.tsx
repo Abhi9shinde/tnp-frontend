@@ -208,7 +208,7 @@ export default function EditProject() {
             {/* Fields */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <Label>Title</Label>
+                <Label>Title <span className="text-destructive">*</span></Label>
                 <Input
                   disabled={!item.isEditing}
                   value={item.title}
@@ -228,7 +228,7 @@ export default function EditProject() {
             </div>
 
             <div>
-              <Label>Description</Label>
+              <Label>Description <span className="text-destructive">*</span></Label>
               <Textarea
                 disabled={!item.isEditing}
                 value={item.description}
@@ -242,7 +242,7 @@ export default function EditProject() {
             </div>
 
             <div>
-              <Label>Tech stack (comma separated)</Label>
+              <Label>Tech stack (comma separated) <span className="text-destructive">*</span></Label>
               <Input
                 disabled={!item.isEditing}
                 value={item.techStack}

@@ -266,7 +266,7 @@ export default function EditSocial() {
               </div>
 
               <div>
-                <Label>Profile URL</Label>
+                <Label>Profile URL <span className="text-destructive">*</span></Label>
                 <Input
                   disabled={!item.isEditing}
                   value={item.url}

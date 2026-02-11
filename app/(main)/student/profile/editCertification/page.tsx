@@ -174,7 +174,7 @@ export default function EditCertification() {
           >
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <Label>Title</Label>
+                <Label>Title <span className="text-destructive">*</span></Label>
                 <Input
                   disabled={!item.isEditing}
                   value={item.title}
@@ -183,7 +183,7 @@ export default function EditCertification() {
               </div>
 
               <div>
-                <Label>Organization</Label>
+                <Label>Organization <span className="text-destructive">*</span></Label>
                 <Input
                   disabled={!item.isEditing}
                   value={item.organization}

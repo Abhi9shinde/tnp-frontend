@@ -76,6 +76,16 @@ const Education = () => {
     event.preventDefault();
     setStatusMessage("");
     setErrorMessage("");
+    const has12th = formData.twelfthPercent > 0 && formData.twelfthYear > 0;
+
+    const hasDiploma = formData.diplomaPercent > 0 && formData.diplomaYear > 0;
+
+    if (!has12th && !hasDiploma) {
+      setErrorMessage(
+        "Please provide either 12th details or Diploma details (at least one is required).",
+      );
+      return;
+    }
     setIsSubmitting(true);
 
     try {
@@ -159,7 +169,7 @@ const Education = () => {
                 <Input
                   id="enrollmentYear"
                   type="number"
-                  placeholder="2022"
+                  placeholder="Your Enrollment Year"
                   value={formData.enrollmentYear || ""}
                   onChange={(event) => {
                     const year = event.target.value;
@@ -183,7 +193,7 @@ const Education = () => {
                 <Input
                   id="passingYear"
                   type="number"
-                  placeholder="2026"
+                  placeholder="Your Passing Year"
                   value={formData.passingYear || ""}
                   onChange={(event) => {
                     const year = event.target.value;
@@ -242,7 +252,7 @@ const Education = () => {
                   id="tenthPercent"
                   type="number"
                   step="0.01"
-                  placeholder="92.5"
+                  placeholder="Your 10th Percentage"
                   min={0}
                   value={formData.tenthPercent || ""}
                   onChange={(event) =>
@@ -255,7 +265,7 @@ const Education = () => {
                 <Input
                   id="tenthYear"
                   type="number"
-                  placeholder="2019"
+                  placeholder="Your 10th Passing Year"
                   min={0}
                   value={formData.tenthYear || ""}
                   onChange={(event) =>
@@ -270,7 +280,7 @@ const Education = () => {
                   type="number"
                   step="0.01"
                   min={0}
-                  placeholder="88.0"
+                  placeholder="Your 12th Percentage"
                   value={formData.twelfthPercent || ""}
                   onChange={(event) =>
                     updateField("twelfthPercent", event.target.value)
@@ -283,7 +293,7 @@ const Education = () => {
                   id="twelfthYear"
                   type="number"
                   min={0}
-                  placeholder="2021"
+                  placeholder="Your 12th Passing Year"
                   value={formData.twelfthYear || ""}
                   onChange={(event) =>
                     updateField("twelfthYear", event.target.value)
@@ -302,7 +312,7 @@ const Education = () => {
                   type="number"
                   step="0.01"
                   min={0}
-                  placeholder="75.0"
+                  placeholder="Your Diploma Percentage"
                   value={formData.diplomaPercent || 0}
                   onChange={(event) =>
                     updateField("diplomaPercent", event.target.value)
@@ -315,7 +325,7 @@ const Education = () => {
                   id="diplomaYear"
                   type="number"
                   min={0}
-                  placeholder="2020"
+                  placeholder="Your Diploma Passing Year"
                   value={formData.diplomaYear || ""}
                   onChange={(event) =>
                     updateField("diplomaYear", event.target.value)

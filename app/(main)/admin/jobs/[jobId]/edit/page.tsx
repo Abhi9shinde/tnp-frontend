@@ -58,7 +58,6 @@ export default function EditJobPage() {
     try {
       setSaving(true);
 
-      // 1️⃣ Update job details
       await axios.put("/api/my-proxy/api/v1/admin/editPostingDetails", {
         id: job.id,
         role: job.role,
@@ -69,13 +68,11 @@ export default function EditJobPage() {
         deadline: job.deadline,
       });
 
-      // 2️⃣ Update eligibility
       await axios.put("/api/my-proxy/api/v1/admin/editEligibilityCriteria", {
         jobPostId: job.id,
         ...eligibility,
       });
 
-      // 3️⃣ Update job status (only if changed)
       if (status !== job.status) {
         await axios.patch("/api/my-proxy/api/v1/admin/job/status", {
           jobPostId: job.id,
@@ -245,6 +242,29 @@ export default function EditJobPage() {
         <Button variant="ghost" onClick={() => router.back()}>
           Cancel
         </Button>
+        {/* <Button
+          variant="destructive"
+          disabled={job.status === "ARCHIVED" || saving}
+          onClick={async () => {
+            try {
+              setSaving(true);
+
+              await axios.patch("/api/my-proxy/api/v1/admin/job/status", {
+                jobPostId: job.id,
+                status: "ARCHIVED",
+              });
+
+              toast.success("Job archived");
+              router.push("/admin/jobs");
+            } catch (err: any) {
+              toast.error("Failed to archive job");
+            } finally {
+              setSaving(false);
+            }
+          }}
+        >
+          Archive Job
+        </Button> */}
         <Button onClick={saveChanges} disabled={saving}>
           {saving ? "Saving…" : "Save Changes"}
         </Button>

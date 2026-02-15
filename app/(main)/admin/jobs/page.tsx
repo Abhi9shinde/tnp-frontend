@@ -5,9 +5,25 @@ import { AdminJobCard } from "@/components/admin/AdminJobCard";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from "next/navigation";
+import { useState, useMemo } from "react";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 
 export default function AdminJobsPage() {
   const { data: jobs, isLoading } = useAdminJobPostings();
+  const [statusFilter, setStatusFilter] = useState("ALL");
+  const filteredJobs = useMemo(() => {
+    if (!jobs) return [];
+
+    if (statusFilter === "ALL") return jobs;
+
+    return jobs.filter((job) => job.status === statusFilter);
+  }, [jobs, statusFilter]);
   const router = useRouter();
 
   return (
@@ -18,10 +34,25 @@ export default function AdminJobsPage() {
           <h1 className="text-2xl font-bold">Job Postings</h1>
           <p className="text-muted-foreground">Manage all placement drives</p>
         </div>
+        <div className="flex items-center gap-3">
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-[170px]">
+              <SelectValue placeholder="Filter status" />
+            </SelectTrigger>
 
-        <Button onClick={() => router.push("/admin/posting")}>
-          + Create Job
-        </Button>
+            <SelectContent>
+              <SelectItem value="ALL">All Jobs</SelectItem>
+              <SelectItem value="OPEN">Open</SelectItem>
+              <SelectItem value="DRAFT">Draft</SelectItem>
+              <SelectItem value="CLOSED">Closed</SelectItem>
+              <SelectItem value="ARCHIVED">Archived</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <Button onClick={() => router.push("/admin/posting")}>
+            + Create Job
+          </Button>
+        </div>
       </div>
 
       {/* Grid */}
@@ -30,10 +61,10 @@ export default function AdminJobsPage() {
           ? Array.from({ length: 6 }).map((_, i) => (
               <Skeleton key={i} className="h-48 rounded-xl" />
             ))
-          : jobs?.map((job) => <AdminJobCard key={job.id} job={job} />)}
+          : filteredJobs?.map((job) => <AdminJobCard key={job.id} job={job} />)}
       </div>
 
-      {!isLoading && jobs?.length === 0 && (
+      {!isLoading && filteredJobs?.length === 0 && (
         <p className="text-center text-muted-foreground py-10">
           No job postings yet.
         </p>

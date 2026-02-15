@@ -71,7 +71,9 @@ export async function POST(
     body: parsedBody !== undefined ? JSON.stringify(parsedBody) : undefined,
   });
 
-  return new NextResponse(await res.json(), { status: res.status });
+  const data = await res.json();
+  return NextResponse.json(data, { status: res.status });
+
 }
 
 export async function PUT(
@@ -133,7 +135,8 @@ export async function PATCH(
     body: parsedBody !== undefined ? JSON.stringify(parsedBody) : undefined,
   });
 
-  return new NextResponse(await res.json(), { status: res.status });
+  const data = await res.json();
+return NextResponse.json(data, { status: res.status });
 }
 
 export async function DELETE(

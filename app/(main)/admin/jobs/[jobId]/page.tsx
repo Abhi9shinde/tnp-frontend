@@ -4,6 +4,8 @@ import { useParams, useRouter } from "next/navigation";
 import { useState, useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import axios from "axios";
+
 import {
   Card,
   CardContent,
@@ -17,6 +19,8 @@ import { ApplicationsTable } from "@/components/admin/ApplicationsTable";
 import { useAdminJob } from "@/hooks/useAdminJob";
 import { useJobApplications } from "@/hooks/useJobApplications";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useNotifyEligibleStudents } from "@/hooks/useNotifyEligibleStudents";
+
 
 type ApplicationTab =
   | "ALL"
@@ -73,10 +77,13 @@ export default function AdminJobDetailPage() {
     );
   };
 
+    const notifyMutation = useNotifyEligibleStudents(jobId);
+
   if (isLoading) return <div className="p-8">Loading…</div>;
   if (!data) return <div className="p-8 text-red-500">Job not found</div>;
 
   const { job, stats } = data;
+
 
   return (
     <div className="space-y-8 p-4 md:p-8">
@@ -194,8 +201,35 @@ export default function AdminJobDetailPage() {
             </p>
           </div>
 
-          <Button disabled={stats.eligibleNotApplied === 0}>
-            Notify Eligible Students
+          <Button disabled={
+            stats.eligibleNotApplied === 0 || notifyMutation.isPending
+            }
+            onClick={async () => {
+            try {
+              const res = await notifyMutation.mutateAsync();
+              const { emails, subject, body } = res;
+
+              if (!emails?.length) {
+                alert("No students to notify");
+                return;
+              }
+
+              const gmailUrl =
+              `https://mail.google.com/mail/?view=cm&fs=1` +
+              `&to=${encodeURIComponent(emails.join(","))}` +
+              `&su=${encodeURIComponent(subject)}` +
+              `&body=${encodeURIComponent(body)}`;
+
+              window.open(gmailUrl, "_blank");
+            } catch (err: any) {
+              console.error("Notify error:", err?.response?.data || err);
+              alert("Failed to prepare email");
+            }
+          }}
+          >
+            {notifyMutation.isPending
+              ? "Preparing..."
+              : "Notify Eligible Students"}
           </Button>
         </CardContent>
       </Card>

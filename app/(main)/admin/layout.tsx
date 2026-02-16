@@ -20,8 +20,8 @@ import { useRouter } from "next/navigation";
 
 const sidebarPlaceholders = [
   {
-    label: "TEST",
-    href: "/TEST",
+    label: "Jobs",
+    href: "/admin/jobs",
   },
 ];
 

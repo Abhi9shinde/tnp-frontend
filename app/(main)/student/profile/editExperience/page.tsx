@@ -217,7 +217,7 @@ export default function EditExperience() {
               </div>
             </div>
             <div>
-              <Label>Description</Label>
+              <Label>Description<span className="text-destructive">*</span></Label>
               <Textarea
                 disabled={!item.isEditing}
                 value={item.description}

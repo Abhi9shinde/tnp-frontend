@@ -11,6 +11,12 @@ import {
   IconLink,
   IconArrowNarrowRight,
   IconExternalLink,
+  IconSchool,
+  IconBriefcase,
+  IconFileCode,
+  IconCpu,
+  IconCertificate,
+  IconTrophy,
 } from "@tabler/icons-react";
 import Container from "@/components/Container";
 import { useSession } from "@/providers/session-provider";
@@ -92,10 +98,12 @@ export default function OverviewPage() {
         <div className="space-y-10 mt-12">
           {/* Experience */}
           <div className="mt-6">
-            <p className="mb-2 text-sm font-semibold text-neutral-500">
-              Experience
-            </p>
-
+            <span className="flex flex-row gap-2">
+              <IconBriefcase className="h-5 w-5 text-primary" />
+              <p className="mb-2 text-sm font-semibold text-neutral-500">
+                Experience
+              </p>
+            </span>
             {profile.internships?.length > 0 ? (
               <div className="space-y-4">
                 {profile.internships.map((internship: any) => (
@@ -134,10 +142,12 @@ export default function OverviewPage() {
 
           {/* Achievements */}
           <div className="mt-6">
-            <p className="mb-2 text-sm font-semibold text-neutral-500">
-              Achievements
-            </p>
-
+            <span className="flex flex-row gap-2">
+              <IconTrophy className="h-4 w-4" />
+              <p className="mb-2 text-sm font-semibold text-neutral-500">
+                Achievements
+              </p>
+            </span>
             {profile.achievements?.length > 0 ? (
               <div className="space-y-4">
                 {profile.achievements.map((achievement: any) => (
@@ -176,9 +186,12 @@ export default function OverviewPage() {
 
           {/* Projects */}
           <div className="mt-6">
-            <p className="mb-2 text-sm font-semibold text-neutral-500">
-              Projects
-            </p>
+            <span className="flex flex-row gap-2">
+              <IconFileCode className="h-5 w-5 text-primary" />
+              <p className="mb-2 text-sm font-semibold text-neutral-500">
+                Projects
+              </p>
+            </span>
 
             {profile.projects?.length > 0 ? (
               <div className="space-y-4">
@@ -240,12 +253,14 @@ export default function OverviewPage() {
               </p>
             )}
           </div>
-
           {/* Education*/}
           <div className="mt-6">
-            <p className="text-sm font-semibold text-neutral-500 mb-2">
-              Education
-            </p>
+            <span className="flex flex-row gap-2">
+              <IconSchool className="h-4 w-4" />
+              <p className="text-sm font-semibold text-neutral-500 mb-2">
+                Education
+              </p>
+            </span>
             <div className="flex flex-row justify-between">
               <div className="text-sm">
                 <p className="font-semibold">
@@ -267,9 +282,12 @@ export default function OverviewPage() {
 
           {/* Skills */}
           <div className="mt-6">
-            <p className="mb-2 text-sm font-semibold text-neutral-500">
-              Skills
-            </p>
+            <span className="flex flex-row gap-2">
+              <IconCpu className="h-4 w-4" />
+              <p className="mb-2 text-sm font-semibold text-neutral-500">
+                Skills
+              </p>
+            </span>
 
             {profile.skills?.length > 0 ? (
               <div className="flex flex-wrap gap-2">
@@ -288,9 +306,12 @@ export default function OverviewPage() {
 
           {/* Certificates */}
           <div className="mt-6">
-            <p className="mb-2 text-sm font-semibold text-neutral-500">
-              Certificates
-            </p>
+            <span className="flex flex-row gap-2">
+              <IconCertificate className="h-4 w-4" />
+              <p className="mb-2 text-sm font-semibold text-neutral-500">
+                Certificates
+              </p>
+            </span>
 
             {profile.certifications?.length > 0 ? (
               <div className="space-y-4">

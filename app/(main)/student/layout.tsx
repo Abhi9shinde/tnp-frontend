@@ -26,7 +26,7 @@ const sidebarPlaceholders = [
   {
     label: "Search",
     href: "/student/search",
-  },  
+  },
   {
     label: "Profile",
     href: "/student/profile/overview",
@@ -34,6 +34,10 @@ const sidebarPlaceholders = [
   {
     label: "Postings",
     href: "/student/postings",
+  },
+  {
+    label: "Interview Experiences",
+    href: "/student/experiences",
   },
 ];
 

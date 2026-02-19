@@ -16,6 +16,7 @@ import {
 
 export default function AdminJobsPage() {
   const { data: jobs, isLoading } = useAdminJobPostings();
+
   const [statusFilter, setStatusFilter] = useState("ALL");
   const filteredJobs = useMemo(() => {
     if (!jobs) return [];
@@ -36,7 +37,7 @@ export default function AdminJobsPage() {
         </div>
         <div className="flex items-center gap-3">
           <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-[170px]">
+            <SelectTrigger className="w-42.5">
               <SelectValue placeholder="Filter status" />
             </SelectTrigger>
 

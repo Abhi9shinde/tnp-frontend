@@ -3,6 +3,7 @@
 import React from "react";
 
 import { useAdminJobPostings } from "@/hooks/useAdminJobPostings";
+import { useStatistics } from "@/hooks/useStatistics";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -16,16 +17,16 @@ import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/navigation";
 
 export default function AdminDashboardComponent() {
-  const { data: postings, isLoading } = useAdminJobPostings();
-  const router = useRouter();
-
-  // Placeholder stats - in a real app these would likely come from an API
+  const { data: postings, isLoading: isLoadingPostings } = useAdminJobPostings();
+  const { data: statsData, isLoading: isLoadingStats } = useStatistics();
+  const router = useRouter(); 
+  console.log(statsData);
   const stats = [
     {
       title: "Placed Students",
-      value: "142",
+      value: statsData?.placedStudents?.toString() || "0",
       label: "Total Placed",
-      change: "+12% from last year",
+      change: "Current statistics",
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -45,7 +46,7 @@ export default function AdminDashboardComponent() {
     },
     {
       title: "Total Students",
-      value: "520",
+      value: statsData?.totalStudents?.toString() || "0",
       label: "Registered",
       change: "Active batch",
       icon: (
@@ -64,10 +65,10 @@ export default function AdminDashboardComponent() {
       ),
     },
     {
-      title: "Companies",
-      value: "24",
-      label: "Visited",
-      change: "+4 this month",
+      title: "Total Postings",
+      value: statsData?.totalPostings?.toString() || "0",
+      label: "Companies",
+      change: "Drives conducted",
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -124,23 +125,36 @@ export default function AdminDashboardComponent() {
         </Card>
 
         {/* Stats Cards */}
-        {stats.map((stat, i) => (
-          <Card
-            key={i}
-            className="hover:shadow-lg transition-shadow duration-300 border-border/50"
-          >
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                {stat.title}
-              </CardTitle>
-              {stat.icon}
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stat.value}</div>
-              <p className="text-xs text-muted-foreground">{stat.change}</p>
-            </CardContent>
-          </Card>
-        ))}
+        {isLoadingStats
+          ? [1, 2, 3].map((i) => (
+              <Card key={i} className="border-border/50">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <Skeleton className="h-4 w-[100px]" />
+                  <Skeleton className="h-4 w-4 rounded-full" />
+                </CardHeader>
+                <CardContent>
+                  <Skeleton className="h-8 w-[60px] mb-2" />
+                  <Skeleton className="h-3 w-[120px]" />
+                </CardContent>
+              </Card>
+            ))
+          : stats.map((stat, i) => (
+              <Card
+                key={i}
+                className="hover:shadow-lg transition-shadow duration-300 border-border/50"
+              >
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    {stat.title}
+                  </CardTitle>
+                  {stat.icon}
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{stat.value}</div>
+                  <p className="text-xs text-muted-foreground">{stat.change}</p>
+                </CardContent>
+              </Card>
+            ))}
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
@@ -161,7 +175,7 @@ export default function AdminDashboardComponent() {
             </div>
           </CardHeader>
           <CardContent>
-            {isLoading ? (
+            {isLoadingPostings ? (
               <div className="space-y-4">
                 {[1, 2, 3].map((i) => (
                   <div key={i} className="flex items-center space-x-4">

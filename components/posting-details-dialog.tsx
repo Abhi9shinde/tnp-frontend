@@ -34,6 +34,7 @@ interface PostingDetailsDialogProps {
 }
 
 interface EligibilityCriteria {
+  eligibility:{
   id: string;
   allowedBranches: string[];
   minTenth: number;
@@ -43,6 +44,8 @@ interface EligibilityCriteria {
   jobPostId: string;
   passingYear: number;
   minDiploma: number;
+  },
+  samePackageOffered:boolean
 }
 
 interface StudentEducation {
@@ -107,7 +110,7 @@ export function PostingDetailsDialog({
         `/api/my-proxy/api/v1/student/applications`,
       );
       const applications = response.data;
-      console.log(applications);
+      
       const application = applications.find(
         (app: any) => app.jobPostId === posting?.id,
       );
@@ -124,42 +127,48 @@ export function PostingDetailsDialog({
       return { isEligible: false, reasons: [] as string[] };
     }
 
-    const reasons: string[] = [];
-
-    if (studentEducation.cgpa < eligibility.minCGPA) {
-      reasons.push(`Minimum CGPA required is ${eligibility.minCGPA}`);
+    if (eligibility.samePackageOffered) {
+      return {
+        isEligible: false,
+        reasons: ["Already offered a similar or higher package"],
+      };
     }
 
-    if (studentEducation.tenthPercent < eligibility.minTenth) {
-      reasons.push(`Minimum 10th % required is ${eligibility.minTenth}`);
+    const criteria = eligibility.eligibility;
+    const reasons: string[] = [];
+
+    if (studentEducation.cgpa < criteria.minCGPA) {
+      reasons.push(`Minimum CGPA required is ${criteria.minCGPA}`);
+    }
+
+    if (studentEducation.tenthPercent < criteria.minTenth) {
+      reasons.push(`Minimum 10th % required is ${criteria.minTenth}`);
     }
 
     if (
       studentEducation.twelfthPercent
-        ? studentEducation.twelfthPercent < eligibility.minTwelfth
-        : studentEducation.diplomaPercent < eligibility.minDiploma
+        ? studentEducation.twelfthPercent < criteria.minTwelfth
+        : studentEducation.diplomaPercent < criteria.minDiploma
     ) {
       reasons.push(
         studentEducation.twelfthPercent
-          ? `Minimum 12th % required is ${eligibility.minTwelfth}`
-          : `Minimum Diploma % required is ${eligibility.minDiploma}`,
+          ? `Minimum 12th % required is ${criteria.minTwelfth}`
+          : `Minimum Diploma % required is ${criteria.minDiploma}`,
       );
     }
     if (
-      eligibility.passingYear &&
-      studentEducation.passingYear !== eligibility.passingYear
+      criteria.passingYear &&
+      studentEducation.passingYear !== criteria.passingYear
     ) {
-      reasons.push(
-        `Only ${eligibility.passingYear} batch students are eligible`,
-      );
+      reasons.push(`Only ${criteria.passingYear} batch students are eligible`);
     }
-    if (studentEducation.backlogs > eligibility.maxBacklogs) {
-      reasons.push(`Max allowed backlogs is ${eligibility.maxBacklogs}`);
+    if (studentEducation.backlogs > criteria.maxBacklogs) {
+      reasons.push(`Max allowed backlogs is ${criteria.maxBacklogs}`);
     }
 
     if (
-      eligibility.allowedBranches?.length &&
-      !eligibility.allowedBranches.some(
+      criteria.allowedBranches?.length &&
+      !criteria.allowedBranches.some(
         (b) =>
           b === "All" ||
           studentEducation.branch.toLowerCase().includes(b.toLowerCase()),
@@ -287,15 +296,29 @@ export function PostingDetailsDialog({
                   <Skeleton key={i} className="h-20 w-full rounded-lg" />
                 ))}
               </div>
-            ) : eligibility ? (
+            ) : eligibility?.samePackageOffered ? (
+              <div className="bg-destructive/10 p-6 rounded-lg border border-destructive/20 flex flex-col items-center text-center gap-3">
+                <XCircle className="w-12 h-12 text-destructive" />
+                <div className="space-y-1">
+                  <h4 className="font-bold text-lg text-destructive">
+                    Not Eligible
+                  </h4>
+                  <p className="text-sm text-destructive/80 max-w-md">
+                    You have already been offered a package of similar or higher
+                    value. According to the policy, you are not eligible to
+                    apply for this position.
+                  </p>
+                </div>
+              </div>
+            ) : eligibility?.eligibility ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <EligibilityCard
                   label="Minimum CGPA"
-                  value={eligibility.minCGPA}
+                  value={eligibility.eligibility.minCGPA}
                   icon={<GraduationCap className="w-4 h-4" />}
                   status={
                     studentEducation
-                      ? studentEducation.cgpa >= eligibility.minCGPA
+                      ? studentEducation.cgpa >= eligibility.eligibility.minCGPA
                         ? "pass"
                         : "fail"
                       : "neutral"
@@ -304,11 +327,12 @@ export function PostingDetailsDialog({
                 />
                 <EligibilityCard
                   label="10th Percentage"
-                  value={`${eligibility.minTenth}%`}
+                  value={`${eligibility.eligibility.minTenth}%`}
                   icon={<Percent className="w-4 h-4" />}
                   status={
                     studentEducation
-                      ? studentEducation.tenthPercent >= eligibility.minTenth
+                      ? studentEducation.tenthPercent >=
+                        eligibility.eligibility.minTenth
                         ? "pass"
                         : "fail"
                       : "neutral"
@@ -321,12 +345,12 @@ export function PostingDetailsDialog({
                 />
                 <EligibilityCard
                   label="12th Percentage"
-                  value={`${eligibility.minTwelfth}%`}
+                  value={`${eligibility.eligibility.minTwelfth}%`}
                   icon={<Percent className="w-4 h-4" />}
                   status={
                     studentEducation
                       ? studentEducation.twelfthPercent >=
-                        eligibility.minTwelfth
+                        eligibility.eligibility.minTwelfth
                         ? "pass"
                         : "fail"
                       : "neutral"
@@ -340,15 +364,15 @@ export function PostingDetailsDialog({
                 <EligibilityCard
                   label="Diploma Percentage"
                   value={
-                    eligibility.minDiploma != null
-                      ? `${eligibility.minDiploma}%`
+                    eligibility.eligibility.minDiploma != null
+                      ? `${eligibility.eligibility.minDiploma}%`
                       : "N/A"
                   }
                   icon={<Percent className="w-4 h-4" />}
                   status={
                     studentEducation
                       ? studentEducation.diplomaPercent >=
-                        eligibility.minDiploma
+                        eligibility.eligibility.minDiploma
                         ? "pass"
                         : "fail"
                       : "neutral"
@@ -361,11 +385,12 @@ export function PostingDetailsDialog({
                 />
                 <EligibilityCard
                   label="Max Backlogs"
-                  value={eligibility.maxBacklogs}
+                  value={eligibility.eligibility.maxBacklogs}
                   icon={<AlertCircle className="w-4 h-4" />}
                   status={
                     studentEducation
-                      ? studentEducation.backlogs <= eligibility.maxBacklogs
+                      ? studentEducation.backlogs <=
+                        eligibility.eligibility.maxBacklogs
                         ? "pass"
                         : "fail"
                       : "neutral"

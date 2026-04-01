@@ -282,6 +282,7 @@ const Education = () => {
                   placeholder="Your 10th Percentage"
                   min={0}
                   value={formData.tenthPercent || ""}
+                  required
                   onChange={(event) =>
                     updateField("tenthPercent", event.target.value)
                   }
@@ -295,6 +296,7 @@ const Education = () => {
                   placeholder="Your 10th Passing Year"
                   min={0}
                   value={formData.tenthYear || ""}
+                  required
                   onChange={(event) =>
                     updateField("tenthYear", event.target.value)
                   }

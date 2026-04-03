@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { BRANCHES as branches } from "@/constants/branches";
+import { isValidString } from "@/lib/validation";
 const surfaceStyles = "rounded-2xl border border-border bg-card p-6 shadow-sm";
 
 interface EducationFormData {
@@ -50,6 +51,19 @@ const BRANCHES = branches; //from constants
 
 const Education = () => {
   const [formData, setFormData] = useState<EducationFormData>(initialFormState);
+  // Raw string state for numeric inputs so users can freely type/backspace
+  const [rawInputs, setRawInputs] = useState<Record<string, string>>({
+    cgpa: "",
+    backlogs: "",
+    enrollmentYear: "",
+    passingYear: "",
+    tenthPercent: "",
+    tenthYear: "",
+    twelfthPercent: "",
+    twelfthYear: "",
+    diplomaPercent: "",
+    diplomaYear: "",
+  });
   const [statusMessage, setStatusMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -59,19 +73,20 @@ const Education = () => {
     field: keyof EducationFormData,
     value: string | number,
   ) => {
-    setFormData((prev) => {
-      if (field === "branch" || field === "admissionType") {
-        return { ...prev, [field]: value as string };
-      } else {
-        const numValue =
-          typeof value === "string"
-            ? value === ""
-              ? 0
-              : parseFloat(value)
-            : value;
-        return { ...prev, [field]: numValue };
-      }
-    });
+    if (field === "branch" || field === "admissionType") {
+      setFormData((prev) => ({ ...prev, [field]: value as string }));
+    } else {
+      // Store raw string for display
+      setRawInputs((prev) => ({ ...prev, [field]: String(value) }));
+      // Also keep formData in sync for non-input logic
+      const numValue =
+        typeof value === "string"
+          ? value === ""
+            ? 0
+            : parseFloat(value) || 0
+          : value;
+      setFormData((prev) => ({ ...prev, [field]: numValue }));
+    }
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -81,8 +96,29 @@ const Education = () => {
     const isRegular = formData.admissionType === "Regular";
     const isDSE = formData.admissionType === "Direct second year";
 
+    // --- Client-side validation ---
+    if (!formData.branch) {
+      setErrorMessage("Please select a branch.");
+      return;
+    }
     if (!formData.admissionType) {
       setErrorMessage("Please select an admission type.");
+      return;
+    }
+    if (!formData.enrollmentYear || formData.enrollmentYear < 2000) {
+      setErrorMessage("Please enter a valid enrollment year.");
+      return;
+    }
+    if (formData.cgpa <= 0 || formData.cgpa > 10) {
+      setErrorMessage("CGPA must be between 0.01 and 10.");
+      return;
+    }
+    if (formData.tenthPercent <= 0 || formData.tenthPercent > 100) {
+      setErrorMessage("10th Percentage must be between 0.01 and 100.");
+      return;
+    }
+    if (!formData.tenthYear || formData.tenthYear < 2000 || formData.tenthYear > new Date().getFullYear() || String(formData.tenthYear).length !== 4) {
+      setErrorMessage("10th Passing Year must be a complete 4-digit year (e.g. 2020).");
       return;
     }
 
@@ -90,11 +126,28 @@ const Education = () => {
       setErrorMessage("Please provide 12th details for Regular admission.");
       return;
     }
+    if (isRegular && (formData.twelfthYear < 2000 || formData.twelfthYear > new Date().getFullYear() || String(formData.twelfthYear).length !== 4)) {
+      setErrorMessage("12th Passing Year must be a complete 4-digit year (e.g. 2022).");
+      return;
+    }
+    if (isRegular && (formData.twelfthPercent < 0 || formData.twelfthPercent > 100)) {
+      setErrorMessage("12th Percentage must be between 0.01 and 100.");
+      return;
+    }
 
     if (isDSE && (formData.diplomaPercent === 0 || formData.diplomaYear === 0)) {
       setErrorMessage("Please provide Diploma details for Direct Second Year admission.");
       return;
     }
+    if (isDSE && (formData.diplomaYear < 2000 || formData.diplomaYear > new Date().getFullYear() || String(formData.diplomaYear).length !== 4)) {
+      setErrorMessage("Diploma Passing Year must be a complete 4-digit year (e.g. 2023).");
+      return;
+    }
+    if (isDSE && (formData.diplomaPercent < 0 || formData.diplomaPercent > 100)) {
+      setErrorMessage("Diploma Percentage must be between 0.01 and 100.");
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -197,7 +250,7 @@ const Education = () => {
                   id="enrollmentYear"
                   type="number"
                   placeholder="Your Enrollment Year"
-                  value={formData.enrollmentYear || ""}
+                  value={rawInputs.enrollmentYear}
                   onChange={(event) => {
                     const year = event.target.value;
                     updateField("enrollmentYear", event.target.value);
@@ -221,7 +274,7 @@ const Education = () => {
                   id="passingYear"
                   type="number"
                   placeholder="Your Passing Year"
-                  value={formData.passingYear || ""}
+                  value={rawInputs.passingYear}
                   onChange={(event) => {
                     const year = event.target.value;
                     updateField("passingYear", event.target.value);
@@ -239,7 +292,7 @@ const Education = () => {
                   type="number"
                   step="0.01"
                   placeholder="8.45"
-                  value={formData.cgpa === 0 ? "0" : formData.cgpa || ""}
+                  value={rawInputs.cgpa}
                   onChange={(event) => updateField("cgpa", event.target.value)}
                   required
                   min={0}
@@ -252,9 +305,7 @@ const Education = () => {
                   type="number"
                   step={1}
                   placeholder="0"
-                  value={
-                    formData.backlogs === 0 ? "0" : formData.backlogs || ""
-                  }
+                  value={rawInputs.backlogs}
                   onChange={(event) =>
                     updateField("backlogs", event.target.value)
                   }
@@ -281,7 +332,7 @@ const Education = () => {
                   step="0.01"
                   placeholder="Your 10th Percentage"
                   min={0}
-                  value={formData.tenthPercent || ""}
+                  value={rawInputs.tenthPercent}
                   required
                   onChange={(event) =>
                     updateField("tenthPercent", event.target.value)
@@ -295,7 +346,7 @@ const Education = () => {
                   type="number"
                   placeholder="Your 10th Passing Year"
                   min={0}
-                  value={formData.tenthYear || ""}
+                  value={rawInputs.tenthYear}
                   required
                   onChange={(event) =>
                     updateField("tenthYear", event.target.value)
@@ -312,7 +363,7 @@ const Education = () => {
                       step="0.01"
                       min={0}
                       placeholder="Your 12th Percentage"
-                      value={formData.twelfthPercent || ""}
+                      value={rawInputs.twelfthPercent}
                       onChange={(event) =>
                         updateField("twelfthPercent", event.target.value)
                       }
@@ -325,7 +376,7 @@ const Education = () => {
                       type="number"
                       min={0}
                       placeholder="Your 12th Passing Year"
-                      value={formData.twelfthYear || ""}
+                      value={rawInputs.twelfthYear}
                       onChange={(event) =>
                         updateField("twelfthYear", event.target.value)
                       }
@@ -345,7 +396,7 @@ const Education = () => {
                       step="0.01"
                       min={0}
                       placeholder="Your Diploma Percentage"
-                      value={formData.diplomaPercent || ""}
+                      value={rawInputs.diplomaPercent}
                       onChange={(event) =>
                         updateField("diplomaPercent", event.target.value)
                       }
@@ -358,7 +409,7 @@ const Education = () => {
                       type="number"
                       min={0}
                       placeholder="Your Diploma Passing Year"
-                      value={formData.diplomaYear || ""}
+                      value={rawInputs.diplomaYear}
                       onChange={(event) =>
                         updateField("diplomaYear", event.target.value)
                       }
@@ -388,7 +439,13 @@ const Education = () => {
                 variant="ghost"
                 onClick={() => {
                   setFormData(initialFormState);
+                  setRawInputs({
+                    cgpa: "", backlogs: "", enrollmentYear: "", passingYear: "",
+                    tenthPercent: "", tenthYear: "", twelfthPercent: "", twelfthYear: "",
+                    diplomaPercent: "", diplomaYear: "",
+                  });
                   setStatusMessage("");
+                  setErrorMessage("");
                 }}
               >
                 Reset

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { isValidString, isValidEmail, isValidPhone } from "@/lib/validation";
 
 type ProfileFormData = {
   firstName: string;
@@ -42,6 +43,33 @@ export default function OnboardingProfilePage() {
     event.preventDefault();
     setStatusMessage("");
     setErrorMessage("");
+
+    // --- Client-side validation ---
+    if (!isValidString(formData.firstName)) {
+      setErrorMessage("First Name must be a valid name (not just dots, dashes, or spaces).");
+      return;
+    }
+    if (!isValidString(formData.middleName)) {
+      setErrorMessage("Middle Name must be a valid name (not just dots, dashes, or spaces).");
+      return;
+    }
+    if (!isValidString(formData.lastName)) {
+      setErrorMessage("Last Name must be a valid name (not just dots, dashes, or spaces).");
+      return;
+    }
+    if (!formData.dob) {
+      setErrorMessage("Date of Birth is required.");
+      return;
+    }
+    if (!isValidEmail(formData.personalEmail)) {
+      setErrorMessage("Please enter a valid email address.");
+      return;
+    }
+    if (!isValidPhone(formData.phoneNo)) {
+      setErrorMessage("Please enter a valid 10-digit phone number.");
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {

@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { isValidString } from "@/lib/validation";
 
 const surfaceStyles = "rounded-2xl border border-border bg-card p-6 shadow-sm";
 const textareaStyles =
@@ -61,6 +62,25 @@ export default function InternshipsPage() {
     event.preventDefault();
     setStatusMessage("");
     setErrorMessage("");
+
+    // --- Client-side validation ---
+    for (let i = 0; i < internships.length; i++) {
+      const entry = internships[i];
+      const label = `Internship #${i + 1}`;
+
+      if (!isValidString(entry.company)) {
+        setErrorMessage(`${label}: Company must be a valid name (not just dots, dashes, or spaces).`);
+        return;
+      }
+      if (!isValidString(entry.role)) {
+        setErrorMessage(`${label}: Role must be a valid title (not just dots, dashes, or spaces).`);
+        return;
+      }
+      if (!isValidString(entry.duration)) {
+        setErrorMessage(`${label}: Duration must be a valid value (not just dots, dashes, or spaces).`);
+        return;
+      }
+    }
 
     try {
       for (const internship of internships) {

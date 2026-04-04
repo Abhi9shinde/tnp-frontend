@@ -28,7 +28,7 @@ const emptyInternship: InternshipEntry = {
 
 export default function InternshipsPage() {
   const router = useRouter();
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [internships, setInternships] = useState<InternshipEntry[]>([
     { ...emptyInternship },
   ]);
@@ -80,8 +80,8 @@ export default function InternshipsPage() {
         setErrorMessage(`${label}: Duration must be a valid value (not just dots, dashes, or spaces).`);
         return;
       }
-    }
-
+    }  
+    setIsSubmitting(true);
     try {
       for (const internship of internships) {
         await axios.post(
@@ -97,6 +97,8 @@ export default function InternshipsPage() {
         error.response?.data?.error ||
           "Failed to save internship details. Try again.",
       );
+    } finally{
+      setIsSubmitting(false);
     }
   };
 

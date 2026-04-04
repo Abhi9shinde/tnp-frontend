@@ -65,6 +65,10 @@ export default function OnboardingProfilePage() {
       setErrorMessage("Please enter a valid email address.");
       return;
     }
+    if (formData.personalEmail.trim().toLowerCase().endsWith("moderncoe.edu.in")) {
+      setErrorMessage("College email (@moderncoe.edu.in) is not allowed. Please use your personal email.");
+      return;
+    }
     if (!isValidPhone(formData.phoneNo)) {
       setErrorMessage("Please enter a valid 10-digit phone number.");
       return;
@@ -187,6 +191,14 @@ export default function OnboardingProfilePage() {
                   }
                   required
                 />
+                <p className="text-xs text-amber-600 dark:text-amber-400">
+                  ⚠️ Do not use your college email ID
+                </p>
+                {formData.personalEmail.trim().toLowerCase().endsWith("moderncoe.edu.in") && (
+                  <p className="text-xs font-medium text-red-600 dark:text-red-400">
+                    College email detected! Please use a personal email (e.g. Gmail, Outlook).
+                  </p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="phoneNo">Phone Number</Label>

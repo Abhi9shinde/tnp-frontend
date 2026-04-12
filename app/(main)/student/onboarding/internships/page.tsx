@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { isValidString } from "@/lib/validation";
 
 const surfaceStyles = "rounded-2xl border border-border bg-card p-6 shadow-sm";
 const textareaStyles =
@@ -27,7 +28,7 @@ const emptyInternship: InternshipEntry = {
 
 export default function InternshipsPage() {
   const router = useRouter();
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [internships, setInternships] = useState<InternshipEntry[]>([
     { ...emptyInternship },
   ]);
@@ -62,6 +63,25 @@ export default function InternshipsPage() {
     setStatusMessage("");
     setErrorMessage("");
 
+    // --- Client-side validation ---
+    for (let i = 0; i < internships.length; i++) {
+      const entry = internships[i];
+      const label = `Internship #${i + 1}`;
+
+      if (!isValidString(entry.company)) {
+        setErrorMessage(`${label}: Company must be a valid name (not just dots, dashes, or spaces).`);
+        return;
+      }
+      if (!isValidString(entry.role)) {
+        setErrorMessage(`${label}: Role must be a valid title (not just dots, dashes, or spaces).`);
+        return;
+      }
+      if (!isValidString(entry.duration)) {
+        setErrorMessage(`${label}: Duration must be a valid value (not just dots, dashes, or spaces).`);
+        return;
+      }
+    }  
+    setIsSubmitting(true);
     try {
       for (const internship of internships) {
         await axios.post(
@@ -77,6 +97,8 @@ export default function InternshipsPage() {
         error.response?.data?.error ||
           "Failed to save internship details. Try again.",
       );
+    } finally{
+      setIsSubmitting(false);
     }
   };
 

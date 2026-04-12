@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { isValidString, isValidEmail, isValidPhone } from "@/lib/validation";
 
 type ProfileFormData = {
   firstName: string;
@@ -42,6 +43,37 @@ export default function OnboardingProfilePage() {
     event.preventDefault();
     setStatusMessage("");
     setErrorMessage("");
+
+    // --- Client-side validation ---
+    if (!isValidString(formData.firstName)) {
+      setErrorMessage("First Name must be a valid name (not just dots, dashes, or spaces).");
+      return;
+    }
+    if (!isValidString(formData.middleName)) {
+      setErrorMessage("Middle Name must be a valid name (not just dots, dashes, or spaces).");
+      return;
+    }
+    if (!isValidString(formData.lastName)) {
+      setErrorMessage("Last Name must be a valid name (not just dots, dashes, or spaces).");
+      return;
+    }
+    if (!formData.dob) {
+      setErrorMessage("Date of Birth is required.");
+      return;
+    }
+    if (!isValidEmail(formData.personalEmail)) {
+      setErrorMessage("Please enter a valid email address.");
+      return;
+    }
+    if (formData.personalEmail.trim().toLowerCase().endsWith("moderncoe.edu.in")) {
+      setErrorMessage("College email (@moderncoe.edu.in) is not allowed. Please use your personal email.");
+      return;
+    }
+    if (!isValidPhone(formData.phoneNo)) {
+      setErrorMessage("Please enter a valid 10-digit phone number.");
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -159,6 +191,14 @@ export default function OnboardingProfilePage() {
                   }
                   required
                 />
+                <p className="text-xs text-amber-600 dark:text-amber-400">
+                  ⚠️ Do not use your college email ID
+                </p>
+                {formData.personalEmail.trim().toLowerCase().endsWith("moderncoe.edu.in") && (
+                  <p className="text-xs font-medium text-red-600 dark:text-red-400">
+                    College email detected! Please use a personal email (e.g. Gmail, Outlook).
+                  </p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="phoneNo">Phone Number</Label>

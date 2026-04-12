@@ -3,7 +3,7 @@
 import React from "react";
 
 import { useAdminJobPostings } from "@/hooks/useAdminJobPostings";
-import { useStatistics } from "@/hooks/useStatistics";
+import { usePlacementOverview } from "@/hooks/usePlacementOverview";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -17,14 +17,17 @@ import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/navigation";
 
 export default function AdminDashboardComponent() {
-  const { data: postings, isLoading: isLoadingPostings } = useAdminJobPostings();
-  const { data: statsData, isLoading: isLoadingStats } = useStatistics();
-  const router = useRouter(); 
-  console.log(statsData);
+  const { data: postings, isLoading: isLoadingPostings } =
+    useAdminJobPostings();
+  const { data: placementOverview, isLoading: isLoadingPlacementOverview } =
+    usePlacementOverview();
+
+  const router = useRouter();
+  console.log(placementOverview);
   const stats = [
     {
       title: "Placed Students",
-      value: statsData?.placedStudents?.toString() || "0",
+      value: placementOverview?.placedCount?.toString() || "0",
       label: "Total Placed",
       change: "Current statistics",
       icon: (
@@ -46,7 +49,7 @@ export default function AdminDashboardComponent() {
     },
     {
       title: "Total Students",
-      value: statsData?.totalStudents?.toString() || "0",
+      value: placementOverview?.totalStudents?.toString() || "0",
       label: "Registered",
       change: "Active batch",
       icon: (
@@ -66,7 +69,7 @@ export default function AdminDashboardComponent() {
     },
     {
       title: "Total Postings",
-      value: statsData?.totalPostings?.toString() || "0",
+      value: placementOverview?.totalPostings?.toString() || "0",
       label: "Companies",
       change: "Drives conducted",
       icon: (
@@ -125,7 +128,7 @@ export default function AdminDashboardComponent() {
         </Card>
 
         {/* Stats Cards */}
-        {isLoadingStats
+        {isLoadingPlacementOverview
           ? [1, 2, 3].map((i) => (
               <Card key={i} className="border-border/50">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -159,7 +162,7 @@ export default function AdminDashboardComponent() {
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
         {/* Open Applications List */}
-        <Card 
+        <Card
           className="col-span-1 md:col-span-2 lg:col-span-4 border-border/50 cursor-pointer hover:shadow-md transition-all duration-200"
           onClick={() => router.push("/admin/jobs")}
         >
@@ -171,7 +174,9 @@ export default function AdminDashboardComponent() {
                   Currently active and recently closed applications.
                 </CardDescription>
               </div>
-              <Badge variant="outline" className="hidden sm:inline-flex">View All</Badge>
+              <Badge variant="outline" className="hidden sm:inline-flex">
+                View All
+              </Badge>
             </div>
           </CardHeader>
           <CardContent>
@@ -237,20 +242,22 @@ export default function AdminDashboardComponent() {
           <CardContent className="flex items-center justify-center min-h-[300px]">
             <div className="text-center space-y-4">
               <div className="relative flex h-32 w-32 mx-auto items-center justify-center rounded-full border-4 border-primary/20">
-                <span className="text-3xl font-bold text-primary">68%</span>
+                <span className="text-3xl font-bold text-primary">
+                  {placementOverview?.placementRate}%
+                </span>
               </div>
               <p className="text-sm text-muted-foreground">
                 Total Placement Rate
               </p>
               <div className="grid grid-cols-2 gap-4 text-xs">
-                <div className="flex flex-col">
-                  <span className="font-medium">CSE</span>
-                  <span className="text-muted-foreground">85% Placed</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="font-medium">ENTC</span>
-                  <span className="text-muted-foreground">62% Placed</span>
-                </div>
+                {placementOverview?.departments?.map((dept: any) => (
+                  <div key={dept.name} className="flex flex-col">
+                    <span className="font-medium">{dept.name}</span>
+                    <span className="text-muted-foreground">
+                      {dept.percentage}% Placed
+                    </span>
+                  </div>
+                ))}
               </div>
             </div>
           </CardContent>

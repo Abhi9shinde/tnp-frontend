@@ -34,18 +34,18 @@ interface PostingDetailsDialogProps {
 }
 
 interface EligibilityCriteria {
-  eligibility:{
-  id: string;
-  allowedBranches: string[];
-  minTenth: number;
-  minTwelfth: number;
-  minCGPA: number;
-  maxBacklogs: number;
-  jobPostId: string;
-  passingYear: number;
-  minDiploma: number;
-  },
-  samePackageOffered:boolean
+  eligibility: {
+    id: string;
+    allowedBranches: string[];
+    minTenth: number;
+    minTwelfth: number;
+    minCGPA: number;
+    maxBacklogs: number;
+    jobPostId: string;
+    passingYear: number;
+    minDiploma: number;
+  };
+  samePackageOffered: boolean;
 }
 
 interface StudentEducation {
@@ -110,7 +110,7 @@ export function PostingDetailsDialog({
         `/api/my-proxy/api/v1/student/applications`,
       );
       const applications = response.data;
-      
+
       const application = applications.find(
         (app: any) => app.jobPostId === posting?.id,
       );
@@ -175,6 +175,9 @@ export function PostingDetailsDialog({
       )
     ) {
       reasons.push(`Role not open for ${studentEducation.branch} students`);
+    }
+    if (posting?.deadline && new Date(posting?.deadline) < new Date()) {
+      reasons.push("Application deadline has passed");
     }
 
     return {

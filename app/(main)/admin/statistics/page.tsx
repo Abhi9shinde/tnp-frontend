@@ -109,19 +109,19 @@ export default function StatisticsPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="md:col-span-1 flex flex-col items-center justify-center p-6 bg-card/50 rounded-xl border border-border/40">
+        <div className="md:col-span-1 flex flex-col items-center justify-center p-6 bg-transparent rounded-xl border border-border/10">
           <CircularProgress 
             value={overview?.placementRate ?? 0} 
             label="Placed" 
             size={180}
             delay={0.5}
           />
-          <p className="mt-4 text-sm text-muted-foreground font-medium">Placement Progress</p>
+          <p className="mt-4 text-xs text-muted-foreground/80 font-semibold uppercase tracking-wider">Placement Progress</p>
         </div>
         
-        <div className="md:col-span-2 p-6 bg-card/50 rounded-xl border border-border/40 space-y-4">
+        <div className="md:col-span-2 p-6 bg-transparent rounded-xl border border-border/10 space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Monthly Placement Trend</h3>
+            <h3 className="text-base font-semibold text-foreground/90">Monthly Placement Trend</h3>
             <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full font-medium">Monthly Hires</span>
           </div>
           <div className="h-32 flex items-end">
@@ -131,15 +131,15 @@ export default function StatisticsPage() {
               delay={0.6}
             />
           </div>
-          <div className="flex justify-between text-[10px] text-muted-foreground font-mono uppercase">
+          <div className="flex justify-between text-[11px] text-muted-foreground/70 font-medium">
             {monthlyPlacementTrend?.map(t => <span key={t.month}>{t.month.slice(0, 3)}</span>) ?? <span>JAN</span>}
           </div>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="p-6 bg-card/50 rounded-xl border border-border/40 space-y-4">
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Application Status</h3>
+        <div className="p-6 bg-transparent rounded-xl border border-border/10 space-y-4">
+          <h3 className="text-base font-semibold text-foreground/90">Application Status</h3>
           <HorizontalBars 
             data={applicationStatusBreakdown ? Object.entries(applicationStatusBreakdown).map(([status, count]) => ({
               name: status,
@@ -148,8 +148,8 @@ export default function StatisticsPage() {
             delay={0.7}
           />
         </div>
-        <div className="p-6 bg-card/50 rounded-xl border border-border/40 space-y-4">
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Job Posting Status</h3>
+        <div className="p-6 bg-transparent rounded-xl border border-border/10 space-y-4">
+          <h3 className="text-base font-semibold text-foreground/90">Job Posting Status</h3>
           <HorizontalBars 
             data={postingInsights?.postingStatusBreakdown ? Object.entries(postingInsights.postingStatusBreakdown).map(([status, count]) => ({
               name: status,
@@ -165,8 +165,8 @@ export default function StatisticsPage() {
   // ── Tab: Departments ───────────────────────────────────────────────────────
   const DepartmentsTab = () => (
     <div className="space-y-8">
-      <div className="p-6 bg-card/50 rounded-xl border border-border/40 space-y-6">
-        <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Department Performance</h3>
+      <div className="p-6 bg-transparent rounded-xl border border-border/10 space-y-6">
+        <h3 className="text-base font-semibold text-foreground/90">Department Performance</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
           <HorizontalBars 
             data={departmentWise?.map(dept => ({
@@ -178,10 +178,10 @@ export default function StatisticsPage() {
           <div className="space-y-4">
              {departmentWise?.slice(0, 4).map((dept) => (
                <div key={dept.department} className="flex items-center justify-between p-3 bg-muted/20 rounded-lg">
-                 <span className="text-sm font-medium">{dept.department}</span>
+                 <span className="text-sm font-semibold">{dept.department}</span>
                  <div className="flex items-center gap-3">
                     <span className="text-xs text-muted-foreground">{dept.placedStudents} / {dept.totalStudents}</span>
-                    <span className="text-sm font-bold text-primary">{dept.placementRate}%</span>
+                    <span className="text-sm font-bold text-primary tabular-nums">{dept.placementRate}%</span>
                  </div>
                </div>
              ))}
@@ -189,22 +189,41 @@ export default function StatisticsPage() {
         </div>
       </div>
 
-      <div className="p-6 bg-card/50 rounded-xl border border-border/40 space-y-6">
-        <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">CGPA vs Placement Rate</h3>
-        <div className="h-40 flex items-end gap-2 px-2">
+      <div className="p-6 bg-transparent rounded-xl border border-border/10 space-y-8">
+        <h3 className="text-base font-semibold text-foreground/90">CGPA vs Placement Rate</h3>
+        <div className="h-48 flex items-end justify-between gap-4 px-2">
           {cgpaPlacementInsights?.map((item, i) => (
-            <div key={item.bucket} className="flex-1 flex flex-col items-center gap-2 group">
-              <div className="relative w-full flex flex-col justify-end items-center h-32">
+            <div key={item.bucket} className="flex-1 flex flex-col items-center gap-4 group max-w-[80px]">
+              <div className="relative w-full flex flex-col justify-end items-center h-40 bg-muted/5 rounded-t-md overflow-hidden">
+                 {/* Background Track Fill (Subtle) */}
+                 <div className="absolute inset-0 bg-primary/5 group-hover:bg-primary/10 transition-colors" />
+                 
+                 {/* Active Bar */}
                  <motion.div 
                     initial={{ height: 0 }}
                     animate={{ height: `${item.placementRate}%` }}
-                    transition={{ duration: 1, delay: 0.2 + i * 0.1 }}
-                    className="w-full bg-primary/40 group-hover:bg-primary/60 rounded-t-sm transition-colors"
-                 />
-                 <span className="absolute -top-6 text-[10px] font-bold group-hover:scale-110 transition-transform">{item.placementRate}%</span>
+                    transition={{ duration: 1, delay: 0.2 + i * 0.1, ease: "circOut" }}
+                    className="relative w-full bg-primary/60 group-hover:bg-primary/80 transition-colors z-10"
+                 >
+                    {/* Value indicator inside/above */}
+                    <span className="absolute -top-7 left-0 right-0 text-center text-[10px] font-bold tabular-nums opacity-0 group-hover:opacity-100 transition-opacity">
+                      {item.placementRate}%
+                    </span>
+                 </motion.div>
+                 
+                 {/* Static Value (Always visible but subtle) */}
+                 <span className="absolute bottom-2 text-[10px] font-bold text-white/90 z-20 tabular-nums mix-blend-difference">
+                   {item.placementRate}%
+                 </span>
               </div>
-              <span className="text-[10px] text-muted-foreground font-medium uppercase text-center break-words min-h-[32px] flex items-center">
-                {item.bucket.replace(/([A-Z])/g, ' $1').replace('between', '').trim()}
+              <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider text-center h-8 flex items-center justify-center leading-tight">
+                {item.bucket
+                  .replace(/([A-Z])/g, ' $1')
+                  .replace('between', '')
+                  .replace('And', '–')
+                  .replace('above', '>')
+                  .replace('below', '<')
+                  .trim()}
               </span>
             </div>
           ))}
@@ -225,8 +244,8 @@ export default function StatisticsPage() {
 
   const PackagesTab = () => (
     <div className="space-y-8">
-       <div className="p-6 bg-card/50 rounded-xl border border-border/40 space-y-6">
-        <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Package Distribution</h3>
+       <div className="p-6 bg-transparent rounded-xl border border-border/10 space-y-6">
+        <h3 className="text-base font-semibold text-foreground/90">Package Distribution</h3>
         <HorizontalBars 
           data={actualTiers.map(t => ({
             name: t.range,
@@ -237,8 +256,8 @@ export default function StatisticsPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="p-6 bg-card/50 rounded-xl border border-border/40 space-y-4">
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Top Recruiter Offers</h3>
+        <div className="p-6 bg-transparent rounded-xl border border-border/10 space-y-4">
+          <h3 className="text-base font-semibold text-foreground/90">Top Recruiter Offers</h3>
           <div className="space-y-3">
             {companyWiseSelections?.map((company, i) => (
               <motion.div 
@@ -253,7 +272,7 @@ export default function StatisticsPage() {
                   <span className="text-sm font-medium">{company.company}</span>
                 </div>
                 <div className="text-right">
-                  <span className="text-sm font-bold block">{company.selectedOffers} offers</span>
+                  <p className="text-sm font-semibold block tabular-nums">{company.selectedOffers} offers</p>
                   {company.averageCtcLpa && (
                     <span className="text-[10px] text-muted-foreground font-medium">Avg: {company.averageCtcLpa} LPA</span>
                   )}
@@ -263,12 +282,12 @@ export default function StatisticsPage() {
           </div>
         </div>
         
-        <div className="p-6 bg-card/50 rounded-xl border border-border/40 flex flex-col items-center justify-center gap-4 text-center">
+        <div className="p-6 bg-transparent rounded-xl border border-border/10 flex flex-col items-center justify-center gap-4 text-center">
             <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center text-primary">
               <Award className="h-8 w-8" />
             </div>
             <div>
-              <h4 className="font-bold text-xl uppercase tracking-tighter">Package Insights</h4>
+              <h4 className="font-bold text-lg tracking-tight">Package Insights</h4>
               <p className="text-xs text-muted-foreground max-w-xs mx-auto">Market analysis based on current recruitment trends and CTC offerings.</p>
             </div>
             <div className="grid grid-cols-2 gap-4 w-full pt-4 border-t border-border">
@@ -300,10 +319,10 @@ export default function StatisticsPage() {
   const InsightsTab = () => (
     <div className="space-y-8">
        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-         <div className="p-6 bg-card/50 rounded-xl border border-border/40 space-y-6">
+         <div className="p-6 bg-transparent rounded-xl border border-border/10 space-y-6">
             <div className="flex items-center gap-2 mb-2">
               <PieChart className="h-5 w-5 text-primary" />
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Posting Summary</h3>
+              <h3 className="text-base font-semibold text-foreground/90">Posting Summary</h3>
             </div>
             <div className="space-y-4">
               <div className="p-4 bg-primary/5 rounded-xl space-y-1">
@@ -320,10 +339,10 @@ export default function StatisticsPage() {
             </div>
          </div>
 
-         <div className="p-6 bg-card/50 rounded-xl border border-border/40 space-y-6">
+         <div className="p-6 bg-transparent rounded-xl border border-border/10 space-y-6">
             <div className="flex items-center gap-2 mb-2">
               <Target className="h-5 w-5 text-primary" />
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Selection Funnel</h3>
+              <h3 className="text-base font-semibold text-foreground/90">Selection Funnel</h3>
             </div>
              <div className="flex items-center justify-center py-4">
                 <CircularProgress 
@@ -335,24 +354,24 @@ export default function StatisticsPage() {
                 />
              </div>
              <div className="text-center space-y-1">
-                <p className="text-sm font-bold">{overview?.selectedOffers} Selected Offers</p>
+                <p className="text-sm font-bold tabular-nums">{overview?.selectedOffers} Selected Offers</p>
                 <p className="text-xs text-muted-foreground">from {overview?.totalApplications} total student applications</p>
              </div>
          </div>
        </div>
 
-       <div className="p-6 bg-card/50 rounded-xl border border-border/40 space-y-4">
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Institutional Overview</h3>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+       <div className="pt-8 border-t border-border/10 space-y-6">
+          <h3 className="text-base font-semibold text-foreground/90">Institutional Overview</h3>
+          <div className="flex flex-wrap items-center justify-between gap-8 pb-4">
             {[
               { label: "Faculty Success", value: "92%" },
               { label: "Active Pool", value: overview?.totalStudents },
               { label: "Placement Rate", value: `${overview?.placementRate}%` },
               { label: "Growth", value: "+4.2%" },
-            ].map((stat) => (
-              <div key={stat.label} className="p-3 bg-muted/20 rounded-lg text-center">
-                <span className="text-[10px] text-muted-foreground font-bold uppercase">{stat.label}</span>
-                <p className="font-bold text-lg">{stat.value}</p>
+            ].map((stat, i) => (
+              <div key={stat.label} className="flex flex-col gap-1 min-w-[120px]">
+                <span className="text-[11px] text-muted-foreground font-semibold uppercase tracking-wider">{stat.label}</span>
+                <p className="font-bold text-xl tracking-tight tabular-nums">{stat.value}</p>
               </div>
             ))}
           </div>
@@ -385,10 +404,10 @@ export default function StatisticsPage() {
             <ChevronLeft className="h-5 w-5" />
           </Button>
           <div>
-            <h1 className="text-2xl font-black text-foreground tracking-tighter uppercase">
+            <h1 className="text-3xl font-bold text-primary tracking-tight">
               Placement Intelligence
             </h1>
-            <p className="text-xs text-muted-foreground font-medium flex items-center gap-1.5 uppercase tracking-widest">
+            <p className="text-[13px] text-muted-foreground font-medium flex items-center gap-2">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
               Live Performance Data · Batch of 2025
             </p>
@@ -400,21 +419,28 @@ export default function StatisticsPage() {
       </motion.div>
 
       {/* ── Tab Bar ── */}
-      <div className="flex gap-1 bg-secondary/30 p-1 rounded-xl border border-border/40 max-w-fit">
-        {TABS.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all rounded-lg ${
-              activeTab === tab.id
-                ? "bg-card text-primary shadow-sm border border-border/40"
-                : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
-            }`}
-          >
-            {tab.icon}
-            <span className="hidden sm:inline">{tab.label}</span>
-          </button>
-        ))}
+      <div className="flex gap-8 border-b border-border/10 w-full overflow-x-auto scrollbar-hide">
+        {TABS.map((tab) => {
+          const isActive = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex items-center gap-2 py-4 text-sm font-semibold transition-all relative ${
+                isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {tab.icon}
+              <span>{tab.label}</span>
+              {isActive && (
+                <motion.div 
+                  layoutId="activeTab"
+                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"
+                />
+              )}
+            </button>
+          );
+        })}
       </div>
 
       {/* ── Tab Content ── */}

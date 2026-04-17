@@ -35,18 +35,18 @@ export function StatCard({
       whileHover={{ y: -4 }}
       className="h-full"
     >
-      <Card className={cn("overflow-hidden border-border/40 bg-card/50 backdrop-blur-sm", className)}>
+      <Card className={cn("overflow-hidden border-border/20 bg-transparent shadow-none", className)}>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+          <CardTitle className="text-sm font-semibold text-muted-foreground/80">
             {title}
           </CardTitle>
-          <div className="p-2 bg-primary/5 rounded-full text-primary">
+          <div className="p-1.5 bg-primary/5 rounded-full text-primary/70">
             {icon}
           </div>
         </CardHeader>
         <CardContent>
           <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-bold tracking-tight">{value}</span>
+            <span className="text-2xl font-bold tracking-tight tabular-nums">{value}</span>
             {trend && (
               <span className={cn(
                 "text-xs font-semibold px-1.5 py-0.5 rounded-md flex items-center gap-0.5",
@@ -57,7 +57,7 @@ export function StatCard({
             )}
           </div>
           {description && (
-            <p className="text-xs text-muted-foreground mt-1.5 font-medium">
+            <p className="text-xs text-muted-foreground mt-1.5 font-normal">
               {description}
             </p>
           )}
@@ -71,7 +71,7 @@ export function CircularProgress({
   value,
   label,
   size = 200,
-  strokeWidth = 12,
+  strokeWidth = 8,
   delay = 0,
 }: {
   value: number;
@@ -95,7 +95,7 @@ export function CircularProgress({
           stroke="currentColor"
           strokeWidth={strokeWidth}
           fill="transparent"
-          className="text-muted/20"
+          className="text-muted/10"
         />
         {/* Progress Circle */}
         <motion.circle
@@ -109,7 +109,7 @@ export function CircularProgress({
           initial={{ strokeDashoffset: circumference }}
           animate={{ strokeDashoffset: offset }}
           transition={{ duration: 1.5, delay, ease: "easeOut" }}
-          className="text-primary"
+          className="text-primary/80"
           strokeLinecap="round"
         />
       </svg>
@@ -118,11 +118,11 @@ export function CircularProgress({
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: delay + 0.5 }}
-          className="text-4xl font-extrabold tracking-tighter"
+          className="text-2xl font-bold tracking-tight tabular-nums"
         >
           {value}%
         </motion.span>
-        <span className="text-xs font-medium text-muted-foreground px-4 uppercase tracking-widest">{label}</span>
+        <span className="text-[10px] font-semibold text-muted-foreground/60 px-4 uppercase tracking-wider">{label}</span>
       </div>
     </div>
   );
@@ -140,15 +140,15 @@ export function HorizontalBars({
       {data.map((item, index) => (
         <div key={item.name} className="space-y-1.5">
           <div className="flex justify-between text-sm">
-            <span className="font-medium text-muted-foreground">{item.name}</span>
-            <span className="font-bold">{item.value}%</span>
+            <span className="font-semibold text-muted-foreground/80">{item.name}</span>
+            <span className="font-semibold tabular-nums">{item.value}%</span>
           </div>
-          <div className="h-2 w-full bg-muted/30 rounded-full overflow-hidden">
+          <div className="h-1 w-full bg-muted/10 rounded-full overflow-hidden">
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: `${item.value}%` }}
               transition={{ duration: 1, delay: delay + index * 0.1, ease: "circOut" }}
-              className={cn("h-full rounded-full", item.color || "bg-primary")}
+              className={cn("h-full rounded-full", item.color || "bg-primary/80")}
             />
           </div>
         </div>

@@ -23,6 +23,10 @@ const sidebarPlaceholders = [
     label: "Jobs",
     href: "/admin/jobs",
   },
+  {
+    label: "Statistics",
+    href: "/admin/statistics",
+  },
 ];
 
 export default function AdminLayout({

@@ -232,12 +232,22 @@ export default function AdminDashboardComponent() {
         </Card>
 
         {/* Analytics / Charts Placeholder */}
-        <Card className="col-span-1 md:col-span-2 lg:col-span-3 border-border/50">
+        <Card
+          className="col-span-1 md:col-span-2 lg:col-span-3 border-border/50 cursor-pointer hover:shadow-md hover:border-primary/50 transition-all duration-200 group"
+          onClick={() => router.push("/admin/statistics")}
+        >
           <CardHeader>
-            <CardTitle>Placement Overview</CardTitle>
-            <CardDescription>
-              Department wise placement statistics.
-            </CardDescription>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle>Placement Overview</CardTitle>
+                <CardDescription>
+                  Department wise placement statistics.
+                </CardDescription>
+              </div>
+              <Badge variant="outline" className="hidden sm:inline-flex group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                View Details
+              </Badge>
+            </div>
           </CardHeader>
           <CardContent className="flex items-center justify-center min-h-[300px]">
             <div className="text-center space-y-4">

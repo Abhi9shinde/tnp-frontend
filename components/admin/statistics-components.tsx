@@ -1,9 +1,20 @@
-"use client";
-
 import React from "react";
-import { motion } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
+import { AreaChart, Area, CartesianGrid, XAxis, YAxis } from "recharts";
+import { 
+  Card, 
+  CardHeader, 
+  CardTitle, 
+  CardContent 
+} from "@/components/ui/card";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  type ChartConfig,
+} from "@/components/ui/chart";
+
 
 interface StatCardProps {
   title: string;
@@ -95,7 +106,7 @@ export function CircularProgress({
           stroke="currentColor"
           strokeWidth={strokeWidth}
           fill="transparent"
-          className="text-muted/10"
+          className="text-muted/25"
         />
         {/* Progress Circle */}
         <motion.circle
@@ -157,55 +168,56 @@ export function HorizontalBars({
   );
 }
 
-export function MinimalTrendLine({
+export function TrendChart({
   data,
-  height = 100,
-  delay = 0,
+  height = 120,
 }: {
-  data: number[];
+  data: { month: string; value: number }[];
   height?: number;
-  delay?: number;
 }) {
-  const max = Math.max(...data);
-  const min = Math.min(...data);
-  const range = max - min;
-  const points = data.map((val, i) => ({
-    x: (i / (data.length - 1)) * 100,
-    y: 100 - ((val - min) / (range || 1)) * 100,
-  }));
-
-  const path = `M ${points.map(p => `${p.x},${p.y}`).join(" L ")}`;
+  const config: ChartConfig = {
+    value: { label: "Placements", color: "hsl(var(--primary))" },
+  }
 
   return (
-    <div className="w-full" style={{ height }}>
-      <svg viewBox="0 0 100 100" className="w-full h-full overflow-visible" preserveAspectRatio="none">
-        <defs>
-          <linearGradient id="lineGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="var(--primary)" stopOpacity="0.2" />
-            <stop offset="100%" stopColor="var(--primary)" stopOpacity="0" />
-          </linearGradient>
-        </defs>
-        {/* Area fill */}
-        <motion.path
-          d={`${path} L 100,100 L 0,100 Z`}
-          fill="url(#lineGradient)"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay }}
-        />
-        {/* Trend Line */}
-        <motion.path
-          d={path}
-          fill="none"
-          stroke="var(--primary)"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 1.5, delay, ease: "easeInOut" }}
-        />
-      </svg>
+    <div style={{ height: `${height}px` }} className="w-full">
+      <ChartContainer config={config}>
+        <AreaChart
+          data={data}
+          margin={{ left: 0, right: 0, top: 10, bottom: 0 }}
+        >
+          <defs>
+            <linearGradient id="placementTrendGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.2}/>
+              <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
+            </linearGradient>
+          </defs>
+          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border)/0.2)" />
+          <XAxis 
+            dataKey="month" 
+            hide 
+          />
+          <YAxis 
+            tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} 
+            tickLine={false}
+            axisLine={false}
+            tickFormatter={(value) => `${value}`}
+            width={20}
+          />
+          <ChartTooltip
+            content={<ChartTooltipContent indicator="dot" />}
+          />
+          <Area
+            type="monotone"
+            dataKey="value"
+            stroke="hsl(var(--primary))"
+            strokeWidth={2}
+            fillOpacity={1}
+            fill="url(#placementTrendGradient)"
+            animationDuration={1500}
+          />
+        </AreaChart>
+      </ChartContainer>
     </div>
   );
 }
